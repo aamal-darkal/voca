@@ -1,0 +1,75 @@
+:root {
+    --start-color: rgb(179, 153, 175);
+    --end-color: white;
+    --fore-color: rgb(116, 69, 112);
+    --end-color-0: rgba(118, 195, 243, 0.3);
+}
+
+
+.btn-group-vertical a:hover {
+    color: white;
+    background-color: var(--end-color-0);
+}
+ 
+.btn-group-vertical a , .down-arrow , footer a, .navbar-brand-mine{
+    color: var(--fore-color) !important;
+}
+
+td .btn {
+    background-color: var(--start-color) ;
+}
+.btn-mine {
+    color: var(--end-color);
+    border: solid 1px transparent;
+    background-color: var(--fore-color);
+}
+.btn-mine:hover {
+    color: var(--fore-color);
+    border: solid 1px; 
+    background-color: var(--end-color);
+}
+.btn-outline-mine {
+    color: var(--fore-color);
+    background-color: var(--end-color);
+    border: solid 1px;
+}
+.btn-outline-mine:hover {
+    color: var(--end-color);
+    background-color: var(--fore-color);
+    border: solid 1px transparent;
+}
+
+body {
+    background-image: linear-gradient(var(--start-color),  var(--end-color));
+}
+
+.canvas {
+    background-image: linear-gradient(var(--start-color),  var(--end-color));
+}
+
+
+.navbar-brand-mine {
+    font-family: fantasy;
+    text-shadow: .5px .5px 1px white;
+}
+
+.side-menu a {
+    font-size: 1.2em;
+}
+main {
+    min-height: 80vh;
+}
+
+
+.card {
+    background-color: rgb(244, 228, 253);
+}   
+
+td {
+    white-space: nowrap;
+}
+
+.canvas {
+    width: 200px !important;
+    max-width: 110%; 
+}
