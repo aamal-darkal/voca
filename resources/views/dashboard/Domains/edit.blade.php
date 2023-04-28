@@ -1,13 +1,12 @@
 @extends('layouts.dashboard')
 @section('inside-content')
     <div class="container-fluid">
-        <div class="row">            
+        <div class="row">  
+            <a onclick="history.back()" class="btn btn-mine my-2">&leftarrow;</a>
+            <h4>Edit Domain </h4>
             <form action="{{ route('domains.update' , ['domain'=> $domain]) }}" method="post" class="col-md-6 offset-md-3">
                 @csrf
                 @method('put')
-
-                <h4>Edit Domain </h4>
-
                 <div class="control-group">
                     <label for="title">Title</label>
                     <input type="text" name="title" id="title" value="{{ old('title' , $domain->title) }}" placeholder="Domain title"
@@ -27,18 +26,7 @@
                             {{ $message }}
                         @enderror
                     </div>
-                </div>
-
-                <div class="control-group">
-                    <label for="language">Level count</label>
-                    <input type="number" name="level_count" value="{{ old('level_count'  , $domain->level_count) }}" placeholder="Level Count"
-                        required maxlength="100" class="form-control my-2" >
-                    <div class="text-danger">
-                        @error('level_count')
-                            {{ $message }}
-                        @enderror
-                    </div>
-                </div>
+                </div>                
 
                 <div class="control-group">
                     <label for="language">Domain Language</label>

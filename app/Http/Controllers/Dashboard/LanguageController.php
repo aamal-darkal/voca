@@ -113,7 +113,7 @@ class LanguageController extends Controller
             }
         } else
             Dialect::create(['lacale' => $language->name]);
-        return redirect()->route('languages.index')->with('success', 'Language added successfully');
+        return redirect()->route('languages.index')->with('success', 'Language saved successfully');
     }
 
     /**
@@ -125,14 +125,16 @@ class LanguageController extends Controller
     public function destroy(Language $language, Request $request)
     {
         if ($request->has('hard')) {
-            $participants = $language->participants->modelkeys();
-            Participant::wherein('id' , $participants)->delete();
+            // $participants = $language->participants->modelkeys();
+            // Participant::wherein('id' , $participants)->delete();
 
-            $dialects = $language->dialects->modelkeys();
-            Dialect::wherein('id' , $dialects)->delete();
+            // $dialects = $language->dialects->modelkeys();
+            // Dialect::wherein('id' , $dialects)->delete();
             
-            $language->delete();
-            return redirect()->back()->with('success' , "language deleted successfully");
+            // $language->delete();
+            // return back()->with('success' , "language deleted successfully");
+            return back()->with('error', 'Under development');
+
         } else {
 
             $dialectCount = $language->dialects->count();

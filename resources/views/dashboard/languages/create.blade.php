@@ -5,9 +5,9 @@
             @foreach ($errors->all() as $error)
                 <p>{{ $error }}</p>
             @endforeach
+            <h4>Add Language </h4>
             <form action="{{ route('languages.store') }}" method="post" class="col-md-6 offset-md-3">
                 @csrf
-                <h4>Add Language </h4>
                 <input type="text" name="name" value="{{ old('name') }}" placeholder="language name" required
                     maxlength="100" class="form-control my-2" maxlength="255">
                 <div class="text-danger">
@@ -29,12 +29,7 @@
                     <tbody>
                         <tr class="table-row" style="visibility: collapse;">
                             <td>
-                                <input type="text" name="locales[]" class="form-control" maxlength="255" required>
-                                <div class="text-danger">
-                                    @error('locales')
-                                        {{ $message }}
-                                    @enderror
-                                </div>
+                                <input type="text" name="locales[]" class="form-control" maxlength="255" required>                               
                             </td>
                             <td>
                                 <input type="text" name="keys[]" class="form-control" minlength="5" maxlength="5" required>

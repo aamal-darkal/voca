@@ -9,7 +9,7 @@ class Domain extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description' , 'level_count', 'language_id' ];
+    protected $fillable = ['title', 'description' , 'language_id' ];
     function levels() {
         return $this->hasMany(Level::class);
     }

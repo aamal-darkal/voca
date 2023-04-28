@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('phrase_id')->constrained()->onDelete('cascade');
             $table->foreignId('word_id')->constrained()->onDelete('cascade');
-            $table->string('translate');
+            $table->string('translation');
             $table->integer('order');
         });
     }

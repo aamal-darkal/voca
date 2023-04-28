@@ -9,11 +9,11 @@
     <div class="offcanvas-body">
         <div class="side-menu btn-group-vertical w-100" role="group" aria-label="Vertical button group">
             <a class="btn border" href="/"><i class="fas fa-home"></i> Home</a>
-            <a class="btn border" href="languages"><i class="fas fa-language"></i> Languages</a>
-            <a class="btn border" href="participants"><i class="fas fa-user-friends"></i> Participant</a>
-            <a class="btn border" href="domains"><i class="fas fa-section"></i> Domains</a>
-            <a class="btn border" href="levels"><i class="fas fa-ruler-vertical"></i> Level</a>
-            <a class="btn border" href="phrase"><i class="fas fa-quote-left"></i> <i class="fas fa-quote-right"></i> phrase</a>
+            <a class="btn border" href="/languages"><i class="fas fa-language"></i> Languages</a>
+            <a class="btn border" href="/participants"><i class="fas fa-user-friends"></i> Participant</a>
+            <a class="btn border" href="/domains"><i class="fas fa-section"></i> Domains</a>
+            <a class="btn border" href="/levels"><i class="fas fa-ruler-vertical"></i> Level</a>
+            <a class="btn border" href="/phrase"><i class="fas fa-quote-left"></i> <i class="fas fa-quote-right"></i> phrase</a>
         </div>
     </div>
 </div>

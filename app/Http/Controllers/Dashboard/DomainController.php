@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Models\Domain;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Dialect;
+use App\Models\Domain;
 use App\Models\Language;
 use App\Models\Level;
-use App\Models\Participant;
 use App\Models\Phrase;
 
 class DomainController extends Controller
@@ -28,6 +26,7 @@ class DomainController extends Controller
         }
 
         $languages = Language::get();
+
         return view('dashboard.domains.index', compact('domains', 'languages'))->with('selectedlang', $language );
         
     }
@@ -40,7 +39,7 @@ class DomainController extends Controller
     public function create()
     {
         $languages = Language::get();
-        return view('dashboard.domains.create' , compact('languages'));
+        return view('dashboard.domains.create' , compact('languages' ));
     }
 
     /**
@@ -54,8 +53,7 @@ class DomainController extends Controller
         $request->validate([
             'title' => 'required|string|max:255|unique:domains',
             'description' => 'string',
-            'level_count' => 'integer',
-            'language_id' => 'required|exists:languages,id  '
+            'language_id' => 'required|exists:languages,id'
         ]);
 
         Domain::create($request->all());        
@@ -98,11 +96,10 @@ class DomainController extends Controller
         $request->validate([
             'title' => 'required|string|max:255|unique:domains,title,' . $domain->id,
             'description' => 'string',
-            'level_count' => 'integer',
-            'language_id' => 'required|exists:languages,id'
+                'language_id' => 'required|exists:languages,id'
         ]);
         $domain->update($request->all());
-        return redirect()->route('domains.index')->with('success', 'Domain added successfully');
+        return redirect()->route('domains.index')->with('success', 'Domain saved successfully');
     }
 
     /**
@@ -114,14 +111,16 @@ class DomainController extends Controller
     public function destroy(Domain $domain, Request $request)
     {
         if ($request->has('hard')) {
-            $phrases = $domain->phrases->modelkeys();
-            Phrase::wherein('id' , $phrases)->delete();
+            // $phrases = $domain->phrases->modelkeys();
+            // Phrase::wherein('id' , $phrases)->delete();
 
-            $levels = $domain->levels->modelkeys();
-            Level::wherein('id' , $levels)->delete();
+            // $levels = $domain->levels->modelkeys();
+            // Level::wherein('id' , $levels)->delete();
             
-            $domain->delete();
-            return redirect()->back()->with('success' , "Domain deleted successfully");
+            // $domain->delete();
+            // return back()->with('success' , "Domain deleted successfully");
+            return back()->with('error', 'Under development');
+
         } else {
             $levelCount = $domain->levels->count();
             if ($levelCount == 0)

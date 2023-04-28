@@ -92,14 +92,12 @@
                 </tr>
             </tbody>
         </table>
-    @section('script')
-        <script>
-            $(document).ready(function() {
-                $('#myTable').DataTable();
-            });
-        </script>
-    @endsection
-
-
-</div>
+    </div>
+@endsection
+@section('script')
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+        });
+    </script>
 @endsection

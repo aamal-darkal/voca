@@ -16,8 +16,14 @@ class LanguageSeeder extends Seeder
     public function run()
     {
         $languages = [
-            ['id' => 1 , 'name' => 'عربي'],
-            ['id' => 2 , 'name' => 'English'],
+            [
+                'id' => 1,
+                'name' => 'عربي'
+            ],
+            [
+                'id' => 2,
+                'name' => 'English'
+            ],
         ];
         foreach ($languages as $language)
             Language::create($language);

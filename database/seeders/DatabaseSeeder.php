@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\Level;
 use App\Models\Participant;
+use App\Models\WordType;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -24,6 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DomainSeeder::class);
         $this->call(LevelSeeder::class);
         $this->call(PhraseSeeder::class);
+        $this->call(WordTypeSeeder::class);
         $this->call(WordSeeder::class);
         // \App\Models\User::factory(10)->create();
 
