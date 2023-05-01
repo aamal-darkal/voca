@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DomainController;
 use App\Http\Controllers\Api\LevelController;
 use App\Http\Controllers\Api\PhraseController;
+use App\Models\Domain;
+use App\Models\Level;
 
 /*
 |-----------------  ---------------------------------------------------------
@@ -26,20 +28,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/auth/register', [AuthController::class, 'createUser']);
 Route::post('/auth/login', [AuthController::class, 'loginUser']);
 
-//Route::apiResource('posts', PostController::class)->middleware('auth:sanctum');
-
-Route::controller(ParticipantController::class)->middleware('auth:sanctum')->prefix('participants')->group( function() {
-    Route::get('by-id/{id}' , 'getById');
-    Route::get('by-email/{id}' , 'getByEmail');
-});
-
-Route::controller(DomainController::class)->middleware('auth:sanctum')->prefix('domains')->group(function() {
-    Route::get('full-tree/{id}' , 'fullTree');
-    Route::get('/{domain}' , 'show');
-});
 
 
-Route::middleware('auth:sanctum')->group(function() {
-Route::get('levels/{id}', [LevelController::class , 'show']);
-Route::get('phrases/{id}', [PhraseController::class , 'show']);   
+Route::middleware('auth:sanctum')->group(function () {
+    Route::controller(ParticipantController::class)->prefix('participants')->group(function () {
+        Route::get('/{participant}', 'show');
+        Route::get('/by-email/{email}', 'getByEmail');
+        Route::get('/stages/{participant}', 'stages');
+        Route::post('/', 'store');
+        Route::patch('/{participant}', 'update');
+    });
+    Route::controller(DomainController::class)->prefix('domains')->group( function() {
+        Route::get('/', 'index');
+        Route::get('/{domain}',  'show');
+        Route::get('/fulltree/{domain}', 'fulltree');
+    });
+    
+    Route::get('levels/{id}', [LevelController::class, 'show']);
+    Route::get('phrases/{id}', [PhraseController::class, 'show']);
 });

@@ -48,6 +48,7 @@ class DomainSeeder extends Seeder
         Domain::find(2)->langAlts()->attach([
             1 => ['title' => 'هندسة برمجيات' , 'description' => 'مفهوم البرمجة - الأدوات',] , 
         ]);
-        
+        Domain::find(1)->participants()->attach([1 => [ 'status' => 'F'] ]);
+        Domain::find(2)->participants()->attach([1 => [ 'status' => 'P'] ,2 => [ 'status' => 'p']]);        
     }
 }

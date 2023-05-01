@@ -75,5 +75,10 @@ class LevelSeeder extends Seeder
         Level::find(2)->langAlts()->attach([
             1 => ['title' => 'خوارزميات' , 'description' => 'مصطلحات الخوارزميات',] , 
         ]);
+
+        Level::find(1)->participants()->attach([1 => [ 'status' => 'F'] ]);
+        Level::find(2)->participants()->attach([1 => [ 'status' => 'F'] ,2 => [ 'status' => 'F']]);
+        Level::find(3)->participants()->attach([1 => [ 'status' => 'P'] ,2 => [ 'status' => 'F']]);
+        Level::find(4)->participants()->attach([1 => [ 'status' => 'N'] ,2 => [ 'status' => 'P']]);
     }
 }

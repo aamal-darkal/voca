@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LevelResource extends JsonResource
+class ParticipantLevelResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,7 +20,7 @@ class LevelResource extends JsonResource
             'description' => $this->description,
             'phrase_count' => $this->phrase_count,
             'order' => $this->order,
-            'phrase' => PhraseResource::collection( $this->phrases),
+            'status' => $this->pivot->status,
         ];
     }
 }

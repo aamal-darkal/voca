@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\DomainFullTreeResource;
 use App\Http\Resources\DomainResource;
 use App\Models\Domain;
 use Illuminate\Http\Request;
@@ -10,10 +11,6 @@ use Illuminate\Http\Request;
 class DomainController extends Controller
 {
 
-    function fullTree($id){
-        $domain = Domain::with('levels')->find($id);
-        return  new DomainResource($domain);
-    }
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +18,7 @@ class DomainController extends Controller
      */
     public function index()
     {
-        //
+        return DomainResource::collection(Domain::paginate(2));
     }
 
     /**
@@ -53,8 +50,12 @@ class DomainController extends Controller
      */
     public function show(Domain $domain)
     {
-        return new DomainResource($domain);        
-        
+        return new DomainResource($domain);               
+    } 
+
+    function fullTree($id){
+        $domain = Domain::with('levels')->find($id);
+        return  new DomainFullTreeResource($domain);
     }
 
     /**
