@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LevelResource extends JsonResource
+class DomainFullTreeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,12 +15,11 @@ class LevelResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'phrase_count' => $this->phrase_count,
-            'order' => $this->order,
-            'phrase' => PhraseResource::collection( $this->phrases),
+            'language_id' => $this->language_id,
+            'level_count' => $this->level_count,
+            'levels' => LevelResource::collection( $this->levels),
         ];
     }
 }

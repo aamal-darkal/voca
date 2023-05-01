@@ -22,4 +22,7 @@ class Domain extends Model
     function langAlts() {
         return $this->belongsToMany(Language::class);
     }
+    function participants() {
+        return $this->belongsToMany(Participant::class)->withPivot('status');
+    }
 }

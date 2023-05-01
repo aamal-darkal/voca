@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Domain;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DomainResource extends JsonResource
@@ -19,7 +20,7 @@ class DomainResource extends JsonResource
             'description' => $this->description,
             'language_id' => $this->language_id,
             'level_count' => $this->level_count,
-            'levels' => LevelResource::collection( $this->levels),
+            'levels' => $this->levels()->select(['id'])->get(),
         ];
     }
 }

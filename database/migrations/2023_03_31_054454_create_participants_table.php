@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('participants', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('link_image')->default('no-image.png');
-            $table->char('theme_app' , 1);
+            $table->string('name' , 50);
+            $table->string('email' , 100)->unique();
+            $table->string('avatar')->default('no-image.png');
+            $table->char('theme_app' , 1)->default('L');;
             $table->boolean('is_admob')->default(false);
             $table->integer('learn_word_count')->default(0);
             $table->integer('learn_phrase_count')->default(0); 

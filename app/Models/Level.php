@@ -24,4 +24,7 @@ class Level extends Model
     function words() {
         return $this->belongsToMany(Word::class);
     }
+    function participants() {
+        return $this->belongsToMany(Participant::class)->withPivot('status');
+    }
 }

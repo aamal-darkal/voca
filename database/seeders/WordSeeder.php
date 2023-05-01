@@ -82,7 +82,7 @@ class WordSeeder extends Seeder
                 'order' => 6,
                 ] , 
             7 => [
-                'translation' => 'عملهس', 
+                'translation' => 'عمله', 
                 'order' => 7,
                 ] , 
             
