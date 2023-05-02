@@ -11,10 +11,10 @@ use Illuminate\Http\Request;
 
 class ParticipantController extends Controller
 {
-
     function getByEmail(Request $request)
     {
         $email = $request->email;
+
         $participant = Participant::where('email', $email)->firstOrFail();
         return new ParticipantResource($participant);
     }

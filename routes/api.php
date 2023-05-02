@@ -33,6 +33,7 @@ Route::post('/auth/login', [AuthController::class, 'loginUser']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::controller(ParticipantController::class)->prefix('participants')->group(function () {
         Route::get('/{participant}', 'show');
+
         Route::get('/stages/{participant}', 'stages');
         Route::post('/', 'store');
         Route::patch('/{participant}', 'update');
