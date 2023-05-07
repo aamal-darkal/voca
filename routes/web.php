@@ -5,6 +5,9 @@ use App\Http\Controllers\Dashboard\LanguageController;
 use App\Http\Controllers\Dashboard\LevelController;
 use App\Http\Controllers\Dashboard\ParticipantController;
 use App\Http\Controllers\Dashboard\PhraseController;
+use App\Models\Domain;
+use App\Models\Level;
+use App\Models\Participant;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,8 +27,12 @@ Auth::routes(['register' => false]);
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::resource('languages' , LanguageController::class );
-Route::get('participants' , [ParticipantController::class,'index'])->name('participants');
+Route::get('participants' , [ParticipantController::class,'index'])->name('participants.index');
 Route::resource('domains' , DomainController::class );
 Route::resource('levels' , LevelController::class );    
-Route::resource('phrase' , PhraseController::class );
+Route::resource('phrases' , PhraseController::class );
+
+Route::get('test' , function() {
+    return Participant::with('domains')->with('levels')->get();
+});
 

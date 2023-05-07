@@ -14,6 +14,13 @@
                         {{ $message }}
                     @enderror
                 </div>
+                <input type="text" name="key" value="{{ old('key') , $language->key}}" placeholder="language key" required
+                minlength="2" maxlength="2" class="form-control my-2">
+                <div class="text-danger">
+                    @error('key')
+                        {{ $message }}
+                    @enderror
+                </div>
                 <h5 class="mt-5"> Dialects &nbsp;&nbsp;
                     <button type="button" id="add_row" class="btn btn-outline-mine" onclick="plus_row()">+</button>
                 </h5>
@@ -30,7 +37,7 @@
                             <td>
                                 <input type="hidden" name="states[]" value="new">
                                 <input type="hidden" name="ids[]" value="new">
-                                <input type="text" name="locales[]" class="form-control" required maxlength="255">
+                                <input type="text" name="locales[]" class="form-control" required maxlength="15">
                             </td>
                             <td>
                                 <input type="text" name="keys[]" class="form-control" required minlength="5"

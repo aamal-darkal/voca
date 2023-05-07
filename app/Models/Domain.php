@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Domain extends Model
 {
     use HasFactory;
+    public static $langkey = 'ar';
 
     protected $fillable = ['title', 'description' , 'language_id' ];
     function levels() {
@@ -15,14 +16,18 @@ class Domain extends Model
     }
     function phrases() {
         return $this->hasManyThrough(Phrase::class , Level::class);
-    }
+    }   
     function language() {
         return $this->belongsTo(Language::class);
     }
-    function langAlts() {
-        return $this->belongsToMany(Language::class);
+    // function langAppsx() {
+    //     return $this->belongsToMany(Language::class  )->withPivot(['title' , 'description']);
+    // }
+    function langApps() {
+        return $this->belongsToMany(Language::class)->where('key' , SELF::$langkey)->withPivot(['title' , 'description']);
     }
-    function participants() {
+    function participants() {   
         return $this->belongsToMany(Participant::class)->withPivot('status');
     }
+   
 }

@@ -9,6 +9,7 @@
                 <tr>
                     <td>id</td>
                     <td>name</td>
+                    <td>key</td>
                     <td>actions</td>
                 </tr>
             </thead>
@@ -17,6 +18,7 @@
                     <tr>
                         <td>{{ $language->id }}</td>
                         <td>{{ $language->name }}</td>
+                        <td>{{ $language->key }}</td>
                         <td><a href="{{ route('languages.edit', ['language' => $language]) }}" class="btn btn-outline-primary btn-sm" title="edit"><i class="fas fa-edit"></i></a> |
                             <a href="{{ route('languages.show', ['language' => $language]) }}" class="btn btn-outline-success btn-sm" title="view"><i class="fas fa-eye"></i></a> |
 

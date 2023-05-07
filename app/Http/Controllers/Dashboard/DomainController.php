@@ -18,16 +18,17 @@ class DomainController extends Controller
      */
     public function index(Request $request)
     {
-        $language = $request->input('language' , '*');
-        if ($language == '*')
+        $lang = $request->input('language' , '*');
+        if ($lang == '*')
             $domains = Domain::paginate(10);
         else {
-            $domains = $language->domains();
+            $language = Language::find($lang);  
+            $domains = $language->domains;
         }
 
         $languages = Language::get();
 
-        return view('dashboard.domains.index', compact('domains', 'languages'))->with('selectedlang', $language );
+        return view('dashboard.domains.index', compact('domains', 'languages'))->with('selectedlang', $lang );
         
     }
 

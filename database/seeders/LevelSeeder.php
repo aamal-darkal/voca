@@ -18,48 +18,48 @@ class LevelSeeder extends Seeder
         $levels = [
             [
                 'id' => 1,
-                'title' => 'body part',
-                'description' => 'Scientific names of the body',
+                'title' => 'أجزاء الجسم',
+                'description' => 'الأسماء العلمية لأجزاء الجسم',
                 'phrase_count' => 5,
                 'order' => 1,
                 'domain_id' => 1,
             ],
             [
                 'id' => 2,
-                'title' => 'algorithm',
-                'description' => 'algorithm terms',
+                'title' => 'خوارزميات',
+                'description' => 'مصطلحات الخوارزميات',
                 'phrase_count' => 5,
                 'order' => 1,
                 'domain_id' => 2,
             ],
             [
                 'id' => 3,
-                'title' => 'programming',
-                'description' => 'programming methods',
+                'title' => 'برمجة',
+                'description' => 'طرق البرمجة',
                 'phrase_count' => 5,
                 'order' => 2,
                 'domain_id' => 2,
             ],
             [
                 'id' => 4,
-                'title' => 'Artificial intelligence',
-                'description' => 'Artificial intelligence principles',
+                'title' => 'الذكاء الصنعي',
+                'description' => 'مبادئ الذكاء',
                 'phrase_count' => 5,
                 'order' => 3,
                 'domain_id' => 2,
             ],
             [
                 'id' => 5,
-                'title' => 'Computer part',
-                'description' => 'Hardware devices',
+                'title' => 'أجزاء الكمبيوتر',
+                'description' => 'بنية الأجهزة',
                 'phrase_count' => 5,
                 'order' => 1,
                 'domain_id' => 3,
             ],
             [
                 'id' => 6,
-                'title' => 'maintenance',
-                'description' => 'maintenance, devices',
+                'title' => 'صيانة',
+                'description' => 'صيانة التجهيزات',
                 'phrase_count' => 5,
                 'order' => 2,
                 'domain_id' => 3,
@@ -69,11 +69,23 @@ class LevelSeeder extends Seeder
         foreach($levels as $level) {
             Level::create($level);
         }
-        Level::find(1)->langAlts()->attach([
-            1 => ['title' => 'أجزاء الجسم' , 'description' => 'الأسماء العلمية لأجزاء الجسم',] , 
+        Level::find(1)->langApps()->attach([
+            2 => ['title' => 'body part' , 'description' =>  'Scientific names of the body',] , 
         ]);
-        Level::find(2)->langAlts()->attach([
-            1 => ['title' => 'خوارزميات' , 'description' => 'مصطلحات الخوارزميات',] , 
+        Level::find(2)->langApps()->attach([
+            2 => ['title' =>  'algorithm', 'description' => 'algorithm terms', ] , 
+        ]);
+        Level::find(3)->langApps()->attach([
+            2 => ['title' =>  'programming', 'description' => 'programming methods', ] , 
+        ]);
+        Level::find(4)->langApps()->attach([
+            2 => ['title' =>  'Artificial intelligence', 'description' => 'Artificial intelligence principles', ] , 
+        ]);
+        Level::find(5)->langApps()->attach([
+            2 => ['title' =>  'Computer part', 'description' => 'Hardware devices', ] , 
+        ]);
+        Level::find(6)->langApps()->attach([
+            2 => ['title' =>  'maintenance', 'description' => 'devices maintenance', ] , 
         ]);
 
         Level::find(1)->participants()->attach([1 => [ 'status' => 'C'] ]);

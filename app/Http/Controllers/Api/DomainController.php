@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\DomainFullTreeResource;
 use App\Http\Resources\DomainResource;
 use App\Models\Domain;
+use App\Models\Level;
+// use App\Models\DomainLocale as Domain;
 use Illuminate\Http\Request;
 
 class DomainController extends Controller
@@ -16,9 +18,11 @@ class DomainController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return DomainResource::collection(Domain::paginate(2));
+    public function index(Request $request)
+    {                
+        Domain::$langkey = $request->langkey;
+        $domains = Domain::with('levels:id,domain_id')->with('langApps')->paginate(5);
+        return DomainResource::collection($domains);
     }
 
     /**
@@ -48,13 +52,17 @@ class DomainController extends Controller
      * @param  \App\Models\Domain  $domain
      * @return \Illuminate\Http\Response
      */
-    public function show(Domain $domain)
+    public function show( $id , Request $request)
     {
+        Domain::$langkey = $request->langkey;
+        $domain = Domain::with('levels:id,domain_id')->with('langApps')->find($id);
         return new DomainResource($domain);               
     } 
-
-    function fullTree($id){
-        $domain = Domain::with('levels')->find($id);
+    /******************* */
+    function fullTree($id , Request $request){
+        Domain::$langkey = $request->langkey;        
+        Level::$langkey = $request->langkey;        
+        $domain = Domain::with('levels')->with('langApps')->find($id);
         return  new DomainFullTreeResource($domain);
     }
 

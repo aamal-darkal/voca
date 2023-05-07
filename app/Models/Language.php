@@ -30,4 +30,8 @@ class Language extends Model
     function levelAlts() {
         return $this->belongsToMany(Level::class);
     }
+
+    function wordTypes() {
+        return $this->hasMany(WordType::class);
+    }
 }

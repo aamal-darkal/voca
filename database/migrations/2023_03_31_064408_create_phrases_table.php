@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('phrases', function (Blueprint $table) {
             $table->id();
             $table->text('content');
-            $table->text('translation');
+            $table->text('translation')->nullable();
             $table->integer('word_count')->default(0);
             $table->foreignId('level_id')->constrained();            
             $table->timestamps();

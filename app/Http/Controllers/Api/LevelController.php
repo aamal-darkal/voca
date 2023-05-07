@@ -46,11 +46,14 @@ class LevelController extends Controller
      * @param  \App\Models\Level  $level
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+
+     public function show($id ,  Request $request)
     {
-        $level = Level::find($id);
+        Level::$langkey = $request->langkey;
+
+        $level = Level::with('langApps')->find($id);
         return new LevelResource($level);        
-    }
+    }    
 
     /**
      * Show the form for editing the specified resource.

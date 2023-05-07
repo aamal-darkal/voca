@@ -40,8 +40,9 @@ class LanguageController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:languages',
-            'locales.*' => 'required',
+            'name' => 'required|string|max:15|unique:languages',
+            'key' => 'required|string|max:2|min:2|unique:languages',
+            'locales.*' => 'required|max:15',
             'keys.*' => 'required|max:5|min:5'
         ]);
         $language = Language::create($request->all());

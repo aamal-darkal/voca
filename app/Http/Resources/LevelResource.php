@@ -16,11 +16,11 @@ class LevelResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'description' => $this->description,
+            'title' => $this->langApps[0]['pivot']['title']?? $this->title,
+            'description' => $this->langApps[0]['pivot']['description']?? $this->description,
             'phrase_count' => $this->phrase_count,
             'order' => $this->order,
             'phrase' => PhraseResource::collection( $this->phrases),
         ];
-    }
+    }   
 }

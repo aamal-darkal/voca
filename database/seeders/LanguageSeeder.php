@@ -18,11 +18,18 @@ class LanguageSeeder extends Seeder
         $languages = [
             [
                 'id' => 1,
-                'name' => 'عربي'
+                'name' => 'عربي',
+                'key' => 'ar'
             ],
             [
                 'id' => 2,
-                'name' => 'English'
+                'name' => 'English',
+                'key' => 'en'
+            ],
+            [
+                'id' => 3,
+                'name' => 'سنسكريتي',
+                'key' => 'sn'
             ],
         ];
         foreach ($languages as $language)

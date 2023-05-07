@@ -9,4 +9,7 @@ class WordType extends Model
 {
     use HasFactory;
     public $timestamps = false;
+    function language() {
+        return $this->belongsTo(Language::class);
+    }
 }

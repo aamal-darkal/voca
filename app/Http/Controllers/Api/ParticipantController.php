@@ -54,7 +54,8 @@ class ParticipantController extends Controller
             $participant->save();
             return [
                 'status' =>  'success',
-                'message' => 'book saved participant'
+                'message' => 'book saved participant',
+                'id' => $participant->id,
             ];
         } else
             return [
@@ -64,10 +65,9 @@ class ParticipantController extends Controller
     }
     public function update(Request $request,Participant $participant)
     {
-        // return $request;
         $request->validate([
-            'name' => 'required|string|max:50',
-            'email' => 'required|email|max:100|unique:participants,email,' . $participant->id ,
+            'name' => 'string|max:50',
+            'email' => 'email|max:100|unique:participants,email,' . $participant->id ,
             'avatar' => 'image|max:2000|mimes:jpg,png,jpeg,bmp',
             'theme_app' => 'in:D,L',
             'is_admob' => 'boolean',

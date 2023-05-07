@@ -12,11 +12,14 @@ class DomainFullTreeResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
+
+     
     public function toArray($request)
     {
         return [
-            'title' => $this->title,
-            'description' => $this->description,
+            'id' => $this->id,
+            'title' => $this->langApps[0]['pivot']['title']?? $this->title,
+            'description' => $this->langApps[0]['pivot']['description']?? $this->description,
             'language_id' => $this->language_id,
             'level_count' => $this->level_count,
             'levels' => LevelResource::collection( $this->levels),

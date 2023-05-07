@@ -7,7 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class DomainResource extends JsonResource
 {
-    /**
+    /** 
      * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -16,11 +16,13 @@ class DomainResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'title' => $this->title,
-            'description' => $this->description,
+            'id' => $this->id,
+            'title' => $this->langApps[0]['pivot']['title']?? $this->title,
+            'description' => $this->langApps[0]['pivot']['description']?? $this->description,
             'language_id' => $this->language_id,
-            'level_count' => $this->level_count,
-            'levels' => $this->levels()->select(['id'])->get(),
+            'level_count' => $this->level_count,        
+            'levels' => $this->levels,
         ];
     }
+    
 }
