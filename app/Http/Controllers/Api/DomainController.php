@@ -58,11 +58,17 @@ class DomainController extends Controller
         $domain = Domain::with('levels:id,domain_id')->with('langApps')->find($id);
         return new DomainResource($domain);               
     } 
-    /******************* */
+    /**
+     * show full Tree of domain with its levels, phrase,words
+     *
+     * @param [id of domain] $id
+     * @param Request $request
+     * @return resource
+     */
     function fullTree($id , Request $request){
         Domain::$langkey = $request->langkey;        
         Level::$langkey = $request->langkey;        
-        $domain = Domain::with('levels')->with('langApps')->find($id);
+        $domain = Domain::with('levels','langApps')->find($id);
         return  new DomainFullTreeResource($domain);
     }
 

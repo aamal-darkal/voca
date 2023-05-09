@@ -19,6 +19,7 @@ class PhraseResource extends JsonResource
             'content' => $this->content,
             'translation' => $this->translation,
             'word_count' => $this->word_count,
+            'status' => $this->status,
             'words' => WordResource::collection( $this->words),
         ];
     }

@@ -15,7 +15,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($levels as $domain)
+            @foreach ($levels as $level)
                 <tr>
                     <td>{{ $level->id }}</td>
                     <td>{{ $level->title }}</td>

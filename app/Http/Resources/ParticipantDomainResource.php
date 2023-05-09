@@ -14,15 +14,16 @@ class ParticipantDomainResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
+
     public function toArray($request)
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'description' => $this->description,
+            'title' => $this->langApps[0]['pivot']['title']?? $this->title,
+            'description' => $this->langApps[0]['pivot']['description']?? $this->description,
             'level_count' => $this->level_count,            
             'status' => $this->pivot->status,
-            'levels' => ParticipantLevelResource::collection( $this->getLevels( $this->id , $this->pivot->participant_id)),
+            'levels' => ParticipantAllLevelsResource::collection( $this->getLevels( $this->id , $this->pivot->participant_id)),
         ];  
     }
     function getLevels( $domain , $participant){

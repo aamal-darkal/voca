@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\LevelResource;
 use App\Models\Level;
+use App\Models\Participant;
 use Illuminate\Http\Request;
 
 class LevelController extends Controller
@@ -53,7 +54,8 @@ class LevelController extends Controller
 
         $level = Level::with('langApps')->find($id);
         return new LevelResource($level);        
-    }    
+    }
+    
 
     /**
      * Show the form for editing the specified resource.

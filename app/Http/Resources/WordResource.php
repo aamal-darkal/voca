@@ -20,6 +20,7 @@ class WordResource extends JsonResource
             'word_type' => $this->wordType->name,
             'translation' => $this->pivot->translation,
             'order' => $this->pivot->order,
+            'status' => $this->pivot->status,
         ];
     }
 }

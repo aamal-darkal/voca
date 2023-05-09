@@ -18,7 +18,7 @@ class ParticipantResource extends JsonResource
             'id' =>$this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'link_image' => $this->link_image,
+            'avatar' => url( 'storage/participant-images/' . $this->avatar),
             'theme_app' => $this->theme_app,
             'is_admob' => $this->is_admob,
             'learn_word_count' => $this->learn_word_count,
