@@ -21,10 +21,6 @@ use App\Models\Level;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::post('/auth/register', [AuthController::class, 'createUser']);
 Route::post('/auth/login', [AuthController::class, 'loginUser']);
 
@@ -33,7 +29,6 @@ Route::post('/auth/login', [AuthController::class, 'loginUser']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::controller(ParticipantController::class)->prefix('participants')->group(function () {
         Route::get('/{participant}', 'show');
-
         Route::get('/stages/{participant}', 'stages');
         Route::post('/', 'store');
         Route::patch('/{participant}', 'update');
@@ -48,5 +43,10 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     
     Route::get('levels/{id}', [LevelController::class, 'show']);
+    
     Route::get('phrases/{id}', [PhraseController::class, 'show']);
+});
+
+Route::fallback(function() {
+    return response()->json(['error' => 'page not found, you can contact aamal-darkal on telegram: 0940090043'],404);
 });

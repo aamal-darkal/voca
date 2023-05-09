@@ -8,10 +8,11 @@ use App\Http\Controllers\Dashboard\PhraseController;
 use App\Models\Domain;
 use App\Models\Level;
 use App\Models\Participant;
+use App\Models\Phrase;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-/*
+/*;
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
@@ -33,6 +34,7 @@ Route::resource('levels' , LevelController::class );
 Route::resource('phrases' , PhraseController::class );
 
 Route::get('test' , function() {
-    return Participant::with('domains')->with('levels')->get();
+    $listing =  Phrase::with('level')->with('level.domain')->get();
+    dd($listing);
 });
 
