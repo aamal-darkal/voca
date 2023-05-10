@@ -93,6 +93,7 @@ class ParticipantController extends Controller
             ];
     }
     public function update(Request $request, Participant $participant)
+    public function update(Request $request, Participant $participant)
     {
         $request->validate([
             'name' => 'string|max:50',
@@ -103,6 +104,7 @@ class ParticipantController extends Controller
             'lang_app' => 'exists:languages,id',
             'dialect_id' => 'exists:dialects,id',
         ]);
+        if ($participant->update($request->all())) {
         if ($participant->update($request->all())) {
             if ($request->has('avatar')) {
                 $avatar = $request->file('avatar');
