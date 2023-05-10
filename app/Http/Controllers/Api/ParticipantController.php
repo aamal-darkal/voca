@@ -43,22 +43,6 @@ class ParticipantController extends Controller
         return ParticipantDomainResource::collection($domains);
     }
 
-    /**
-     * for certain level
-     *
-     * @param Participant $participant
-     * @param Request $request
-     * @return LevelResource instance
-     */
-    public function ParticipantLevelStatus(Participant $participant , Request $request)
-    {
-        Level::$langkey =  Language::find( $participant->lang_app)->key;
-
-        $level_id = $request->level_id;
-        $level = $participant->levels()->with('langApps' , 'phrases')->where('level_id' ,$level_id)->get()[0];
-        // return $level;
-        return new ParticipantLevelResource($level);
-    }
     
     public function store(Request $request)
     {
@@ -93,6 +77,7 @@ class ParticipantController extends Controller
             ];
     }
     public function update(Request $request, Participant $participant)
+    public function update(Request $request, Participant $participant)
     {
         $request->validate([
             'name' => 'string|max:50',
@@ -103,6 +88,7 @@ class ParticipantController extends Controller
             'lang_app' => 'exists:languages,id',
             'dialect_id' => 'exists:dialects,id',
         ]);
+        if ($participant->update($request->all())) {
         if ($participant->update($request->all())) {
             if ($request->has('avatar')) {
                 $avatar = $request->file('avatar');

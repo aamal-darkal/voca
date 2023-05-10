@@ -49,11 +49,3 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::get('phrases/{id}', [PhraseController::class, 'show']);
 });
-
-Route::fallback(function() {
-    return response()->json(['error' => 'page not found, you can contact aamal-darkal on telegram: 0940090043'],404);
-});
-
-Route::get('generate' , function(){
-    Artisan::call('storage:link');      
-});
