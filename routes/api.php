@@ -1,15 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ParticipantController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DomainController;
 use App\Http\Controllers\Api\LevelController;
 use App\Http\Controllers\Api\PhraseController;
-use App\Models\Domain;
-use App\Models\Level;
-use Illuminate\Support\Facades\Artisan;
 
 /*
 |-----------------  ---------------------------------------------------------
@@ -48,12 +44,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('levels/{id}', [LevelController::class, 'show']);
     
     Route::get('phrases/{id}', [PhraseController::class, 'show']);
-});
-
-Route::fallback(function() {
-    return response()->json(['error' => 'page not found, you can contact aamal-darkal on telegram: 0940090043'],404);
-});
-
-Route::get('generate' , function(){
-    Artisan::call('storage:link');      
 });
