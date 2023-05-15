@@ -23,7 +23,7 @@
                     </td>
                 </tr>
             </table>
-            <form action="{{ route('phrases.store') }}" method="post" class="col-md-10 offset-md-1" name="phrase">
+            <form action="{{ route('phrases.update') }}" method="post" class="col-md-10 offset-md-1" name="phrase">
                 <h4>Edit Phrase </h4>
 
                 @csrf

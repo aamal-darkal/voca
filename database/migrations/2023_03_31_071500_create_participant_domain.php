@@ -17,7 +17,7 @@ return new class extends Migration
             $table->primary(['domain_id' ,'participant_id']);
             $table->foreignId('domain_id')->constrained()->onDelete('cascade');
             $table->foreignId('participant_id')->constrained()->onDelete('cascade');
-            $table->char('status' ,1);            
+            $table->char('status' ,1)->comment('S => start , C => complete, X => skip');            
         });
     }
 

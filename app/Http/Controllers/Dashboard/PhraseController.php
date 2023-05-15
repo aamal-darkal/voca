@@ -105,22 +105,26 @@ class PhraseController extends Controller
             'contents.*' => 'string',            
             'word_type_id.*' => 'exists:word_types,id',            
         ]);
-        $phrase = Phrase::create($request->all());
+        $phrase->update($request->all());
+        $phrase->words()->delete();
+
         $contents = $request->contents;
         $translations = $request->translations;
         $wordTypes = $request->wordTypes;
 
         for($i = 0 ; $i < count($contents) ; $i++) {
-            $word = Word::create([
-                'content' => $contents[$i],
-                'word_type_id' => $wordTypes[$i],
-            ]);
-            $word->phrases()->attach($phrase , [
-                                                'translation' => $translations[$i] ,
-                                                'order' => $i ,
-                                                ]);
-        }
-        return back()->with('success', 'phrase added successfully');             
+            for($i = 0 ; $i < count($contents) ; $i++) {
+                $word = Word::create([
+                    'content' => $contents[$i],
+                    'word_type_id' => $wordTypes[$i],
+                ]);
+                $word->phrases()->attach($phrase , [
+                                                    'translation' => $translations[$i] ,
+                                                    'order' => $i ,
+                                                    ]);
+            }
+        return back()->with('success', 'phrase added successfully');  
+        }           
 
     }
 

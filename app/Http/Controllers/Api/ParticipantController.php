@@ -55,9 +55,9 @@ class ParticipantController extends Controller
         Level::$langkey =  Language::find( $participant->lang_app)->key;
 
         $level_id = $request->level_id;
-        $level = $participant->levels()->with('langApps' , 'phrases')->where('level_id' ,$level_id)->get()[0];
-        // return $level;
-        return new ParticipantLevelResource($level);
+        $level = $participant->levels()->with('langApps' , 'phrases')->where('level_id' ,$level_id)->get();
+        // return new ParticipantLevelResource($level);
+        return ParticipantLevelResource::collection($level);
     }
     
     public function store(Request $request)
@@ -81,6 +81,9 @@ class ParticipantController extends Controller
             } else
                 $participant->avatar = 'no-image.png';
             $participant->save();
+            $domains = $participant->dialect->language->domains;
+            
+            $participant->domains()->syncWithPivotValues($domains,  ['status' => 'S']);
             return [
                 'status' =>  'success',
                 'message' => 'book saved participant',
@@ -110,7 +113,7 @@ class ParticipantController extends Controller
                 $avatar->storeAs('public/participant-images',  $fileName);
                 $participant->avatar = $fileName;
                 $participant->save();
-            }
+            }            
             return [
                 'status' =>  'success',
                 'message' => 'participant saved successfully'
