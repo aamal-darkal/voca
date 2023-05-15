@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('participant_id')->constrained()->onDelete('cascade');
             $table->foreignId('phrase_word_id')->references('id')->on('phrase_word')->onDelete('cascade');
             $table->primary(['participant_id' , 'phrase_word_id'  ]);                        
-            $table->char('status' ,1);
+            $table->char('status' ,1)->comment('S => start , C => complete, X => skip , N => normat, f => failed');
         });
     }
 
