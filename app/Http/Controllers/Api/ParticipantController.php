@@ -83,7 +83,6 @@ class ParticipantController extends Controller
                 $participant->avatar = 'no-image.png';
             $participant->save();
             $domains = $participant->dialect->language->domains;
-
             $participant->domains()->syncWithPivotValues($domains,  ['status' => 'S']);
             return [
                 'status' =>  'success',
@@ -114,7 +113,7 @@ class ParticipantController extends Controller
                 $avatar->storeAs('public/participant-images',  $fileName);
                 $participant->avatar = $fileName;
                 $participant->save();
-            }
+            }            
             return [
                 'status' =>  'success',
                 'message' => 'participant saved successfully'
