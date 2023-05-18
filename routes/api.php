@@ -26,11 +26,15 @@ Route::post('/auth/login', [AuthController::class, 'loginUser']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::controller(ParticipantController::class)->prefix('participants')->group(function () {
         Route::get('/{participant}', 'show');
-        Route::get('/DomainsStatus/{participant}', 'ParticipantDomainsStatus');
-        Route::get('/LevelStatus/{participant}', 'ParticipantLevelStatus');
+        Route::get('/DomainsStatus/{participant}', 'DomainsStatus');
+        Route::get('/LevelStatus/{participant}', 'LevelStatus');
 
         Route::post('/', 'store');
         Route::patch('/{participant}', 'update');
+
+        Route::post( 'attachDomain/{participant}','attachDomain');
+        Route::post( 'attachLevel/{participant}','attachLevel');
+        Route::post( 'attachPhrase/{participant}','attachPhrase');
     });
     
     Route::get('participant-email', [ParticipantController::class, 'getByEmail']);

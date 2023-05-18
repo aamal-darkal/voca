@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Participant;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\LevelResource;
+use App\Http\Resources\ParticipantAllLevelsResource;
 use App\Http\Resources\ParticipantDomainResource;
 use App\Http\Resources\ParticipantLevelResource;
 use App\Http\Resources\ParticipantResource;
@@ -34,12 +35,13 @@ class ParticipantController extends Controller
      * @param Participant $participant
      * @return void
      */
-    public function ParticipantDomainsStatus(Participant $participant )
+    public function DomainsStatus(Participant $participant)
     {
-        Domain::$langkey =  Language::find( $participant->lang_app)->key;
-        Level::$langkey =  Language::find( $participant->lang_app)->key;
-
-        $domains = $participant->domains()->with('langApps' )->get();
+        Domain::$langkey =  Language::find($participant->lang_app)->key;
+        Level::$langkey =  Language::find($participant->lang_app)->key;
+        $domains = Domain::with('langApps')->get();
+        ParticipantDomainResource::$participant = $participant->id;
+        ParticipantAllLevelsResource::$participant = $participant->id;
         return ParticipantDomainResource::collection($domains);
     }
 
@@ -50,16 +52,15 @@ class ParticipantController extends Controller
      * @param Request $request
      * @return LevelResource instance
      */
-    public function ParticipantLevelStatus(Participant $participant , Request $request)
+    public function LevelStatus(Participant $participant, Request $request)
     {
-        Level::$langkey =  Language::find( $participant->lang_app)->key;
+        Level::$langkey =  Language::find($participant->lang_app)->key;
 
         $level_id = $request->level_id;
-        $level = $participant->levels()->with('langApps' , 'phrases')->where('level_id' ,$level_id)->get();
-        // return new ParticipantLevelResource($level);
+        $level = $participant->levels()->with('langApps', 'phrases')->where('level_id', $level_id)->get();
         return ParticipantLevelResource::collection($level);
     }
-    
+
     public function store(Request $request)
     {
         $request->validate([
@@ -82,7 +83,7 @@ class ParticipantController extends Controller
                 $participant->avatar = 'no-image.png';
             $participant->save();
             $domains = $participant->dialect->language->domains;
-            
+
             $participant->domains()->syncWithPivotValues($domains,  ['status' => 'S']);
             return [
                 'status' =>  'success',
@@ -113,7 +114,7 @@ class ParticipantController extends Controller
                 $avatar->storeAs('public/participant-images',  $fileName);
                 $participant->avatar = $fileName;
                 $participant->save();
-            }            
+            }
             return [
                 'status' =>  'success',
                 'message' => 'participant saved successfully'
@@ -123,5 +124,43 @@ class ParticipantController extends Controller
                 'status' =>  'error',
                 'message' => 'error in updating participant'
             ];
+    }
+
+    public function attachDomain(Participant $participant, Request $request)
+    {
+        $domain = $request->domain;
+        $isattached = $participant->domains()->where('id', $domain)->first();
+        if ($isattached)
+            $participant->domains()->updateExistingPivot($domain, ['status' => $request->status]);
+        else
+            $participant->domains()->attach($domain, ['status' => $request->status]);
+        return [
+            'status' => 'success',
+        ];
+    }
+
+    public function attachLevel(Participant $participant, Request $request)
+    {
+        $level = $request->level;
+        $isattached = $participant->levels()->where('id', $level)->first();
+        if ($isattached)
+            $participant->levels()->updateExistingPivot($level, ['status' => $request->status]);
+        else
+            $participant->levels()->attach($level, ['status' => $request->status]);
+        return [
+            'status' => 'success',
+        ];
+    }
+    public function attachPhrase(Participant $participant, Request $request)
+    {
+        $phrase = $request->phrase;
+        $isattached = $participant->phrases()->where('id', $phrase)->first();
+        if ($isattached)
+            $participant->phrases()->updateExistingPivot($phrase, ['status' => $request->status]);
+        else
+            $participant->phrases()->attach($phrase, ['status' => $request->status]);
+        return [
+            'status' => 'success',
+        ];
     }
 }

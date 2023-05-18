@@ -12,16 +12,27 @@ class ParticipantAllLevelsResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
+    public static $participant;
+
     public function toArray($request)
     {
         return [        
             'id' => $this->id,
             'title' => $this->langApps[0]['pivot']['title']?? $this->title,
             'description' => $this->langApps[0]['pivot']['description']?? $this->description,
-            'status' => $this->pivot->status,
             'phrase_count' => $this->phrase_count,
             'order' => $this->order,
-            'status' => $this->pivot->status,
+            'status' => $this->getStatus($this),
+
         ];
+    }
+    function getStatus($level)
+    {
+
+        $levelParticipant = $level->participants()->where('id', Self::$participant)->first();
+        if ($levelParticipant)
+            return $levelParticipant->pivot->status;
+        else
+            return null;
     }
 }
