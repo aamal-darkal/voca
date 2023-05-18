@@ -82,8 +82,8 @@ class ParticipantController extends Controller
             } else
                 $participant->avatar = 'no-image.png';
             $participant->save();
-            $domains = $participant->dialect->language->domains;
-            $participant->domains()->syncWithPivotValues($domains,  ['status' => 'S']);
+            // $domains = $participant->dialect->language->domains;
+            // $participant->domains()->syncWithPivotValues($domains,  ['status' => 'S']);
             return [
                 'status' =>  'success',
                 'message' => 'book saved participant',
