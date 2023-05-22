@@ -9,6 +9,8 @@ use App\Http\Resources\ParticipantAllLevelsResource;
 use App\Http\Resources\ParticipantDomainResource;
 use App\Http\Resources\ParticipantLevelResource;
 use App\Http\Resources\ParticipantResource;
+use App\Http\Resources\PhraseResource;
+use App\Http\Resources\WordResource;
 use App\Models\Domain;
 use App\Models\Language;
 use App\Models\Level;
@@ -27,38 +29,6 @@ class ParticipantController extends Controller
     public function show(Participant $participant)
     {
         return new ParticipantResource($participant);
-    }
-
-    /**
-     * for all domains
-     *
-     * @param Participant $participant
-     * @return void
-     */
-    public function DomainsStatus(Participant $participant)
-    {
-        Domain::$langkey =  Language::find($participant->lang_app)->key;
-        Level::$langkey =  Language::find($participant->lang_app)->key;
-        $domains = Domain::with('langApps')->get();
-        ParticipantDomainResource::$participant = $participant->id;
-        ParticipantAllLevelsResource::$participant = $participant->id;
-        return ParticipantDomainResource::collection($domains);
-    }
-
-    /**
-     * for certain level
-     *
-     * @param Participant $participant
-     * @param Request $request
-     * @return LevelResource instance
-     */
-    public function LevelStatus(Participant $participant, Request $request)
-    {
-        Level::$langkey =  Language::find($participant->lang_app)->key;
-
-        $level_id = $request->level_id;
-        $level = $participant->levels()->with('langApps', 'phrases')->where('level_id', $level_id)->get();
-        return ParticipantLevelResource::collection($level);
     }
 
     public function store(Request $request)
@@ -124,7 +94,42 @@ class ParticipantController extends Controller
                 'message' => 'error in updating participant'
             ];
     }
+/*********************** Status ********************************* */
+    /**
+     * for all domains
+     *
+     * @param Participant $participant
+     * @return void
+     */
+    public function domainsStatus(Participant $participant)
+    {
+        Domain::$langkey =  Language::find($participant->lang_app)->key;
+        Level::$langkey =  Language::find($participant->lang_app)->key;
+        $domains = Domain::with('langApps')->get();
+        ParticipantDomainResource::$participant = $participant->id;
+        ParticipantAllLevelsResource::$participant = $participant->id;
+        return ParticipantDomainResource::collection($domains);
+    }
 
+    /**
+     * for certain level
+     *
+     * @param Participant $participant
+     * @param Request $request
+     * @return LevelResource instance
+     */
+    public function levelStatus(Participant $participant, Request $request)
+    {
+        Level::$langkey =  Language::find($participant->lang_app)->key;
+
+        $level_id = $request->level_id;
+        $level = $participant->levels()->with('langApps', 'phrases')->where('level_id', $level_id)->get();
+        PhraseResource::$participant = $participant->id;
+        WordResource::$participant = $participant->id;
+        return ParticipantLevelResource::collection($level);
+    }
+
+    /* **************************** Attachment ************************************** */
     public function attachDomain(Participant $participant, Request $request)
     {
         $domain = $request->domain;
@@ -158,6 +163,18 @@ class ParticipantController extends Controller
             $participant->phrases()->updateExistingPivot($phrase, ['status' => $request->status]);
         else
             $participant->phrases()->attach($phrase, ['status' => $request->status]);
+        return [
+            'status' => 'success',
+        ];
+    }
+    public function attachWord(Participant $participant, Request $request)
+    {
+        $word = $request->phrase_word_id; 
+        $isattached = $participant->words()->where('id', $word)->first();
+        if ($isattached)
+            $participant->words()->updateExistingPivot($word, ['status' => $request->status]);
+        else
+            $participant->words()->attach($word, ['status' => $request->status]);
         return [
             'status' => 'success',
         ];

@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DomainController;
 use App\Http\Controllers\Api\LevelController;
 use App\Http\Controllers\Api\PhraseController;
+use App\Models\Participant;
+use App\Models\PhraseWord;
 
 /*
 |-----------------  ---------------------------------------------------------
@@ -26,8 +28,8 @@ Route::post('/auth/login', [AuthController::class, 'loginUser']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::controller(ParticipantController::class)->prefix('participants')->group(function () {
         Route::get('/{participant}', 'show');
-        Route::get('/DomainsStatus/{participant}', 'DomainsStatus');
-        Route::get('/LevelStatus/{participant}', 'LevelStatus');
+        Route::get('/DomainsStatus/{participant}', 'domainsStatus');
+        Route::get('/LevelStatus/{participant}', 'levelStatus');
 
         Route::post('/', 'store');
         Route::patch('/{participant}', 'update');
@@ -35,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post( 'attachDomain/{participant}','attachDomain');
         Route::post( 'attachLevel/{participant}','attachLevel');
         Route::post( 'attachPhrase/{participant}','attachPhrase');
+        Route::post( 'attachWord/{participant}','attachWord');
     });
     
     Route::get('participant-email', [ParticipantController::class, 'getByEmail']);

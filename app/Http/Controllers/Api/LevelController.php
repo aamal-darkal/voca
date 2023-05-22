@@ -53,7 +53,7 @@ class LevelController extends Controller
         Level::$langkey = $request->langkey;
 
         $level = Level::with('langApps')->find($id);
-        return new LevelResource($level);        
+        // return new LevelResource($level);        
     }
     
 

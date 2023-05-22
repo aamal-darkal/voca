@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Participant;
+use App\Models\Phrase;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PhraseResource extends JsonResource
@@ -12,6 +14,7 @@ class PhraseResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
+    public static $participant;
     public function toArray($request)
     {
         return [
@@ -19,8 +22,16 @@ class PhraseResource extends JsonResource
             'content' => $this->content,
             'translation' => $this->translation,
             'word_count' => $this->word_count,
-            'status' => $this->status,
+            'status' => $this->getStatus($this),
             'words' => WordResource::collection( $this->words),
         ];
+    }
+    function getStatus($phrase)
+    {
+        $phraseParticipant = $phrase->participants()->where('id', Self::$participant)->first();
+        if ($phraseParticipant)
+            return $phraseParticipant->pivot->status;
+        else
+            return null;
     }
 }

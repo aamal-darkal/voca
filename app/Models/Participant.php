@@ -24,6 +24,6 @@ class Participant extends Model
         return $this->belongsToMany(Phrase::class)->withPivot('status');
     }
     function words() {
-        return $this->belongsToMany(Word::class)->withPivot('status') ;
+        return $this->belongsToMany(PhraseWord::class)->withPivot('status') ;
     }
 }
