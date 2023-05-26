@@ -10,12 +10,17 @@ class Phrase extends Model
     use HasFactory;
     protected $fillable = ['content' , 'translation' ,'word_count' , 'level_id'];
     function level() {
-        return $this->belongsTo(Domain::class);
+        return $this->belongsTo(Level::class);
     }
     function words(){
         return $this->belongsToMany(Word::class)->withPivot(['id', 'translation' , 'order']);
     }
     function participants() {
         return $this->belongsToMany(Participant::class)->withPivot(['status']);;
+    }
+    function language() {
+        return $this->belongsTo(Level::class)->with('domain')->with('language');
+
+        // return $level->domain->language;
     }
 }

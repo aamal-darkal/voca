@@ -52,7 +52,7 @@
                         <tr>
                             <td></td>
                             <td class="text-start">{{ $phrase->translation }}</td>
-                            <td><a href="{{ route('phrases.edit', ['phrase' => $phrase]) }}"
+                            <td><a href="{{ route( 'phrases.edit', ['phrase' => $phrase]) }}"
                                     class="btn btn-outline-primary btn-sm" title="edit"><i class="fas fa-edit"></i></a> |                                
                                 <form action="{{ route('phrases.destroy', ['phrase' => $phrase]) }}" method="post"
                                     onsubmit="return confirm('delete {{ $phrase->name }}')" class="d-inline-block">

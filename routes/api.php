@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ParticipantController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DialectController;
 use App\Http\Controllers\Api\DomainController;
+use App\Http\Controllers\Api\LanguageController;
 use App\Http\Controllers\Api\LevelController;
 use App\Http\Controllers\Api\PhraseController;
 use App\Models\Participant;
@@ -26,6 +28,9 @@ Route::post('/auth/login', [AuthController::class, 'loginUser']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    Route::get('dialects' , [DialectController::class , 'index'])->name('dialedcts.index');
+    Route::get('languages/{language}' , [LanguageController::class , 'show'])->name('language.show');
     Route::controller(ParticipantController::class)->prefix('participants')->group(function () {
         Route::get('/{participant}', 'show');
         Route::get('/DomainsStatus/{participant}', 'domainsStatus');

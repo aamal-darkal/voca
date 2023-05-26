@@ -68,24 +68,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($words as $word)
+            
+                        @for ($i=0 ; i < count($words);$i++)
                             <tr class="table-row">
                                 <td>
-                                    <input type="text" name="contents[]" class="form-control" readonly>
+                                    <input type="text" name="contents[]" value="{{ $words[$i] }}" class="form-control" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" name="translations[]" class="form-control">
+                                    <input type="text" name="translations[]" value="{{ $words[$i]->pivot->translation }}" class="form-control">
                                 </td>
                                 <td>
                                     <select name="wordTypes[]" class="form-control">
                                         <option value="" hidden selected>--word type</option>
                                         @foreach ($wordTypes as $wordType)
-                                            <option value="{{ $wordType->id }}">{{ $wordType->name }}</option>
+                                            <option value="{{ $wordType->id }}" @selected($wordType->id == $words[$i]->wordTypes)>{{ $wordType->name }}</option>
                                         @endforeach
                                     </select>
                                 </td>
                             </tr>
-                        @endforeach
+                        @endfor
                     </tbody>
                 </table>
                 <input type="submit" value="Add phrases" class="btn btn-mine btn-mine mt-1">

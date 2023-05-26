@@ -77,7 +77,7 @@ class PhraseController extends Controller
     }
     
 
-    /**
+    /** 
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Phrase  $phrase
@@ -85,8 +85,11 @@ class PhraseController extends Controller
      */
     public function edit(Phrase $phrase)
     {
-        $words = $phrase->words->withPivot();
-        return view('dashboard.phrases.edit' , compact('phrase' ,'words'));   
+        // $wordTypes = $phrase->language->wordTypes;  
+        return  $phrase->language;
+        return $wordTypes = $phrase->language;
+        $words = $phrase->words;
+        return view('dashboard.phrases.edit' , compact('phrase' , 'wordTypes','words'));   
     }
 
     /**
