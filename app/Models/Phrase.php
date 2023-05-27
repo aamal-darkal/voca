@@ -18,9 +18,4 @@ class Phrase extends Model
     function participants() {
         return $this->belongsToMany(Participant::class)->withPivot(['status']);;
     }
-    function language() {
-        return $this->belongsTo(Level::class)->with('domain')->with('language');
-
-        // return $level->domain->language;
-    }
 }

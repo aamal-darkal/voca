@@ -23,19 +23,18 @@
                     </td>
                 </tr>
             </table>
-            <form action="{{ route('phrases.update') }}" method="post" class="col-md-10 offset-md-1" name="phrase">
+            <form action="{{ route('phrases.update' , ['phrase' => $phrase]) }}" method="post" class="col-md-10 offset-md-1" name="phrase">
                 <h4>Edit Phrase </h4>
 
                 @csrf
-                <input type="hidden" name="level_id" value="{{ $level_id }}">
-
+                @method('PUT')
                 <div class="row">
                     <div class="col-11">
                         <textarea type="text" name="content" placeholder="phrase content" class="form-control mt-3" required class=""
-                            onchange="generateWords(this.value)">{{ old('content') }}</textarea>
+                            onchange="generateWords(this.value)">{{ old('content' , $phrase->content) }}</textarea>
                     </div>
                     <div class="col-1">
-                        <input type="hidden" id="word_count" name="word_count"> </output>
+                        <input type="hidden" id="word_count" name="word_count" value="{{ $phrase->word_count }}"> </output>
                     </div>
 
                     <div class="text-danger">
@@ -44,18 +43,17 @@
                         @enderror
                     </div>
                     <div class="col-11">
-                        <textarea type="text" name="translation" placeholder="phrase translation" class="form-control mt-3">{{ old('translation') }}</textarea>
+                        <textarea type="text" name="translation" placeholder="phrase translation" class="form-control mt-3">{{ old('translation' , $phrase->translation) }}</textarea>
                     </div>
                     <div class="text-danger">
                         @error('translation')
                             {{ $message }}
                         @enderror
                     </div>
-                    @if (old('contents'))
+                    {{-- @if (old('contents'))
                         <script>
-                            generateWords({{ old('contents') }})
                         </script>
-                    @endif
+                    @endif --}}
                 </div>
 
                 <h5 class="mt-5"> Words </h5>
@@ -69,19 +67,19 @@
                     </thead>
                     <tbody>
             
-                        @for ($i=0 ; i < count($words);$i++)
+                        @for ($i=0 ; $i < count($words);$i++)
                             <tr class="table-row">
                                 <td>
-                                    <input type="text" name="contents[]" value="{{ $words[$i] }}" class="form-control" readonly>
+                                    <input type="text" name="contents[]" value="{{ $words[$i]->content }}" class="form-control" readonly>
                                 </td>
                                 <td>
                                     <input type="text" name="translations[]" value="{{ $words[$i]->pivot->translation }}" class="form-control">
                                 </td>
                                 <td>
                                     <select name="wordTypes[]" class="form-control">
-                                        <option value="" hidden selected>--word type</option>
+                                        <option value="" hidden>--word type</option>
                                         @foreach ($wordTypes as $wordType)
-                                            <option value="{{ $wordType->id }}" @selected($wordType->id == $words[$i]->wordTypes)>{{ $wordType->name }}</option>
+                                            <option value="{{ $wordType->id }}" @selected($wordType->id == $words[$i]->word_type_id)>{{ $wordType->name }}</option>
                                         @endforeach
                                     </select>
                                 </td>
@@ -89,7 +87,7 @@
                         @endfor
                     </tbody>
                 </table>
-                <input type="submit" value="Add phrases" class="btn btn-mine btn-mine mt-1">
+                <input type="submit" value="save phrases" class="btn btn-mine btn-mine mt-1">
                 <input type="reset" value="تصفير" class="btn btn-outline-mine mt-1">
                 <a href="{{ route('phrases.index') }}" class="btn btn-outline-secondary my-2">تراجع</a>
             </form>

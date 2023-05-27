@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('dialects', function (Blueprint $table) {
             $table->id();
-            $table->string('locale' ,15);
-            $table->char('key', 5);
+            $table->char('locale' ,5);
+            $table->string('key', 50);
             $table->foreignId('language_id')->constrained();
         });
     }

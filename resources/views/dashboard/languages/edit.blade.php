@@ -3,28 +3,87 @@
     <div class="container">
         <div class="row">
             <h3>Edit language </h3>
+            <table id="template-dialect" style="visibility: collapse;">
+                <tr class="table-row">
+                    <td>
+                        <input type="hidden" name="dialectStates[]" value="new">
+                        <input type="hidden" name="dialectIds[]" value="new">
+                        <input type="text" name="locales[]" class="form-control" required minlength="5" maxlength="5">
+                    </td>
+                    <td>
+                        <input type="text" name="keys[]" class="form-control" required maxlength="50">
+                    </td>
+                    <td>
+                        <button type="button" class="pull-right btn btn-outline-mine"
+                            onclick="delete_dialect(this)">-</button>
+                    </td>
+                </tr>
+                <div class="text-danger">
+                    @error('locales.*')
+                        {{ $message }}
+                    @enderror
+                    @error('keys.*')
+                        {{ $message }}
+                    @enderror
+                </div>
+            </table>
+            <table id="template-wordType" style="visibility: collapse;">
+                <tr class="table-row">
+                    <td>
+                        <input type="hidden" name="wordTypeStates[]" value="new">
+                        <input type="hidden" name="wordTypeIds[]" value="new">
+                        <input type="text" name="names[]" class="form-control" required maxlength="50">
+                    </td>
+                    <td>
+                        <button type="button" class="pull-right btn btn-outline-mine"
+                            onclick="delete_wordType(this)">-</button>
+                    </td>
+                </tr>
+                <div class="text-danger">
+                    @error('locales.*')
+                        {{ $message }}
+                    @enderror
+                    @error('keys.*')
+                        {{ $message }}
+                    @enderror
+                </div>
+            </table>
             <form action="{{ route('languages.update', ['language' => $language]) }}" method="post"
                 class="col-md-6 offset-md-3">
                 @csrf
                 @method('put')
-                <input type="text" name="name" value="{{ old('name', $language->name) }}" placeholder="language name"
+                <label for="name">Language name</label>
+                <input type="text" name="name" id="name" value="{{ old('name', $language->name) }}" placeholder="language name"
                     required maxlength="50" class="form-control my-2">
                 <div class="text-danger">
                     @error('name')
                         {{ $message }}
                     @enderror
                 </div>
-                <input type="text" name="key" value="{{ old('key') , $language->key}}" placeholder="language key" required
-                minlength="2" maxlength="2" class="form-control my-2">
+                <label for="key">Language key</label>
+                <input type="text" name="key" id="key" value="{{ old('key', $language->key) }}" placeholder="language key"
+                    required minlength="2" maxlength="2" class="form-control my-2">
                 <div class="text-danger">
                     @error('key')
                         {{ $message }}
                     @enderror
                 </div>
+                @php
+                    $locales = old('locales');
+                    $keys = old('keys');
+                    $names = old('names');
+                    
+                    $dialectStates = old('dialectStates');
+                    $dialectIds = old('dialectIds');
+                    
+                    $wordTypeStates = old('wordTypeStates');
+                    $wordTypeIds = old('wordTypeIds');
+                @endphp
+                {{-- ****************************** Dialects ******************************--}}
                 <h5 class="mt-5"> Dialects &nbsp;&nbsp;
-                    <button type="button" id="add_row" class="btn btn-outline-mine" onclick="plus_row()">+</button>
+                    <button type="button" id="add_row" class="btn btn-outline-mine" onclick="plus_dialect()">+</button>
                 </h5>
-                <table class="table" id="dialects_table">
+                <table class="table" id="real-dialects">
                     <thead>
                         <tr>
                             <th>Locale</th>
@@ -33,41 +92,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table-row" style="visibility: collapse;">
-                            <td>
-                                <input type="hidden" name="states[]" value="new">
-                                <input type="hidden" name="ids[]" value="new">
-                                <input type="text" name="locales[]" class="form-control" required maxlength="15">
-                            </td>
-                            <td>
-                                <input type="text" name="keys[]" class="form-control" required minlength="5"
-                                    maxlength="5">
-                            </td>
-                            <td>
-                                <button type="button" class="pull-right btn btn-outline-mine"
-                                    onclick="delete_row(this)">-</button>
-                            </td>
-                        </tr>
-                        <div class="text-danger">
-                            @error('locales.*')
-                                {{ $message }}
-                            @enderror
-                            @error('keys.*')
-                                {{ $message }}
-                            @enderror
-                        </div>
-                        @php
-                            $locales = old('locales');
-                            $keys = old('keys');
-                            $states = old('states');
-                            $ids = old('ids');
-                        @endphp
                         @if ($locales)
                             @for ($i = 0; $i < count($locales); $i++)
                                 <tr class="table-row">
                                     <td>
-                                        <input type="hidden" name="states[]" value="{{ $states[$i] }}">
-                                        <input type="hidden" name="ids[]" value="{{ $ids[$i] }}">
+                                        <input type="hidden" name="dialectStates[]" value="{{ $dialectStates[$i] }}">
+                                        <input type="hidden" name="dialectIds[]" value="{{ $dialectIds[$i] }}">
                                         <input type="text" name="locales[]" value="{{ $locales[$i] }}"
                                             class="form-control" maxlength="255">
                                         <div class="text-danger">
@@ -82,7 +112,7 @@
                                     </td>
                                     <td>
                                         <button type="button" class="pull-right btn btn-outline-mine"
-                                            onclick="delete_row(this)">-</button>
+                                            onclick="delete_dialect(this)">-</button>
                                     </td>
                                 </tr>
                             @endfor
@@ -90,9 +120,9 @@
                             @foreach ($language->dialects as $dialect)
                                 <tr class="table-row">
                                     <td>
-                                        <input type="hidden" name="states[]" value="old">
-                                        <input type="hidden" name="ids[]" value="{{ $dialect->id }}">
-                                        <input type="text" name="locales[]" value="{{ $dialect->locale }}" 
+                                        <input type="hidden" name="dialectStates[]" value="old">
+                                        <input type="hidden" name="dialectIds[]" value="{{ $dialect->id }}">
+                                        <input type="text" name="locales[]" value="{{ $dialect->locale }}"
                                             class="form-control" required maxlength="255">
 
                                     </td>
@@ -103,15 +133,67 @@
                                     </td>
                                     <td>
                                         <button type="button" class="pull-right btn btn-outline-mine"
-                                            onclick="delete_row(this)">-</button>
+                                            onclick="delete_dialect(this)">-</button>
                                     </td>
                                 </tr>
                             @endforeach
                         @endif
                     </tbody>
                 </table>
-                <input type="button" value="save Language" class="btn btn-mine btn-mine mt-1"
-                    onclick="omitTemplate();submit()">
+                {{-- ****************************** word types ******************************--}}
+
+                <h5 class="mt-5"> Word Types &nbsp;&nbsp;
+                    <button type="button" id="add_row" class="btn btn-outline-mine"
+                        onclick="plus_wordType()">+</button>
+                </h5>
+                <table class="table" id="real-wordTypes">
+                    <thead>
+                        <tr>
+                            <th>names</th>
+                            <td>actions</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if ($names)
+                            @for ($i = 0; $i < count($names); $i++)
+                                <tr class="table-row">
+                                    <td>
+                                        <input type="hidden" name="wordTypesStates[]" value="{{ $wordTypesStates[$i] }}">
+                                        <input type="hidden" name="wordTypesIds[]" value="{{ $wordTypesIds[$i] }}">
+                                        <input type="text" name="names[]" value="{{ $names[$i] }}"
+                                            class="form-control" minlength="5" maxlength="5">
+                                        <div class="text-danger">
+                                            @error('names')
+                                                {{ $message }}
+                                            @enderror
+                                        </div>
+                                    </td>                                   
+                                    <td>
+                                        <button type="button" class="pull-right btn btn-outline-mine"
+                                            onclick="delete_wordType(this)">-</button>
+                                    </td>
+                                </tr>
+                            @endfor
+                        @else
+                            @foreach ($language->wordTypes as $wordType)
+                                <tr class="table-row">
+                                    <td>
+                                        <input type="hidden" name="wordTypesStates[]" value="old">
+                                        <input type="hidden" name="wordTypesIds[]" value="{{ $wordType->id }}">
+                                        <input type="text" name="names[]" value="{{ $wordType->name }}"
+                                            class="form-control" required maxlength="50">
+
+                                    </td>
+                                    <td>
+                                        <button type="button" class="pull-right btn btn-outline-mine"
+                                            onclick="delete_wordType(this)">-</button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                    </tbody>
+                </table>
+                <input type="button" value="save Language" class="btn btn-mine btn-mine mt-1" onclick="submit()">
                 <input type="reset" value="تصفير" class="btn btn-outline-mine mt-1">
                 <a href="{{ route('languages.index') }}" class="btn btn-outline-secondary my-2">تراجع</a>
             </form>
@@ -120,22 +202,26 @@
 @endsection
 @section('script')
     <script>
-        function delete_row(inp) {
+        function plus_dialect() {
+            let template = document.getElementById("template-dialect").children[0].children[0];
+            let newRow = template.cloneNode(true)
+            document.querySelector("#real-dialects tbody").appendChild(newRow)
+        }
+
+        function delete_dialect(inp) {
             inp.parentNode.parentNode.style.visibility = 'collapse';
             inp.parentNode.parentNode.firstElementChild.firstElementChild.value = 'del';
         }
 
-        function plus_row() {
-            let template = document.querySelector(".table-row");
+        function plus_wordType() {
+            let template = document.getElementById("template-wordType").children[0].children[0];
             let newRow = template.cloneNode(true)
-            newRow.style.visibility = 'visible'
-            document.querySelector('tbody').appendChild(newRow)
+            document.querySelector("#real-wordTypes tbody").appendChild(newRow)
         }
 
-        function omitTemplate() {
-            let inputItems = document.querySelectorAll(".table-row:first-of-type input");
-            for (let inputItem of inputItems)
-                inputItem.name = ""
+        function delete_wordType(inp) {
+            inp.parentNode.parentNode.style.visibility = 'collapse';
+            inp.parentNode.parentNode.firstElementChild.firstElementChild.value = 'del';
         }
     </script>
 @endsection

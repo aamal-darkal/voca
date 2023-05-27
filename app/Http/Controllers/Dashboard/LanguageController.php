@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Dialect;
 use App\Models\Participant;
+use App\Models\WordType;
 
 class LanguageController extends Controller
 {
@@ -40,10 +41,11 @@ class LanguageController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:15|unique:languages',
+            'name' => 'required|string|max:20|unique:languages',
             'key' => 'required|string|max:2|min:2|unique:languages',
-            'locales.*' => 'required|max:15',
-            'keys.*' => 'required|max:5|min:5'
+            'locales.*' => 'max:5|min:5',
+            'keys.*' => 'max:50',
+            'names.*' => 'max:50',
         ]);
         $language = Language::create($request->all());
         if ($request->has('locales')) {
@@ -90,20 +92,22 @@ class LanguageController extends Controller
     {
         // return $request;
         $request->validate([
-            'name' => 'required|string|max:255|unique:languages,name,' . $language->id,
-            'locales.*' => 'required',
-            'keys.*' => 'required|max:5|min:5'
+            'name' => 'required|string|max:20|unique:languages,name,' . $language->id,
+            'key' => 'required|string|max:2|min:2|unique:languages,key,' . $language->id,
+            'locales.*' => 'max:5|min:5',
+            'keys.*' => 'max:50',
+            'names.*' => 'max:50',
         ]);
         $language->update($request->all());
 
         if ($request->has('locales')) {
-            $ids = $request->ids;
+            // return $request->locales;
+            $ids = $request->dialectIds;
+            $states = $request->dialectStates;
             $locales = $request->locales;
             $keys = $request->keys;
-            $states = $request->states;
             for ($i = 0; $i < count($locales); $i++) {
                 if ($states[$i] == 'new')
-
                     Dialect::create(['locale' => $locales[$i], 'key' => $keys[$i], 'language_id' => $language->id]);
                 elseif ($states[$i] == 'del' && $ids[$i] != 'new') {
                     $dialect = Dialect::find($ids[$i])->delete();
@@ -114,6 +118,23 @@ class LanguageController extends Controller
             }
         } else
             Dialect::create(['lacale' => $language->name]);
+        
+        if ($request->has('names'))
+        {
+            $ids = $request->wordTypesIds;
+            $states = $request->wordTypesStates;
+            $names = $request->names;
+            for ($i = 0; $i < count($names); $i++) {
+                if ($states[$i] == 'new')
+                    WordType::create(['name' => $names[$i], 'language_id' => $language->id]);
+                elseif ($states[$i] == 'del' && $ids[$i] != 'new') {
+                    $dialect = WordType::find($ids[$i])->delete();
+                } elseif ($states[$i] == 'old') {
+                    $dialect = WordType::find($ids[$i]);
+                    $dialect->update(['name' => $names[$i], 'language_id' => $language->id]);
+                }
+            }
+        }
         return redirect()->route('languages.index')->with('success', 'Language saved successfully');
     }
 

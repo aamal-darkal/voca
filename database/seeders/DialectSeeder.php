@@ -16,9 +16,9 @@ class DialectSeeder extends Seeder
     public function run()
     {
         $dialects = [            
-            ['locale' => 'arabic',  'key' => 'ar_SA' ,  'language_id' => 1],
-            ['locale' => 'american',  'key' => 'en_US' ,  'language_id' => 2],
-            ['locale' => 'british',  'key' => 'en_UK' ,  'language_id' => 2],
+            // ['locale' => 'arabic',  'key' => 'ar_SA' ,  'language_id' => 1],
+            ['locale' => 'en-US',  'key' => 'en-us-x-sfg#male_1-local' ,  'language_id' => 2],
+            ['locale' => 'en-GB',  'key' => 'en-gb-x-gbd-local' ,  'language_id' => 2],
     ];
     foreach($dialects as $dialect)
         Dialect::create($dialect);

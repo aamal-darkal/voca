@@ -73,3 +73,7 @@ td {
     width: 200px !important;
     max-width: 110%; 
 }
+
+h5 {
+    color: var(--fore-color);
+}

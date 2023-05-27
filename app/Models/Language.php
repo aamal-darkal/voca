@@ -9,7 +9,7 @@ class Language extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $fillable = ['name'];
+    protected $fillable = ['name' , 'key'];
 
     function dialects(){
         return $this->hasMany(Dialect::class);
