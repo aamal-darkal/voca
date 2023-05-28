@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('levels', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title' , 100);
             $table->string('description');
             $table->integer('phrase_count')->default(0);
             $table->integer('order');  

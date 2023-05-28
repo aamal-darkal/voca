@@ -61,16 +61,6 @@ class DomainController extends Controller
         return redirect()->route('domains.index')->with('success', 'Domain added successfully');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Domain  $Domain
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Domain $domain)
-    {
-        return view('dashboard.domains.view' , compact('domain'));
-    }
 
     /**
      * Show the form for editing the specified resource.

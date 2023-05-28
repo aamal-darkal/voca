@@ -19,9 +19,8 @@ class levelController extends Controller
     public function index(Request $request)
     {
         $domain = Domain::find($request->domain);
-        session(['domain' => $domain->id]);
         $levels = $domain->levels;
-        return view('dashboard.levels.index', compact('levels' ))->with('domain' , $domain->title);        
+        return view('dashboard.levels.index', compact('levels' ))->with('domain' , $domain);        
     }
 
     /**
@@ -29,9 +28,9 @@ class levelController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $domain = session('domain');
+        $domain = $request->domain;
         return view('dashboard.levels.create' , compact('domain'));
     }
 
@@ -46,26 +45,18 @@ class levelController extends Controller
         $request->validate([
             'title' => 'required|string|max:255|unique:levels',
             'description' => 'string',
+            'level' => 'required|integer',
         ]);
         
         $request['order'] =  Level::max('order') + 1 ;
         Level::create($request->all());  
-
-        $domain = Domain::find(session('domain'));
+        
+        $domain = Domain::find($request->domain_id);
         $domain->level_count++; 
         $domain->save();
-        return redirect()->route('levels.index' , ['domain' => session('domain')])->with('success', 'level added successfully');
+        return redirect()->route('levels.index' , ['domain' => $domain->id])->with('success', 'level added successfully');
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\level  $level
-     * @return \Illuminate\Http\Response
-     */
-    public function show(level $level)
-    {
-    }
+   
 
     /**
      * Show the form for editing the specified resource.
@@ -73,9 +64,9 @@ class levelController extends Controller
      * @param  \App\Models\level  $level
      * @return \Illuminate\Http\Response
      */
-    public function edit(level $level)
+    public function edit(level $level, Request $request)
     {
-        $domain = session('domain');
+        $domain = $request->domain;
         return view('dashboard.levels.edit', compact('level' , 'domain'));
     }
 
@@ -93,7 +84,7 @@ class levelController extends Controller
             'description' => 'string',
         ]);
         $level->update($request->all());
-        return redirect()->route('levels.index' , ['domain' => session('domain')])->with('success', 'level saved successfully');
+        return redirect()->route('levels.index' , ['domain' => $level->domain_id])->with('success', 'level saved successfully');
     }
 
     /**
@@ -117,8 +108,11 @@ class levelController extends Controller
 
         } else {
             $phraseCount = $level->phrases->count();
-            if ($phraseCount == 0)
+            if ($phraseCount == 0) {
+                $domain = $level->domain_id;
                 $level->delete();
+                return redirect()->route('levels.index' , ['domain' => $domain])->with('success', 'level deleted successfully');
+            }
             else {
                 $wordCount = $level->words->count();
                 return back()->with('error', "can\'t delete level, because it has $phraseCount levels and $wordCount phrases,  if you want to delete all, choose hard delete ");

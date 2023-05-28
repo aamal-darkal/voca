@@ -3,13 +3,13 @@
     <div class="container-fluid">
         <div class="row">            
             <form action="{{ route('domains.store') }}" method="post" class="col-md-6 offset-md-3">
-                @csrf
+                <a href="{{ route('domains.index') }}" class="btn btn-mine my-2">&leftarrow;</a>
                 <h4>Add Domain </h4>
-
+                @csrf
                 <div class="control-group">
                     <label for="title">Title</label>
                     <input type="text" name="title" id="title" value="{{ old('title') }}" placeholder="Domain title"
-                        required maxlength="100" class="form-control my-2" maxlength="255">
+                         class="form-control my-2" maxlength="100" required>
                     <div class="text-danger">
                         @error('title')
                             {{ $message }}
@@ -19,7 +19,7 @@
                 <div class="control-group">
                     <label for="description">Description</label>
                     <input type="text" name="description" value="{{ old('description') }}"
-                        placeholder="Domain description" required maxlength="100" class="form-control my-2" maxlength="255">
+                        placeholder="Domain description" class="form-control my-2" maxlength="255" required>
                     <div class="text-danger">
                         @error('description')
                             {{ $message }}
@@ -40,7 +40,6 @@
 
                 <input type="submit" value="Add Domain" class="btn btn-mine btn-mine mt-1">
                 <input type="reset" value="تصفير" class="btn btn-outline-mine mt-1">
-                <a href="{{ route('domains.index') }}" class="btn btn-outline-secondary my-2">تراجع</a>
             </form>
         </div>
     </div>
