@@ -1,9 +1,9 @@
 @extends('layouts.dashboard')
 @section('inside-content')
     <div class="container-fluid">
-        <div class="col-8 offset-2">
+        <div class="col-12">
             <h3><a onclick="history.back()" class="btn btn-mine my-2">&leftarrow;</a> Phrases Management</h3>
-            <div class="col-11">
+            <div class="col-10">
                 <select id="languages" onchange="filter(this, 'domains')" class="form-control mt-2">
                     <option value="" selected hidden>--select language</option>
                     @foreach ($languages as $language)
@@ -19,8 +19,8 @@
                 </select>
             </div>
             <form action="{{ route('phrases.create') }}" class="row">
-                <div class="col-11">
-                    <select id="levels" name="level_id" onchange="filterTable(this, 'myTable' , 2)"
+                <div class="col-10">
+                    <select id="levels" name="level_id" onchange="filterTable(this, 'myTable' , 1)"
                         class="form-control mt-2" required>
                         <option value="" selected hidden>--select level</option>
                         @foreach ($levels as $level)
@@ -38,19 +38,19 @@
             <table id="myTable" class="table table-striped table-hover text-center">
                 <thead>
                     <tr>
-                        <td>id</td>
-                        <td>content</td>
-                        <td>actions</td>
+                        <th>id</th>
+                        <th></th>
+                        <th>content</th>
+                        <th>translation</th>
+                        <th>actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($phrases as $phrase)
                         <tr>
                             <td>{{ $phrase->id }}</td>
+                            <td style="display: none">{{ $phrase->level_id }}</td>
                             <td class="text-start">{{ $phrase->content }}</td>
-                        </tr>
-                        <tr>
-                            <td></td>
                             <td class="text-start">{{ $phrase->translation }}</td>
                             <td><a href="{{ route( 'phrases.edit', ['phrase' => $phrase]) }}"
                                     class="btn btn-outline-primary btn-sm" title="edit"><i class="fas fa-edit"></i></a> |                                
@@ -71,9 +71,9 @@
     @section('script')
         <script>
             function filter(parentList, filteredList) {
-                childList = document.getElementById(filteredList)
-                childList.options[0].selected = true
-                for (option of childList.options) {
+                filteredList = document.getElementById(filteredList)
+                filteredList.options[0].selected = true
+                for (option of filteredList.options) {
                     if (option.getAttribute('data-fk') != parentList.value)
                         option.hidden = true
                     else
