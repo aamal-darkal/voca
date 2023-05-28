@@ -2,9 +2,13 @@
 @section('inside-content')
     <div class="container-fluid">
         <div class="row">
+
+            {{-- error display --}}
             @foreach ($errors->all() as $error)
                 <p>{{ $error }}</p>
             @endforeach
+
+            {{-- ========================== template-dialect ======================================= --}}
             <table id="template-dialect" style="visibility: collapse;">
                 <tr class="table-row">
                     <td>
@@ -19,6 +23,7 @@
                     </td>
                 </tr>
             </table>
+            {{-- ========================== template-wordType ======================================= --}}
             <table id="template-wordType" style="visibility: collapse;">
                 <tr class="table-row">
                     <td>
@@ -30,11 +35,14 @@
                     </td>
                 </tr>
             </table>
+
+            {{-- ################################### start - form ####################### --}}
             <form action="{{ route('languages.store') }}" method="post" class="col-md-6 offset-md-3">
                 <h4>Add Language </h4>
                 @csrf
+                {{-- ****************************** language ******************************--}}                
                 <input type="text" name="name" value="{{ old('name') }}" placeholder="language name" required
-                    maxlength="50" class="form-control my-2" maxlength="15">
+                    maxlength="50" class="form-control my-2" maxlength="50">
                 <div class="text-danger">
                     @error('name')
                         {{ $message }}
@@ -61,16 +69,17 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {{-- has pre posted value (old) --}}
                         @php
                             $locales = old('locales');
                             $keys = old('keys');
-                        @endphp
+                        @endphp                        
                         @if ($locales)
                             @for ($i = 0; $i < count($locales); $i++)
                                 <tr class="table-row">
                                     <td>
                                         <input type="text" name="locales[]" value="{{ $locales[$i] }}"
-                                            class="form-control" required minlength="5" maxlength="5">
+                                            class="form-control" minlength="5" maxlength="5" required>
                                         <div class="text-danger">
                                             @error('locales')
                                                 {{ $message }}
@@ -79,7 +88,7 @@
                                     </td>
                                     <td>
                                         <input type="text" name="keys[]" value="{{ $keys[$i] }}"
-                                            class="form-control" required maxlength="50">
+                                            class="form-control"  maxlength="50" required>
                                     </td>
                                     <td>
                                         <button type="button" class="pull-right btn btn-outline-mine"
@@ -102,6 +111,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {{-- has pre posted value (old) --}}
                         @php
                             $names = old('names');
                         @endphp
