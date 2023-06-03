@@ -20,7 +20,8 @@ class ParticipantLevelResource extends JsonResource
             'description' => $this->langApps[0]['pivot']['description']?? $this->description,
             'status' => $this->pivot->status,
             'phrase_count' => $this->phrase_count,
-            'order' => $this->order,            
+            'order' => $this->order,  
+            'domain_id'=> $this->domain_id,
             'phrases' => PhraseResource::collection( $this->phrases),
         ];
     }   

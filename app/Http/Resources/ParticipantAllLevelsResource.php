@@ -22,6 +22,7 @@ class ParticipantAllLevelsResource extends JsonResource
             'description' => $this->langApps[0]['pivot']['description']?? $this->description,
             'phrase_count' => $this->phrase_count,
             'order' => $this->order,
+            'domain_id'=> $this->domain_id,
             'status' => $this->getStatus($this),
 
         ];

@@ -27,10 +27,16 @@
                         <tr>
                             <th>Content</th>
                             <th>Translation</th>
+                            <th>Order</th>
                             <th>Word Type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                         </tr>
                     </thead>
-                    <tbody>                      
+                    <tbody> 
+                        @foreach ($words as $word)
+                            <td>{{ $word['content'] }}</td>
+                            <td>{{ $word['translation'] }}</td>
+                            <td>{{ $word['order'] }}</td>
+                        @endforeach                     
                     </tbody>
                 </table>
                 <input type="submit" value="Add phrases" class="btn btn-mine btn-mine mt-1">

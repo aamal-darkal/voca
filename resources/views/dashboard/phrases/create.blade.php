@@ -20,11 +20,7 @@
                         @error('content')
                             {{ $message }}
                         @enderror
-                    </div>
-                    <div class="col-1">
-                        {{-- <input type="hidden" id="word_count" name="word_count"> </output> --}}
-                    </div>
-
+                    </div>                    
                     
                     <div class="col-11">
                         <textarea type="text" name="translation" placeholder="phrase translation" class="form-control mt-3">{{ old('translation') }}</textarea>

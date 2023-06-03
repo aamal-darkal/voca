@@ -195,8 +195,7 @@ class ParticipantController extends Controller
         $phrase_id = $request->phrase_id;
         $phrase = Phrase::find($phrase_id);        
         $language_id = $phrase->domain->language_id;
-        $next_phrase_id = Language::find($language_id)->phrases()->where('phrases.order' , '>' , $phrase->order)->orderby('phrases.order')->get();
-        return $next_phrase_id;
+        $next_phrase_id = Language::find($language_id)->phrases()->where('phrases.order' , '>' , $phrase->order)->orderby('phrases.order')->first();
         $next_phrase_id = $next_phrase_id?$next_phrase_id->id:null;
         $this->handlePhrase( $participant, $phrase_id, $request->phrase_status);
         $words =  $request->words;

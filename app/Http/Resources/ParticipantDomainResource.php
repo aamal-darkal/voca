@@ -22,6 +22,7 @@ class ParticipantDomainResource extends JsonResource
             'title' => $this->langApps[0]['pivot']['title'] ?? $this->title,
             'description' => $this->langApps[0]['pivot']['description'] ?? $this->description,
             'level_count' => $this->level_count,
+            'order' => $this->order,
             'status' => $this->getStatus( $this),
             'key' => Participant::find(SELF::$participant)->dialect->language->key,
             'levels' => ParticipantAllLevelsResource::collection( $this->levels),

@@ -61,26 +61,29 @@ class PhraseController extends Controller
         $phrase = Phrase::create($request->all());
 
         $content = $request->content;
-        $words = explode(" ", $content);
-        for ($i = 1; $i <  count($words); $i++) {
-            $prevWord = Word::where("content", $words[$i])->first();
-            if (!$prevWord) {
-                $newWord = Word::create(["content" => $words[$i]]);
-                $newWord->phrases()->attach($phrase, [
-                    'order' => $i,
-                ]);
+        $contentWords = explode(" ", $content);
+        $words = [];
+        for ($i = 1; $i <  count($contentWords); $i++) {
+            $word = Word::where("content", $contentWords[$i])->first();            
+            if ($word) {
+                $wordInfo['translation'] = $word['content']->phrases->first()->pivot->tranlation;
             } else {
-                $prevWord->phrases()->attach(
-                    $phrase,
-                    [
-                        'translation' => $prevWord->phrases->pivot->tranlation->first,
-                        'order' => $i,
-                    ]
-                );
+                $word = Word::create(["content" => $contentWords[$i]]); 
+                $wordInfo['translation'] = '';
             }
-        }  
-        session()->flush('success' , 'phrase added, ready to complete its words');
-        return view('dashboard.words.edit');
+            $wordInfo['content'] = $contentWords[$i];
+            $wordInfo['order'] = $i;
+            $wordInfos[] = $wordInfo;
+            $word->phrases()->attach(
+                $phrase,
+                [
+                    'translation' => $wordInfo['translation'],
+                    'order' => $wordInfo['order'],
+                ]
+            );
+        }
+        session()->flush('success', 'phrase added, ready to complete its words');
+        return view('dashboard.words.edit', compact('phrase', 'wordInfo'));
     }
 
 
