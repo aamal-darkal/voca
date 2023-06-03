@@ -79,12 +79,7 @@
                                 <tr class="table-row">
                                     <td>
                                         <input type="text" name="locales[]" value="{{ $locales[$i] }}"
-                                            class="form-control" minlength="5" maxlength="5" required>
-                                        <div class="text-danger">
-                                            @error('locales')
-                                                {{ $message }}
-                                            @enderror
-                                        </div>
+                                            class="form-control" minlength="5" maxlength="5" required>                                        
                                     </td>
                                     <td>
                                         <input type="text" name="keys[]" value="{{ $keys[$i] }}"

@@ -18,18 +18,17 @@ class DomainController extends Controller
      */
     public function index(Request $request)
     {
-        $lang = $request->input('language' , '*');
+        $lang = $request->input('language', '*');
         if ($lang == '*')
             $domains = Domain::paginate(10);
         else {
-            $language = Language::find($lang);  
+            $language = Language::find($lang);
             $domains = $language->domains;
         }
 
         $languages = Language::get();
 
-        return view('dashboard.domains.index', compact('domains', 'languages'))->with('selectedlang', $lang );
-        
+        return view('dashboard.domains.index', compact('domains', 'languages'))->with('selectedlang', $lang);
     }
 
     /**
@@ -40,7 +39,7 @@ class DomainController extends Controller
     public function create()
     {
         $languages = Language::get();
-        return view('dashboard.domains.create' , compact('languages' ));
+        return view('dashboard.domains.create', compact('languages'));
     }
 
     /**
@@ -52,16 +51,27 @@ class DomainController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255|unique:domains',
-            'description' => 'string',
-            'language_id' => 'required|exists:languages,id'
+            'language_id' => 'required|exists:languages,id',
+            'title' => 'required|string|max:100|unique:domains',
+            'description' => 'string|max:255',
+            'languages.*' => 'exists:languages,id',
+            'titles.*' => 'string|max:100',
+            'descriptions.*' => 'string|max:255',
         ]);
+        if (!$request->order)
+            $request['order'] = Domain::where('language_id', $request->language_id)->max('order') + 1;
+        $domain = Domain::create($request->all());
+        $titles = $request->titles;
+        $languages = $request->languages;
+        $descriptions = $request->descriptions;
 
-        Domain::create($request->all());        
+        if ($titles) {
+            for ($i = 0; $i < count($titles); $i++) {
+                $domain->languages()->attach($languages[$i], ['title' => $titles[$i],  'description' => $descriptions[$i]]);
+            }
+        }
         return redirect()->route('domains.index')->with('success', 'Domain added successfully');
     }
-
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -71,7 +81,7 @@ class DomainController extends Controller
     public function edit(Domain $domain)
     {
         $languages = Language::get();
-        return view('dashboard.domains.edit', compact('domain' , 'languages'));
+        return view('dashboard.domains.edit', compact('domain', 'languages'));
     }
 
     /**
@@ -85,11 +95,25 @@ class DomainController extends Controller
     {
         // return $request;
         $request->validate([
-            'title' => 'required|string|max:255|unique:domains,title,' . $domain->id,
-            'description' => 'string',
-                'language_id' => 'required|exists:languages,id'
+            'language_id' => 'required|exists:languages,id',
+            'title' => 'required|string|max:100|unique:domains,title,' . $domain->id,
+            'description' => 'string|max:255',
+            'languages.*' => 'exists:languages,id',
+            'titles.*' => '|string|max:100',
+            'descriptions.*' => 'string|max:255',
         ]);
         $domain->update($request->all());
+
+        $titles = $request->titles;
+        $languages = $request->languages;
+        $descriptions = $request->descriptions;
+
+        $domain->languages()->detach();
+        if ($titles) {
+            for ($i = 0; $i < count($titles); $i++) {
+                $domain->languages()->attach($languages[$i], ['title' => $titles[$i],  'description' => $descriptions[$i]]);
+            }
+        }
         return redirect()->route('domains.index')->with('success', 'Domain saved successfully');
     }
 
@@ -107,19 +131,19 @@ class DomainController extends Controller
 
             // $levels = $domain->levels->modelkeys();
             // Level::wherein('id' , $levels)->delete();
-            
+
             // $domain->delete();
             // return back()->with('success' , "Domain deleted successfully");
             return back()->with('error', 'Under development');
-
         } else {
             $levelCount = $domain->levels->count();
-            if ($levelCount == 0)
+            if ($levelCount == 0) {
                 $domain->delete();
-            else {
+                return redirect()->route('domains.index')->with('success', 'Domain deleted successfully');
+            } else {
                 $phraseCount = $domain->phrases->count();
                 return back()->with('error', "can\'t delete Domain, because it has $levelCount levels and $phraseCount phrases,  if you want to delete all, choose hard delete ");
             }
         }
-    }   
+    }
 }

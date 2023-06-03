@@ -4,8 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\Word;
 use App\Models\Phrase;
+use App\Models\PhraseWord;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 
 class WordSeeder extends Seeder
 {
@@ -86,6 +88,11 @@ class WordSeeder extends Seeder
                 'order' => 7,
                 ] , 
             
-        ]);               
+        ]); 
+        $phraseWords = PhraseWord::get() ;  
+        foreach( $phraseWords  as $phraseWord ) {
+            $phraseWord->participants()->attach(1 , ['status' => Arr::random(['S' , 'C']) ]);
+            $phraseWord->participants()->attach(2 , ['status' => Arr::random(['S' , 'C']) ]);
+        }
     }
 }

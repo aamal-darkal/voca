@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Language extends Model
 {
     use HasFactory;
+    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
     public $timestamps = false;
     protected $fillable = ['name' , 'key'];
 
@@ -33,5 +34,11 @@ class Language extends Model
 
     function wordTypes() {
         return $this->hasMany(WordType::class);
+    }
+    function levels() {
+        return $this->hasManyThrough( Level::class , Domain::class);
+    }
+    function phrases() {
+        return $this->hasOneDeep( Phrase::class , [Domain::class, Level::class]);
     }
 }

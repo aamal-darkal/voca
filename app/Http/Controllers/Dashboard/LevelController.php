@@ -18,9 +18,10 @@ class levelController extends Controller
      */
     public function index(Request $request)
     {
-        $domain = Domain::find($request->domain);
-        $levels = $domain->levels;
-        return view('dashboard.levels.index', compact('levels' ))->with('domain' , $domain);        
+        $domain_id = $request->domain;
+        $domain = Domain::find($domain_id);
+        $levels = Level::where('domain_id' , $domain_id)->orderBy('order')->get();
+        return view('dashboard.levels.index', compact('levels'))->with('domain', $domain);
     }
 
     /**
@@ -31,32 +32,48 @@ class levelController extends Controller
     public function create(Request $request)
     {
         $domain = $request->domain;
-        return view('dashboard.levels.create' , compact('domain'));
+        $languages = Language::get();
+        return view('dashboard.levels.create', compact('domain', 'languages'));
     }
 
     /**
      * Store a newly created resource in storage.
-     *
+     *  
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $request->validate([
+            'domain_id' => 'required|exists:domains,id',
             'title' => 'required|string|max:255|unique:levels',
             'description' => 'string',
-            'level' => 'required|integer',
+            // 'order' => 'integer',
+            'languages.*' => 'exists:languages,id',
+            'titles.*' => 'string|max:100',
+            'descriptions.*' => 'string|max:255',
         ]);
-        
-        $request['order'] =  Level::max('order') + 1 ;
-        Level::create($request->all());  
-        
+
+        if (!$request->order)
+            $request['order'] = Level::where('domain_id' , $request->domain_id)->max('order') + 1;
+        $level = Level::create($request->all());
+
+        $titles = $request->titles;
+        $languages = $request->languages;
+        $descriptions = $request->descriptions;     
+
+        if ($titles) {
+            for ($i = 0; $i < count($titles); $i++) {
+                $level->languages()->attach($languages[$i], ['title' => $titles[$i],  'description' => $descriptions[$i]]);
+            }
+        }
+
         $domain = Domain::find($request->domain_id);
-        $domain->level_count++; 
+        $domain->level_count++;
         $domain->save();
-        return redirect()->route('levels.index' , ['domain' => $domain->id])->with('success', 'level added successfully');
+        return redirect()->route('levels.index', ['domain' => $domain->id])->with('success', 'level added successfully');
     }
-   
+
 
     /**
      * Show the form for editing the specified resource.
@@ -67,7 +84,7 @@ class levelController extends Controller
     public function edit(level $level, Request $request)
     {
         $domain = $request->domain;
-        return view('dashboard.levels.edit', compact('level' , 'domain'));
+        return view('dashboard.levels.edit', compact('level', 'domain'));
     }
 
     /**
@@ -82,9 +99,24 @@ class levelController extends Controller
         $request->validate([
             'title' => 'required|string|max:255|unique:levels,title,' . $level->id,
             'description' => 'string',
+            // 'order' => 'integer',
+            'languages.*' => 'exists:languages,id',
+            'titles.*' => 'string|max:100',
+            'descriptions.*' => 'string|max:255',
         ]);
         $level->update($request->all());
-        return redirect()->route('levels.index' , ['domain' => $level->domain_id])->with('success', 'level saved successfully');
+
+        $titles = $request->titles;
+        $languages = $request->languages;
+        $descriptions = $request->descriptions;
+
+        $level->languages()->detach();
+        if ($titles) {
+            for ($i = 0; $i < count($titles); $i++) {
+                $level->languages()->attach($languages[$i], ['title' => $titles[$i],  'description' => $descriptions[$i]]);
+            }
+        }
+        return redirect()->route('levels.index', ['domain' => $level->domain_id])->with('success', 'level saved successfully');
     }
 
     /**
@@ -101,22 +133,22 @@ class levelController extends Controller
 
             // $levels = $level->levels->modelkeys();
             // Level::wherein('id' , $levels)->delete();
-            
+
             // $level->delete();
             // return back()->with('success' , "level deleted successfully");
             return back()->with('error', 'Under development');
-
         } else {
             $phraseCount = $level->phrases->count();
             if ($phraseCount == 0) {
-                $domain = $level->domain_id;
+                $domain = Domain::find($level->domain_id);
+                $domain->level_count--;
+                $domain->save();
                 $level->delete();
-                return redirect()->route('levels.index' , ['domain' => $domain])->with('success', 'level deleted successfully');
-            }
-            else {
+                return redirect()->route('levels.index', ['domain' => $domain])->with('success', 'level deleted successfully');
+            } else {
                 $wordCount = $level->words->count();
                 return back()->with('error', "can\'t delete level, because it has $phraseCount levels and $wordCount phrases,  if you want to delete all, choose hard delete ");
             }
         }
-    }   
+    }
 }

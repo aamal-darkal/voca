@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('title' , 100);
             $table->string('description');
             $table->integer('level_count')->default(0);
+            $table->integer('order');  
             $table->foreignId('language_id')->constrained();
             $table->timestamps();
         });

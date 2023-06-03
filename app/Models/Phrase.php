@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 class Phrase extends Model
 {
     use HasFactory;
-    protected $fillable = ['content' , 'translation' ,'word_count' , 'level_id'];
+    use \Znck\Eloquent\Traits\BelongsToThrough;
+
+    protected $fillable = ['content' , 'translation' ,'word_count' , 'order','level_id'];
     function level() {
         return $this->belongsTo(Level::class);
     }
@@ -18,4 +19,8 @@ class Phrase extends Model
     function participants() {
         return $this->belongsToMany(Participant::class)->withPivot(['status']);;
     }
+
+    function domain() {
+        return $this->belongsToThrough( Domain::class , Level::class);
+    }        
 }

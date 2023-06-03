@@ -14,6 +14,7 @@ use App\Http\Resources\WordResource;
 use App\Models\Domain;
 use App\Models\Language;
 use App\Models\Level;
+use App\Models\Phrase;
 use Illuminate\Http\Request;
 
 class ParticipantController extends Controller
@@ -116,17 +117,34 @@ class ParticipantController extends Controller
      *
      * @param Participant $participant
      * @param Request $request
-     * @return LevelResource instance
+     * @return LevelResource collection as tree
      */
     public function levelStatus(Participant $participant, Request $request)
     {
         Level::$langkey =  Language::find($participant->lang_app)->key;
 
         $level_id = $request->level_id;
-        $level = $participant->levels()->with('langApps', 'phrases')->where('level_id', $level_id)->get();
+        // $level = $participant->levels()->with('langApps', 'phrases')->where('level_id', $level_id)->get();
+        $level = $participant->levels()->with('langApps', 'phrases')->where('id', $level_id)->get();
         PhraseResource::$participant = $participant->id;
         WordResource::$participant = $participant->id;
         return ParticipantLevelResource::collection($level);
+    }
+    /**
+     * for certain level
+     *
+     * @param Participant $participant
+     * @param Request $request
+     * @return PhraseResource collection as tree
+     */
+    public function phraseStatus(Participant $participant, Request $request)
+    {
+
+        $phrase_id = $request->phrase_id;
+        $phrase = $participant->phrases()->with( 'words')->where('id', $phrase_id)->get();
+        PhraseResource::$participant = $participant->id;
+        WordResource::$participant = $participant->id;
+        return PhraseResource::collection($phrase);
     }
 
     /* **************************** Attachment ************************************** */
@@ -158,25 +176,54 @@ class ParticipantController extends Controller
     public function attachPhrase(Participant $participant, Request $request)
     {
         $phrase = $request->phrase;
-        $isattached = $participant->phrases()->where('id', $phrase)->first();
-        if ($isattached)
-            $participant->phrases()->updateExistingPivot($phrase, ['status' => $request->status]);
-        else
-            $participant->phrases()->attach($phrase, ['status' => $request->status]);
+        $this->handlePhrase( $participant, $request->phrase, $request->status);        
         return [
             'status' => 'success',
         ];
     }
     public function attachWord(Participant $participant, Request $request)
     {
-        $word = $request->phrase_word_id; 
-        $isattached = $participant->words()->where('id', $word)->first();
-        if ($isattached)
-            $participant->words()->updateExistingPivot($word, ['status' => $request->status]);
-        else
-            $participant->words()->attach($word, ['status' => $request->status]);
+
+        $this->handleWord($participant , $request->phrase_word_id , $request->status);        
         return [
             'status' => 'success',
         ];
     }
+
+    public function handlePhraseTree(Participant $participant, Request $request)
+    {        
+        $phrase_id = $request->phrase_id;
+        $phrase = Phrase::find($phrase_id);        
+        $language_id = $phrase->domain->language_id;
+        $next_phrase_id = Language::find($language_id)->phrases()->where('phrases.order' , '>' , $phrase->order)->orderby('phrases.order')->get();
+        return $next_phrase_id;
+        $next_phrase_id = $next_phrase_id?$next_phrase_id->id:null;
+        $this->handlePhrase( $participant, $phrase_id, $request->phrase_status);
+        $words =  $request->words;
+        foreach ($words as $word) {
+            $this->handleWord($participant , $word['phrase_word_id'] , $word['phrase_word_status']);
+        }       
+        return [
+            'status' => 'success',
+            'next_phrase_id' => $next_phrase_id,
+        ];
+    }
+
+    function handlePhrase(Participant $participant, $phrase_id, $status)
+    {
+        $isattached = $participant->phrases()->where('id', $phrase_id)->first();
+        if ($isattached)
+            $participant->phrases()->updateExistingPivot($phrase_id, ['status' => $status]);
+        else
+            $participant->phrases()->attach($phrase_id, ['status' => $status]);       
+    }
+
+    function handleWord(Participant $participant,  $phrase_word_id , $status)
+    {
+        $isattached = $participant->words()->where('id', $phrase_word_id)->first();
+        if ($isattached)
+            $participant->words()->updateExistingPivot($phrase_word_id, ['status' => $status]);
+        else
+            $participant->words()->attach($phrase_word_id, ['status' => $status]);       
+    }   
 }

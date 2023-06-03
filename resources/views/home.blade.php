@@ -11,7 +11,7 @@
                         <div class="col-9 text-uppercase">
                             <div class="text-secondary"> participant <br> count</div>
                             <div class="my-2"> ALL</div>
-                            <div class="h3">1000</div>
+                            <div class="h3">{{ $participantCount }}</div>
                         </div>
                         <div class="col-3">
                             <i class="fas fa-users-viewfinder fa-2x"></i>
@@ -28,7 +28,7 @@
                         <div class="col-9 text-uppercase">
                             <div class="text-secondary"> participant <br> count</div>
                             <div class="my-2"> current year</div>
-                            <div class="h3">200</div>
+                            <div class="h3">{{ $participantCount }}</div>
                         </div>
                         <div class="col-3">
                             <i class="fas fa-calendar fa-2x"></i>
@@ -44,7 +44,7 @@
                         <div class="col-9 text-uppercase">
                             <div class="text-secondary"> participant <br> count</div>
                             <div class="my-2">current month</div>
-                            <div class="h3">50</div>
+                            <div class="h3">{{ $participantCount }}</div>
                         </div>
                         <div class="col-3">
                             <i class="fas fa-calendar-days fa-2x"></i>
@@ -60,7 +60,7 @@
                         <div class="col-9 text-uppercase">
                             <div class="text-secondary"> participant <br> count</div>
                             <div class="my-2"> today </div>
-                            <div class="h3">2</div>
+                            <div class="h3">{{ $participantCount }}</div>
                         </div>
                         <div class="col-3">
                             <i class="fas fa-calendar-day fa-2x"></i>

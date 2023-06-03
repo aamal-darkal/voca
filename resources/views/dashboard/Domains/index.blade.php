@@ -20,6 +20,7 @@
                     <th>title</th>
                     <th>description</th>
                     <th>level count</th>
+                    <th>order </th>
                     <th>language</th>
                 </tr>
             </thead>
@@ -30,11 +31,12 @@
                         <td>{{ $domain->title }}</td>
                         <td>{{ $domain->description }}</td>
                         <td>{{ $domain->level_count }}</td>
+                        <td>{{ $domain->order }}</td>
                         <td>{{ $domain->language->name }}</td>
                         <td><a href="{{ route('domains.edit', ['domain' => $domain]) }}"
                                 class="btn btn-outline-primary btn-sm" title="edit"><i class="fas fa-edit"></i></a> |
                             <form action="{{ route('domains.destroy', ['domain' => $domain]) }}" method="post"
-                                onsubmit="return confirm('delete {{ $domain->name }}')" class="d-inline-block">
+                                onsubmit="return confirm('delete {{ $domain->titlep }}')" class="d-inline-block">
                                 @csrf
                                 @method('delete')
                                 <button type="submit" title="delete" class="btn btn-outline-danger btn-sm"><i

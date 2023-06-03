@@ -77,3 +77,6 @@ td {
 h5 {
     color: var(--fore-color);
 }
+.w-100px {
+    width: 100px;
+}

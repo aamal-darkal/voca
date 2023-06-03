@@ -10,7 +10,7 @@ class Domain extends Model
     use HasFactory;
     public static $langkey ;
 
-    protected $fillable = ['title', 'description' , 'language_id' ];
+    protected $fillable = ['title', 'description' ,    'order','language_id' ];
     function levels() {
         return $this->hasMany(Level::class);
     }
@@ -23,8 +23,11 @@ class Domain extends Model
     function langApps() {
         return $this->belongsToMany(Language::class)->where('key' , SELF::$langkey)->withPivot(['title' , 'description']);
     }
+    function languages() {
+        return $this->belongsToMany(Language::class)->withPivot(['title' , 'description']);
+    }
     function participants() {   
         return $this->belongsToMany(Participant::class)->withPivot('status');
-    }
+    }  
    
 }

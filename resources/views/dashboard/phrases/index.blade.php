@@ -39,9 +39,9 @@
                 <thead>
                     <tr>
                         <th>id</th>
-                        <th></th>
                         <th>content</th>
                         <th>translation</th>
+                        <th>order</th>
                         <th>actions</th>
                     </tr>
                 </thead>
@@ -52,6 +52,8 @@
                             <td style="display: none">{{ $phrase->level_id }}</td>
                             <td class="text-start">{{ $phrase->content }}</td>
                             <td class="text-start">{{ $phrase->translation }}</td>
+                            <td class="text-center">{{ $phrase->order }}</td>
+
                             <td><a href="{{ route( 'phrases.edit', ['phrase' => $phrase]) }}"
                                     class="btn btn-outline-primary btn-sm" title="edit"><i class="fas fa-edit"></i></a> |                                
                                 <form action="{{ route('phrases.destroy', ['phrase' => $phrase]) }}" method="post"

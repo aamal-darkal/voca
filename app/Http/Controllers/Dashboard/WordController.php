@@ -25,7 +25,7 @@ class WordController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -36,7 +36,7 @@ class WordController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
     }
 
     /**

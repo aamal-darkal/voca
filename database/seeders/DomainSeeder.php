@@ -21,6 +21,7 @@ class DomainSeeder extends Seeder
                 'title' => 'الطب',
                 'description' => 'أدوية - أمراض - اجزاء الجسم',
                 'level_count' => 1,
+                'order' => 1,
                 'language_id' => 2,
             ],
             [
@@ -28,6 +29,7 @@ class DomainSeeder extends Seeder
                 'title' => 'هندسة برمجيات',
                 'description' => 'مفهوم البرمجة - الأدوات',
                 'level_count' => 3,
+                'order' => 2,
                 'language_id' => 2,
             ],
             [
@@ -35,6 +37,7 @@ class DomainSeeder extends Seeder
                 'title' => 'هندسة جواسيب',
                 'description' => 'أجهزة - أجزاء الكمبيوتر - صيانة',
                 'level_count' => 2,
+                'order' => 3,
                 'language_id' => 2,
             ],            
         ];        

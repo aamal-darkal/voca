@@ -8,7 +8,6 @@ use App\Models\Domain;
 use App\Models\Language;
 use App\Models\Level;
 use App\Models\Word;
-use App\Models\WordType;
 use Illuminate\Http\Request;
 
 class PhraseController extends Controller
@@ -52,27 +51,36 @@ class PhraseController extends Controller
     {
         $request->validate([
             'content' => 'required|string',
-            'word_count' => 'integer',
+            // 'word_count' => 'integer',
             'level_id' => 'exists:levels,id',
             'contents.*' => 'string',
             'word_type_id.*' => 'exists:word_types,id',
         ]);
+        if (!$request->order)
+            $request['order'] = Phrase::where('level_id', $request->level_id)->max('order') + 1;
         $phrase = Phrase::create($request->all());
-        $contents = $request->contents;
-        $translations = $request->translations;
-        $wordTypes = $request->wordTypes;
 
-        for ($i = 0; $i < count($contents); $i++) {
-            $word = Word::create([
-                'content' => $contents[$i],
-                'word_type_id' => $wordTypes[$i],
-            ]);
-            $word->phrases()->attach($phrase, [
-                'translation' => $translations[$i],
-                'order' => $i,
-            ]);
-        }
-        return back()->with('success', 'phrase added successfully');
+        $content = $request->content;
+        $words = explode(" ", $content);
+        for ($i = 1; $i <  count($words); $i++) {
+            $prevWord = Word::where("content", $words[$i])->first();
+            if (!$prevWord) {
+                $newWord = Word::create(["content" => $words[$i]]);
+                $newWord->phrases()->attach($phrase, [
+                    'order' => $i,
+                ]);
+            } else {
+                $prevWord->phrases()->attach(
+                    $phrase,
+                    [
+                        'translation' => $prevWord->phrases->pivot->tranlation->first,
+                        'order' => $i,
+                    ]
+                );
+            }
+        }  
+        session()->flush('success' , 'phrase added, ready to complete its words');
+        return view('dashboard.words.edit');
     }
 
 

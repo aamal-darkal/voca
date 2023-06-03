@@ -29,6 +29,7 @@ Route::get('participants' , [ParticipantController::class,'index'])->name('parti
 Route::resource('domains' , DomainController::class );
 Route::resource('levels' , LevelController::class );    
 Route::resource('phrases' , PhraseController::class );
+Route::put('words/update' , [WordController::class , 'update'])->name('words.update');
 
 Route::get('test' , function() {
     $listing =  Phrase::with('level')->with('level.domain')->get();

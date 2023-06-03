@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('content');
             $table->text('translation')->nullable();
             $table->integer('word_count')->default(0);
+            $table->integer('order');  
             $table->foreignId('level_id')->constrained();            
             $table->timestamps();
         });

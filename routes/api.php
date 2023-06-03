@@ -8,8 +8,12 @@ use App\Http\Controllers\Api\DomainController;
 use App\Http\Controllers\Api\LanguageController;
 use App\Http\Controllers\Api\LevelController;
 use App\Http\Controllers\Api\PhraseController;
+use App\Models\Domain;
+use App\Models\Language;
 use App\Models\Participant;
+use App\Models\Phrase;
 use App\Models\PhraseWord;
+use Illuminate\Support\Arr;
 
 /*
 |-----------------  ---------------------------------------------------------
@@ -31,10 +35,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('dialects' , [DialectController::class , 'index'])->name('dialedcts.index');
     Route::get('languages/{language}' , [LanguageController::class , 'show'])->name('language.show');
+    
     Route::controller(ParticipantController::class)->prefix('participants')->group(function () {
         Route::get('/{participant}', 'show');
         Route::get('/DomainsStatus/{participant}', 'domainsStatus');
         Route::get('/LevelStatus/{participant}', 'levelStatus');
+        Route::get('/phraseStatus/{participant}', 'phraseStatus');
 
         Route::post('/', 'store');
         Route::patch('/{participant}', 'update');
@@ -43,17 +49,17 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post( 'attachLevel/{participant}','attachLevel');
         Route::post( 'attachPhrase/{participant}','attachPhrase');
         Route::post( 'attachWord/{participant}','attachWord');
+        Route::post( 'handlePhraseTree/{participant}','handlePhraseTree');    
     });
     
     Route::get('participant-email', [ParticipantController::class, 'getByEmail']);
 
-    Route::controller(DomainController::class)->prefix('domains')->group( function() {
-        Route::get('/', 'index');
-        Route::get('/{domain}',  'show');
-        Route::get('/fulltree/{domain}', 'fulltree');
-    });
     
-    Route::get('levels/{id}', [LevelController::class, 'show']);
-    
-    Route::get('phrases/{id}', [PhraseController::class, 'show']);
+});
+
+  
+Route::get('test' , function() {
+//    $phrases = Language::find(3)->phrases;
+    $domain  = phrase:: find(1)->domain;
+   return $domain->language_id;
 });
