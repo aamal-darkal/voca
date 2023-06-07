@@ -7,7 +7,9 @@ use App\Models\Phrase;
 use App\Models\Domain;
 use App\Models\Language;
 use App\Models\Level;
+use App\Models\PhraseWord;
 use App\Models\Word;
+use App\Models\WordType;
 use Illuminate\Http\Request;
 
 class PhraseController extends Controller
@@ -37,8 +39,8 @@ class PhraseController extends Controller
         $level = Level::find($request->level_id);
         $domain = $level->domain;
         $language = $domain->language;
-        $wordTypes = $language->wordTypes;
-        return view('dashboard.phrases.create', compact('wordTypes'))->with('level_id', $level->id);
+        $word_types = $language->word_types;
+        return view('dashboard.phrases.create', compact('word_types'))->with('level_id', $level->id);
     }
 
     /**
@@ -61,29 +63,43 @@ class PhraseController extends Controller
         $phrase = Phrase::create($request->all());
 
         $content = $request->content;
-        $contentWords = explode(" ", $content);
-        $words = [];
-        for ($i = 1; $i <  count($contentWords); $i++) {
-            $word = Word::where("content", $contentWords[$i])->first();            
+        $wordContent = explode(" ", $content);
+        for ($i = 0; $i <  count($wordContent); $i++) {
+            $word = Word::where("content", $wordContent[$i])->first();
+            $translations = [];
+            // if word exists take its translation 
             if ($word) {
-                $wordInfo['translation'] = $word['content']->phrases->first()->pivot->tranlation;
+                // get first translation as field
+                $translationRec = PhraseWord::where('word_id',  $word->id)->first();
+                $translation = $translationRec ? $translationRec->translation : '';
+                // get all translations to be as dataset                
+                $translations = PhraseWord::where('word_id',  $word->id)->get()->unique('translation');
+
+                // return $translations;
             } else {
-                $word = Word::create(["content" => $contentWords[$i]]); 
-                $wordInfo['translation'] = '';
+                $word = Word::create(["content" => $wordContent[$i]]);
+                $translation = '';
             }
-            $wordInfo['content'] = $contentWords[$i];
-            $wordInfo['order'] = $i;
-            $wordInfos[] = $wordInfo;
-            $word->phrases()->attach(
-                $phrase,
-                [
-                    'translation' => $wordInfo['translation'],
-                    'order' => $wordInfo['order'],
-                ]
-            );
+
+            $phraseWord = PhraseWord::create([
+                'phrase_id' => $phrase->id,
+                'word_id' => $word->id,
+                'translation' => $translation,
+                'order' => $i
+            ]);
+            $words[] = $word;
+            $phraseWords[] = $phraseWord;
+            $allTranslations[] = $translations;
         }
-        session()->flush('success', 'phrase added, ready to complete its words');
-        return view('dashboard.words.edit', compact('phrase', 'wordInfo'));
+        $word_types = WordType::get();
+        return redirect()->route('words.edit')->with([
+            'success' => 'phrase added, ready to complete its words',
+            'phrase' => $phrase,
+            'words' => $words,
+            'allTranslations' => $allTranslations,
+            'phraseWords' => $phraseWords,
+            'word_types' => $word_types,
+        ]);
     }
 
 
@@ -95,46 +111,27 @@ class PhraseController extends Controller
      */
     public function edit(Phrase $phrase)
     {
-        $wordTypes = $phrase->level->domain->language->wordTypes;
+        // return $phrase;
+        $wordTypes = $phrase->language->wordTypes;
         $words = $phrase->words;
-        return view('dashboard.phrases.edit', compact('phrase', 'wordTypes', 'words'));
-    }
+        $allTranslations = [];
+        $phraseWords = [];
+        foreach ($words as $word) {
+            $translations = PhraseWord::where('word_id',  $word->id)->get()->unique('translation');
+            $allTranslations[] = $translations;
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Phrase  $phrase
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Phrase $phrase)
-    {
-        $request->validate([
-            'content' => 'required|string',
-            'word_count' => 'integer',
-            'level_id' => 'exists:levels,id',
-            'contents.*' => 'string',
-            'word_type_id.*' => 'exists:word_types,id',
-        ]);
-        $phrase->update($request->all());
-        $phrase->words()->delete();
-
-        $contents = $request->contents;
-        $translations = $request->translations;
-        $wordTypes = $request->wordTypes;
-
-        for ($i = 0; $i < count($contents); $i++) {
-            $word = Word::create([
-                'content' => $contents[$i],
-                'word_type_id' => $wordTypes[$i],
-            ]);
-            $word->phrases()->attach($phrase, [
-                'translation' => $translations[$i],
-                'order' => $i,
-            ]);
+            $phraseWord = PhraseWord::where('phrase_id', $phrase->id)->where('word_id', $word->id)->first();
+            $phraseWords[] = $phraseWord;
         }
-        return redirect()->route('phrases.index')->with('success', 'phrase saved successfully');
+        return redirect()->route('words.edit')->with([
+            'phrase' => $phrase,
+            'words' => $words,
+            'allTranslations' => $allTranslations,
+            'phraseWords' => $phraseWords,
+            'word_types' => $wordTypes,
+        ]);
     }
+
 
     /**
      * Remove the specified resource from storage.

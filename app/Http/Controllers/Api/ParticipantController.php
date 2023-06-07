@@ -4,13 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Participant;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\LevelResource;
-use App\Http\Resources\ParticipantAllLevelsResource;
+use App\Http\Resources\ParticipantResource;
 use App\Http\Resources\ParticipantDomainResource;
 use App\Http\Resources\ParticipantLevelResource;
-use App\Http\Resources\ParticipantResource;
-use App\Http\Resources\PhraseResource;
-use App\Http\Resources\WordResource;
+use App\Http\Resources\ParticipantPhraseResource;
+use App\Http\Resources\ParticipantWordResource;
 use App\Models\Domain;
 use App\Models\Language;
 use App\Models\Level;
@@ -53,8 +51,6 @@ class ParticipantController extends Controller
             } else
                 $participant->avatar = 'no-image.png';
             $participant->save();
-            // $domains = $participant->dialect->language->domains;
-            // $participant->domains()->syncWithPivotValues($domains,  ['status' => 'S']);
             return [
                 'status' =>  'success',
                 'message' => 'book saved participant',
@@ -84,7 +80,7 @@ class ParticipantController extends Controller
                 $avatar->storeAs('public/participant-images',  $fileName);
                 $participant->avatar = $fileName;
                 $participant->save();
-            }            
+            }
             return [
                 'status' =>  'success',
                 'message' => 'participant saved successfully'
@@ -95,7 +91,7 @@ class ParticipantController extends Controller
                 'message' => 'error in updating participant'
             ];
     }
-/*********************** Status ********************************* */
+    /*********************** Status ********************************* */
     /**
      * for all domains
      *
@@ -108,7 +104,8 @@ class ParticipantController extends Controller
         Level::$langkey =  Language::find($participant->lang_app)->key;
         $domains = Domain::with('langApps')->get();
         ParticipantDomainResource::$participant = $participant->id;
-        ParticipantAllLevelsResource::$participant = $participant->id;
+        ParticipantLevelResource::$participant = $participant->id;
+        ParticipantLevelResource::$withphrase = false ;
         return ParticipantDomainResource::collection($domains);
     }
 
@@ -124,11 +121,17 @@ class ParticipantController extends Controller
         Level::$langkey =  Language::find($participant->lang_app)->key;
 
         $level_id = $request->level_id;
-        // $level = $participant->levels()->with('langApps', 'phrases')->where('level_id', $level_id)->get();
-        $level = $participant->levels()->with('langApps', 'phrases')->where('id', $level_id)->get();
-        PhraseResource::$participant = $participant->id;
-        WordResource::$participant = $participant->id;
-        return ParticipantLevelResource::collection($level);
+        $level = Level::with('langApps', 'phrases')->where('id', $level_id)->find($level_id);
+        ParticipantLevelResource::$withphrase = true;
+        ParticipantLevelResource::$participant = $participant->id;
+        ParticipantPhraseResource::$participant = $participant->id;
+        ParticipantWordResource::$participant = $participant->id;
+        if ($level)
+            return new ParticipantLevelResource($level);
+        else
+            return [
+                'fail' => 'Level id not found',
+            ];
     }
     /**
      * for certain level
@@ -141,10 +144,11 @@ class ParticipantController extends Controller
     {
 
         $phrase_id = $request->phrase_id;
-        $phrase = $participant->phrases()->with( 'words')->where('id', $phrase_id)->get();
-        PhraseResource::$participant = $participant->id;
-        WordResource::$participant = $participant->id;
-        return PhraseResource::collection($phrase);
+
+        $phrase = Phrase::with('words')->where('id', $phrase_id)->get();
+        ParticipantPhraseResource::$participant = $participant->id;
+        ParticipantWordResource::$participant = $participant->id;
+        return ParticipantPhraseResource::collection($phrase);
     }
 
     /* **************************** Attachment ************************************** */
@@ -176,7 +180,7 @@ class ParticipantController extends Controller
     public function attachPhrase(Participant $participant, Request $request)
     {
         $phrase = $request->phrase;
-        $this->handlePhrase( $participant, $request->phrase, $request->status);        
+        $this->handlePhrase($participant, $request->phrase, $request->status);
         return [
             'status' => 'success',
         ];
@@ -184,24 +188,24 @@ class ParticipantController extends Controller
     public function attachWord(Participant $participant, Request $request)
     {
 
-        $this->handleWord($participant , $request->phrase_word_id , $request->status);        
+        $this->handleWord($participant, $request->phrase_word_id, $request->status);
         return [
             'status' => 'success',
         ];
     }
 
     public function handlePhraseTree(Participant $participant, Request $request)
-    {        
+    {
         $phrase_id = $request->phrase_id;
-        $phrase = Phrase::find($phrase_id);        
+        $phrase = Phrase::find($phrase_id);
         $language_id = $phrase->domain->language_id;
-        $next_phrase_id = Language::find($language_id)->phrases()->where('phrases.order' , '>' , $phrase->order)->orderby('phrases.order')->first();
-        $next_phrase_id = $next_phrase_id?$next_phrase_id->id:null;
-        $this->handlePhrase( $participant, $phrase_id, $request->phrase_status);
+        $next_phrase_id = Language::find($language_id)->phrases()->where('phrases.order', '>', $phrase->order)->orderby('phrases.order')->first();
+        $next_phrase_id = $next_phrase_id ? $next_phrase_id->id : null;
+        $this->handlePhrase($participant, $phrase_id, $request->phrase_status);
         $words =  $request->words;
         foreach ($words as $word) {
-            $this->handleWord($participant , $word['phrase_word_id'] , $word['phrase_word_status']);
-        }       
+            $this->handleWord($participant, $word['phrase_word_id'], $word['phrase_word_status']);
+        }
         return [
             'status' => 'success',
             'next_phrase_id' => $next_phrase_id,
@@ -214,15 +218,15 @@ class ParticipantController extends Controller
         if ($isattached)
             $participant->phrases()->updateExistingPivot($phrase_id, ['status' => $status]);
         else
-            $participant->phrases()->attach($phrase_id, ['status' => $status]);       
+            $participant->phrases()->attach($phrase_id, ['status' => $status]);
     }
 
-    function handleWord(Participant $participant,  $phrase_word_id , $status)
+    function handleWord(Participant $participant,  $phrase_word_id, $status)
     {
         $isattached = $participant->words()->where('id', $phrase_word_id)->first();
         if ($isattached)
             $participant->words()->updateExistingPivot($phrase_word_id, ['status' => $status]);
         else
-            $participant->words()->attach($phrase_word_id, ['status' => $status]);       
-    }   
+            $participant->words()->attach($phrase_word_id, ['status' => $status]);
+    }
 }

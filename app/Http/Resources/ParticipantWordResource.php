@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use App\Models\PhraseWord;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class WordResource extends JsonResource
+class ParticipantWordResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

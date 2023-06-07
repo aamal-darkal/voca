@@ -6,7 +6,7 @@ use App\Models\Participant;
 use App\Models\Phrase;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PhraseResource extends JsonResource
+class ParticipantPhraseResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -25,7 +25,7 @@ class PhraseResource extends JsonResource
             'order' => $this->order,
             'level_id' => $this->level_id,
             'status' => $this->getStatus($this),
-            'words' => WordResource::collection( $this->words),
+            'words' => ParticipantWordResource::collection( $this->words),
         ];
     }
     function getStatus($phrase)

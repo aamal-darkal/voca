@@ -9,6 +9,8 @@ class PhraseWord extends Model
 {
     use HasFactory;
     protected $table='phrase_word';
+    public $timestamps = false;
+    protected $fillable = ['phrase_id' , 'word_id', 'translation' , 'order'];
 
     function participants() {
         return $this->belongsToMany(Participant::class)->withPivot(['status']);

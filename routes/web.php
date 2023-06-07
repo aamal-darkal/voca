@@ -5,7 +5,9 @@ use App\Http\Controllers\Dashboard\LanguageController;
 use App\Http\Controllers\Dashboard\LevelController;
 use App\Http\Controllers\Dashboard\ParticipantController;
 use App\Http\Controllers\Dashboard\PhraseController;
-use App\Models\Phrase;
+use App\Http\Controllers\Dashboard\WordController;
+use App\Http\Controllers\HomeController;
+use App\Models\Word;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,17 +24,24 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes(['register' => false]);
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::resource('languages' , LanguageController::class );
 Route::get('participants' , [ParticipantController::class,'index'])->name('participants.index');
 Route::resource('domains' , DomainController::class );
 Route::resource('levels' , LevelController::class );    
 Route::resource('phrases' , PhraseController::class );
-Route::put('words/update' , [WordController::class , 'update'])->name('words.update');
+Route::controller(HomeController::class )->group(function(){
+    Route::get('/',  'index')->name('home');
+    Route::get('/profile',  'editProfile')->name('home.editProfile');
+    Route::post('/profile',  'saveProfile')->name('home.saveProfile');
+});
+Route::controller(WordController::class )->prefix('words')->group(function(){
+    Route::get('edit' , 'edit')->name('words.edit');
+    Route::post('save' , 'save')->name('words.save');
+});
 
 Route::get('test' , function() {
-    $listing =  Phrase::with('level')->with('level.domain')->get();
-    dd($listing);
+    $word = Word::where("content", 'should')->get();
+    return $word;
 });
 

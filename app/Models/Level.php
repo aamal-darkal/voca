@@ -36,14 +36,5 @@ class Level extends Model
     
     function participant($id) {
         return $this->belongsToMany(Participant::class)->withPivot('status')->where('id',$id);
-    }
-    
-    // function locale( $langCode){
-    //     if($langCode != config('app.main_lang')) {
-            
-    //         $this->title = Level::find($this->id)->langApps->where('key' , $langCode)[0]['pivot']['title'];  
-    //         $this->description = Level::find($this->id)->langApps->where('key' , $langCode)[0]['pivot']['description'];  
-    //     } 
-    //     return $this;       
-    // }
+    }    
 }

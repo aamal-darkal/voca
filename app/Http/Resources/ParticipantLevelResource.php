@@ -6,6 +6,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ParticipantLevelResource extends JsonResource
 {
+    public static $participant;
+    public static $withphrase;
+
     /**
      * Transform the resource into an array.
      *
@@ -14,15 +17,28 @@ class ParticipantLevelResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [        
+        $level =  [        
             'id' => $this->id,
             'title' => $this->langApps[0]['pivot']['title']?? $this->title,
             'description' => $this->langApps[0]['pivot']['description']?? $this->description,
-            'status' => $this->pivot->status,
+            'status' => $this->getStatus($this),           
             'phrase_count' => $this->phrase_count,
             'order' => $this->order,  
-            'domain_id'=> $this->domain_id,
-            'phrases' => PhraseResource::collection( $this->phrases),
+            'domain_id'=> $this->domain_id,   
         ];
-    }   
+        if (SELF::$withphrase)         
+            $level['phrases'] = ParticipantPhraseResource::collection( $this->phrases);
+        return $level;
+    } 
+    
+    
+    function getStatus($level)
+    {
+
+        $levelParticipant = $level->participants()->where('id', Self::$participant)->first();
+        if ($levelParticipant)
+            return $levelParticipant->pivot->status;
+        else
+            return null;
+    }
 }

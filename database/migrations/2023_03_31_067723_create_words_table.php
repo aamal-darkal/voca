@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('words', function (Blueprint $table) {
             $table->id();
-            $table->string('content');
+            $table->string('content' , 30)->index();
             $table->foreignId('word_type_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         });

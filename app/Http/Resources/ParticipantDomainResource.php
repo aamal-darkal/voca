@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Level;
 use App\Models\Participant;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -25,7 +24,7 @@ class ParticipantDomainResource extends JsonResource
             'order' => $this->order,
             'status' => $this->getStatus( $this),
             'key' => Participant::find(SELF::$participant)->dialect->language->key,
-            'levels' => ParticipantAllLevelsResource::collection( $this->levels),
+            'levels' => ParticipantLevelResource::collection( $this->levels),
         ];
     }
    

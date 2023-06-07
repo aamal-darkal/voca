@@ -83,8 +83,8 @@ class levelController extends Controller
      */
     public function edit(level $level, Request $request)
     {
-        $domain = $request->domain;
-        return view('dashboard.levels.edit', compact('level', 'domain'));
+        $languages = Language::get();
+        return view('dashboard.levels.edit', compact('level', 'languages'));
     }
 
     /**

@@ -22,5 +22,9 @@ class Phrase extends Model
 
     function domain() {
         return $this->belongsToThrough( Domain::class , Level::class);
-    }        
+    }       
+    
+    function language() {
+        return $this->belongsToThrough(Language::class, [Domain::class , Level::class ]);
+    }
 }

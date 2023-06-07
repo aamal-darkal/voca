@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\PhraseWord;
 use App\Models\Word;
 use Illuminate\Http\Request;
 
@@ -29,14 +30,28 @@ class WordController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * save phrase words.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function save(Request $request )
     {
-        
+        // dd($request->all());
+        $words = Word::find( $request->word_ids);
+        $word_types = $request->word_types;
+        for($i = 0 ; $i < count($words) ; $i++) {
+            $words[$i]->word_type_id = $word_types[$i];
+            $words[$i]->save();
+        }
+        $phraseWords = PhraseWord::find( $request->phraseWord_ids);
+        $translations = $request->translations;
+        for($i = 0 ; $i < count($phraseWords) ; $i++) {
+            $phraseWords[$i]->translation = $translations[$i] ;
+            $phraseWords[$i]->save();
+        }
+        return redirect()->route('phrases.index')->with('success' , 'Words Saved successfully ');
+
     }
 
     /**
@@ -58,7 +73,16 @@ class WordController extends Controller
      */
     public function edit(Word $word)
     {
-        //
+
+        // dd( session()->all());
+        $phrase = session()->get('phrase');
+        $words = session()->get('words');
+        // return $words;
+        $allTranslations = session()->get('allTranslations');
+        $phraseWords = session()->get('phraseWords');
+        $word_types = session()->get('word_types');
+        return view('dashboard.words.edit', compact('phrase', 'words','allTranslations' , 'phraseWords' ,'word_types'));
+
     }
 
     /**

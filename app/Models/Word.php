@@ -11,7 +11,7 @@ class Word extends Model
     protected $fillable = ['content' , 'word_type_id' ];
 
     function phrases(){
-        return $this->belongsToMany(Phrase::class);
+        return $this->belongsToMany(Phrase::class)->withpivot(['translation' , 'order']);
     }
     function wordType() {
         return $this->belongsTo(WordType::class);

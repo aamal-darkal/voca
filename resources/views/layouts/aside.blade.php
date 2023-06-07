@@ -13,6 +13,7 @@
             <a class="btn border" href="{{ route('participants.index') }}"><i class="fas fa-user-friends"></i> Participants</a>
             <a class="btn border" href="{{ route('domains.index') }}"><i class="fas fa-section"></i> Domains</a>
             <a class="btn border" href="{{ route('phrases.index') }}"><i class="fas fa-quote-left"></i> <i class="fas fa-quote-right"></i> phrases</a>
+            <a class="btn border" href="{{ route('home.saveProfile') }}"><i class="fas fa-quote-left"></i> <i class="fas fa-user"></i> profile</a>
         </div>
     </div>
 </div>
