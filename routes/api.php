@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\LevelController;
 use App\Http\Controllers\Api\PhraseController;
 use App\Models\Domain;
 use App\Models\Language;
+use App\Models\Level;
 use App\Models\Participant;
 use App\Models\Phrase;
 use App\Models\PhraseWord;
@@ -59,7 +60,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
   
 Route::get('test' , function() {
-//    $phrases = Language::find(3)->phrases;
-    $domain  = phrase:: find(1)->domain;
-   return $domain->language_id;
+$participant = Participant::find(1);
+$count = $participant->phrases()->where('level_id' , 2)->wherein('status' , ['C','X'] )->get();
+
+return $count;
 });

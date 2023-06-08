@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Participant;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ParticipantLevelResource extends JsonResource
@@ -24,7 +25,8 @@ class ParticipantLevelResource extends JsonResource
             'status' => $this->getStatus($this),           
             'phrase_count' => $this->phrase_count,
             'order' => $this->order,  
-            'domain_id'=> $this->domain_id,   
+            'domain_id'=> $this->domain_id, 
+            'pastCount' => Participant::find(Self::$participant)->phrases()->where('level_id' , $this->id)->wherein('status' , ['C','X'] )->count(),
         ];
         if (SELF::$withphrase)         
             $level['phrases'] = ParticipantPhraseResource::collection( $this->phrases);
