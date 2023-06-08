@@ -50,7 +50,7 @@ body {
 
 .navbar-brand-mine {
     font-family: fantasy;
-    text-shadow: .5px .5px 1px white;
+    text-shadow: 0.5px 0.5px 0.5px grey, 1px 1px 1px white;
 }
 
 .side-menu a {
@@ -74,9 +74,13 @@ td {
     max-width: 110%; 
 }
 
-h5 {
+h3,h4,h5 {
     color: var(--fore-color);
+    text-shadow: 0.5px 0.5px 0.5px grey, 1px 1px 1px white;
 }
 .w-100px {
     width: 100px;
+}
+.w-200px {
+    width: 150px;
 }

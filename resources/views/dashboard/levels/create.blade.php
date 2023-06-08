@@ -31,8 +31,8 @@
             </table>
             {{-- ========================== end template  ======================================= --}}
             <form action="{{ route('levels.store') }}" method="post" class="col-md-10  ">
-                <a href={{ route('levels.index' , ['domain'=> $domain ]) }} class="btn btn-mine my-2">&leftarrow;</a>
-                <h4>Add Level </h4>
+                <h4><a href={{ route('levels.index' , ['domain'=> $domain ]) }} class="btn btn-mine my-2">&leftarrow;</a>
+                Add Level </h4>
                 @csrf
 
                 <input type="hidden" name="domain_id" value="{{ $domain }}">

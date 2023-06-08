@@ -5,19 +5,22 @@
             @foreach ($errors->all() as $error)
                 <p>{{ $error }}</p>
             @endforeach
-            <form action="{{ route('words.save') }}" method="post" class="col-md-10 offset-md-1">
-                <h4>confirm words </h4>
+            <form action="{{ route('words.save') }}" method="post" class="col-md-10 offset-md-1" name="wordsForm">
+                <h4><a href="{{ route('phrases.index') }}" class="btn btn-mine my-2">&leftarrow;</a>
+                    specify phrase words </h4>
                 @csrf
-                <div class="row">   
+                <div class="row">
                     <div class="col-11">
-                        <p>{{ $phrase->content }}</p>
+                        <h5>Content</h5>
+                        <input type="text" value="{{ $phrase->content }}" disabled class="form-control">
                     </div>
 
-                    <div class="col-11">
-                        <p>{{ $phrase->translation }}</textarea>
+                    <div class="col-11 mt-2">
+                        <h5>Translation</h5>
+                        <input type="text" value="{{ $phrase->translation }}" disabled class="form-control">
                     </div>
                 </div>
-                <h5 class="mt-5"> Words </h5>
+                <h5 class="mt-3"> Words </h5>
                 <table id="real" class="table">
                     <thead>
                         <tr>
@@ -26,6 +29,7 @@
                             <th>word_type</th>
                             <th class="d-none">phraseWords_id</th>
                             <th class=w-25>translation</th>
+                            <th class=w-25> alter translation</th>
                             <th>Order</th>
                         </tr>
                     </thead>
@@ -45,12 +49,18 @@
                                         @endforeach
                                     </select>
                                 </td>
-                                <td class="d-none"><input type="text" name="phraseWord_ids[]" value={{ $phraseWords[$i]->id }}> </td>
+                                <td class="d-none"><input type="text" name="phraseWord_ids[]"
+                                        value={{ $phraseWords[$i]->id }}> </td>
 
-                                <td><input type="text" name="translations[]" class="form-control  d-inline-block w-50"
-                                        value="{{ $phraseWords[$i]->translation }}">
+                                <td>
+                                    <input type="text" class="form-control d-inline-block"
+                                        value="{{ $phraseWords[$i]->translation }}" disabled>
+                                    <input type="text" name="translations[]" value="{{ $phraseWords[$i]->translation }}"
+                                        hidden>                                    
+                                </td>
+                                <td>
                                     <input list="allTranslation{{ $i }}" type="text"
-                                        class="form-control  d-inline-block w-50" onchange="takeValue(this)">
+                                        class="form-control  d-inline-block" onchange="takeValue(this)">
                                     <datalist id="allTranslation{{ $i }}">
                                         @foreach ($allTranslations[$i] as $allTranslation)
                                             <option>{{ $allTranslation->translation }}</option>
@@ -69,10 +79,11 @@
         </div>
     </div>
 @endsection
-@section('script')      
+@section('script')
     <script>
         function takeValue(inp) {
             inp.previousElementSibling.value = inp.value
+            inp.previousElementSibling.previousElementSibling.value = inp.value
         }
     </script>
 @endsection

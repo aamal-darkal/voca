@@ -31,11 +31,9 @@
             </table>
             {{-- ========================== end template  ======================================= --}}
             <div class="row">
-                <form action="{{ route('levels.update', ['level' => $level]) }}" method="post"
-                    class="col-md-6 offset-md-3">
-                    <a href="{{ route('levels.index', ['domain' => $level->domain]) }}"
-                        class="btn btn-mine my-2">&leftarrow;</a>
-                    <h4>Edit Level </h4>
+                <form action="{{ route('levels.update', ['level' => $level]) }}" method="post" class="col-md-6 offset-md-1">
+                <h4><a href="{{ route('levels.index', ['domain' => $level->domain]) }}" class="btn btn-mine my-2">&leftarrow;</a>
+                    Edit Level </h4>
                     @csrf
                     @method('put')
 

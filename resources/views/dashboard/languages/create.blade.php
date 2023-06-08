@@ -37,8 +37,9 @@
             </table>
 
             {{-- ################################### start - form ####################### --}}
-            <form action="{{ route('languages.store') }}" method="post" class="col-md-6 offset-md-3">
-                <h4>Add Language </h4>
+            <form action="{{ route('languages.store') }}" method="post" class="col-md-6 offset-md-1">
+                <h4><a href="{{ route('languages.index' ) }}" class="btn btn-mine my-2">&leftarrow;</a>
+                Add Language </h4>
                 @csrf
                 {{-- ****************************** language ******************************--}}                
                 <input type="text" name="name" value="{{ old('name') }}" placeholder="language name" required
@@ -133,7 +134,6 @@
                 </table>
                 <input type="submit" value="Add Language" class="btn btn-mine btn-mine mt-1">
                 <input type="reset" value="تصفير" class="btn btn-outline-mine mt-1">
-                <a href="{{ route('languages.index') }}" class="btn btn-outline-secondary my-2">تراجع</a>
             </form>
         </div>
     </div>

@@ -1,8 +1,7 @@
-@extends('layouts.app')
-@section('content')
+@extends('layouts.dashboard')
+@section('inside-content')
     <div class="container">
         <div class="row">
-            <h3>Edit language </h3>
             {{-- ========================== template-dialect ======================================= --}}
             <table id="template-dialect" style="visibility: collapse;">
                 <tr class="table-row">
@@ -51,8 +50,9 @@
                 </div>
             </table>
             {{-- ################################### start - form ####################### --}}
-            <form action="{{ route('languages.update', ['language' => $language]) }}" method="post"
-                class="col-md-6 offset-md-3">
+            <form action="{{ route('languages.update', ['language' => $language]) }}" method="post" class="col-md-6 offset-md-1">
+                <h4><a href="{{ route('languages.index' ) }}" class="btn btn-mine my-2">&leftarrow;</a>
+                Edit Language </h4>                
                 @csrf
                 @method('put')
                 {{-- ****************************** language ****************************** --}}
@@ -205,7 +205,6 @@
                 </table>
                 <input type="button" value="save Language" class="btn btn-mine btn-mine mt-1" onclick="submit()">
                 <input type="reset" value="تصفير" class="btn btn-outline-mine mt-1">
-                <a href="{{ route('languages.index') }}" class="btn btn-outline-secondary my-2">تراجع</a>
             </form>
             {{-- ################################### end - form ####################### --}}
 

@@ -24,8 +24,8 @@
                 </tr>
             </table>
             <form action="{{ route('phrases.update' , ['phrase' => $phrase]) }}" method="post" class="col-md-10 offset-md-1" name="phrase">
-                <h4>Edit Phrase </h4>
-
+                <h4><a href="{{ route('phrases.index' ) }}" class="btn btn-mine my-2">&leftarrow;</a>
+                    Edit Phrase </h4>                  
                 @csrf
                 @method('PUT')
                 <div class="row">
@@ -89,7 +89,6 @@
                 </table>
                 <input type="submit" value="save phrases" class="btn btn-mine btn-mine mt-1">
                 <input type="reset" value="تصفير" class="btn btn-outline-mine mt-1">
-                <a href="{{ route('phrases.index') }}" class="btn btn-outline-secondary my-2">تراجع</a>
             </form>
         </div>
     </div>

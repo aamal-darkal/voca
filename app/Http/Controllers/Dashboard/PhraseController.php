@@ -85,7 +85,7 @@ class PhraseController extends Controller
                 'phrase_id' => $phrase->id,
                 'word_id' => $word->id,
                 'translation' => $translation,
-                'order' => $i
+                'order' => $i+1
             ]);
             $words[] = $word;
             $phraseWords[] = $phraseWord;
@@ -111,7 +111,6 @@ class PhraseController extends Controller
      */
     public function edit(Phrase $phrase)
     {
-        // return $phrase;
         $wordTypes = $phrase->language->wordTypes;
         $words = $phrase->words;
         $allTranslations = [];
@@ -123,13 +122,14 @@ class PhraseController extends Controller
             $phraseWord = PhraseWord::where('phrase_id', $phrase->id)->where('word_id', $word->id)->first();
             $phraseWords[] = $phraseWord;
         }
-        return redirect()->route('words.edit')->with([
+        session()->put([
             'phrase' => $phrase,
             'words' => $words,
             'allTranslations' => $allTranslations,
             'phraseWords' => $phraseWords,
             'word_types' => $wordTypes,
         ]);
+        return redirect()->route('words.edit');       
     }
 
 

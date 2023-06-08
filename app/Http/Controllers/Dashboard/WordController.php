@@ -50,6 +50,9 @@ class WordController extends Controller
             $phraseWords[$i]->translation = $translations[$i] ;
             $phraseWords[$i]->save();
         }
+        session()->forget([
+            'phrase' , 'words', 'allTranslations', 'phraseWords', 'word_types',
+        ]);
         return redirect()->route('phrases.index')->with('success' , 'Words Saved successfully ');
 
     }

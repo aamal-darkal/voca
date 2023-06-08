@@ -1,9 +1,9 @@
 @extends('layouts.dashboard')
 @section('inside-content')
     <div class="container">
-        <form action="{{ route('home.saveProfile') }}" method="post" class="col-md-6 offset-md-3">
-            <a href="{{ route('home') }}" class="btn btn-mine my-2">&leftarrow;</a>            
-            <h5 class="fs-2">Edit Admin profile</h5>
+        <form action="{{ route('home.saveProfile') }}" method="post" class="col-md-6 offset-md-1">
+            <h4 class="fs-2"><a href="{{ route('home') }}" class="btn btn-mine my-2">&leftarrow;</a>            
+            Edit Admin profile</h4>
             @csrf
             
             <label for="email">Admin Email</label>

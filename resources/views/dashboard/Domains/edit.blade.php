@@ -30,9 +30,9 @@
                 </tr>
             </table>
             {{-- ========================== end template  ======================================= --}}
-            <form action="{{ route('domains.update', ['domain' => $domain]) }}" method="post" class="col-md-6 offset-md-3">
-                <a href="{{ route('domains.index') }}" class="btn btn-mine my-2">&leftarrow;</a>
-                <h4>Edit Domain </h4>
+            <form action="{{ route('domains.update', ['domain' => $domain]) }}" method="post" class="col-md-6 offset-md-1">
+                <h4><a href="{{ route('domains.index') }}" class="btn btn-mine my-2">&leftarrow;</a>
+                Edit Domain </h4>
                 @csrf
                 @method('put')
 

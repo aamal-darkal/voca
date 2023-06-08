@@ -41,7 +41,7 @@ Route::controller(WordController::class )->prefix('words')->group(function(){
 });
 
 Route::get('test' , function() {
-    $word = Word::where("content", 'should')->get();
-    return $word;
+    
+    return session()->get('phrase');
 });
 

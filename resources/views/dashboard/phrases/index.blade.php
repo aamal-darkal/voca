@@ -57,7 +57,7 @@
                             <td><a href="{{ route( 'phrases.edit', ['phrase' => $phrase]) }}"
                                     class="btn btn-outline-primary btn-sm" title="edit"><i class="fas fa-edit"></i></a> |                                
                                 <form action="{{ route('phrases.destroy', ['phrase' => $phrase]) }}" method="post"
-                                    onsubmit="return confirm('delete {{ $phrase->name }}')" class="d-inline-block">
+                                    onsubmit="return confirm('delete {{ $phrase->content }}')" class="d-inline-block">
                                     @csrf
                                     @method('delete')
                                     <button type="submit" title="delete" class="btn btn-outline-danger btn-sm"><i

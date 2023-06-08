@@ -31,8 +31,8 @@
             </table>
             {{-- ========================== end template  ======================================= --}}
             <form action="{{ route('domains.store') }}" method="post" class="col-md-10  ">
-                <a href="{{ route('domains.index') }}" class="btn btn-mine my-2">&leftarrow;</a>
-                <h4>Add Domain </h4>
+                <h4><a href="{{ route('domains.index') }}" class="btn btn-mine my-2">&leftarrow;</a>
+                Add Domain </h4>
                 @csrf
                 <div class="col-4 control-group">
                     <label for="language">Domain Language</label>
