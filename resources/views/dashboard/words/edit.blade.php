@@ -9,6 +9,8 @@
                 <h4><a href="{{ route('phrases.index') }}" class="btn btn-mine my-2">&leftarrow;</a>
                     specify phrase words </h4>
                 @csrf
+                <input type="text"  name="phrase_id" value="{{ $phrase->id }}"  class="form-control" hidden>
+
                 <div class="row">
                     <div class="col-11">
                         <h5>Content</h5>
@@ -17,7 +19,7 @@
 
                     <div class="col-11 mt-2">
                         <h5>Translation</h5>
-                        <input type="text" value="{{ $phrase->translation }}" disabled class="form-control">
+                        <input type="text"  name="translation" value="{{ $phrase->translation }}" class="form-control">
                     </div>
                 </div>
                 <h5 class="mt-3"> Words </h5>
@@ -66,7 +68,7 @@
                                         @endforeach
                                     </datalist>
                                 </td>
-                                <td><input type="number" name="order[]" value="{{ $phraseWords[$i]->order }}" disabled
+                                <td><input type="text" name="order[]" value="{{ $phraseWords[$i]->order }}" disabled
                                         class="form-control w-100px"> </td>
                             </tr>
                         @endfor

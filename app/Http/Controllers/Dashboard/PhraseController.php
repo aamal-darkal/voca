@@ -75,7 +75,6 @@ class PhraseController extends Controller
                 // get all translations to be as dataset                
                 $translations = PhraseWord::where('word_id',  $word->id)->get()->unique('translation');
 
-                // return $translations;
             } else {
                 $word = Word::create(["content" => $wordContent[$i]]);
                 $translation = '';
@@ -92,7 +91,7 @@ class PhraseController extends Controller
             $allTranslations[] = $translations;
         }
         $word_types = WordType::get();
-        return redirect()->route('words.edit')->with([
+        session()->put([
             'success' => 'phrase added, ready to complete its words',
             'phrase' => $phrase,
             'words' => $words,
@@ -100,6 +99,7 @@ class PhraseController extends Controller
             'phraseWords' => $phraseWords,
             'word_types' => $word_types,
         ]);
+        return redirect()->route('words.edit');
     }
 
 

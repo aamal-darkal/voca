@@ -54,7 +54,7 @@ body {
 }
 
 .side-menu a {
-    font-size: 1.2em;
+    /* font-size: 1.2em; */
 }
 main {
     min-height: 85vh;

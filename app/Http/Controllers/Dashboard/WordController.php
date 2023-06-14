@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Phrase;
 use App\Models\PhraseWord;
 use App\Models\Word;
 use Illuminate\Http\Request;
@@ -37,7 +38,9 @@ class WordController extends Controller
      */
     public function save(Request $request )
     {
-        // dd($request->all());
+        $phrase = Phrase::find($request->phrase_id);
+        $phrase->translation = $request->translation;
+        $phrase->save();
         $words = Word::find( $request->word_ids);
         $word_types = $request->word_types;
         for($i = 0 ; $i < count($words) ; $i++) {
@@ -77,15 +80,12 @@ class WordController extends Controller
     public function edit(Word $word)
     {
 
-        // dd( session()->all());
         $phrase = session()->get('phrase');
         $words = session()->get('words');
-        // return $words;
         $allTranslations = session()->get('allTranslations');
         $phraseWords = session()->get('phraseWords');
         $word_types = session()->get('word_types');
         return view('dashboard.words.edit', compact('phrase', 'words','allTranslations' , 'phraseWords' ,'word_types'));
-
     }
 
     /**
