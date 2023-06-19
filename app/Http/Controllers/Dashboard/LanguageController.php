@@ -43,9 +43,9 @@ class LanguageController extends Controller
         $request->validate([
             'name' => 'required|string|max:20|unique:languages',
             'key' => 'required|string|max:2|min:2|unique:languages',
-            'locales.*' => 'max:5|min:5',
-            'keys.*' => 'max:50',
-            'names.*' => 'max:50',
+            'locales.*' => 'required|string|max:5|min:5',
+            'keys.*' => 'required|string|max:50',
+            'names.*' => 'required|string|max:50',
         ]);
         $language = Language::create($request->all());
         if ($request->has('locales')) {
@@ -54,8 +54,7 @@ class LanguageController extends Controller
             for ($i = 0; $i < count($locales); $i++) {
                 Dialect::create(['locale' => $locales[$i], 'key' => $keys[$i], 'language_id' => $language->id]);
             }
-        } else
-            Dialect::create(['lacale' => $language->name]);
+        }
         if ($request->has('names')) {
             $names = $request->names;
             for ($i = 0; $i < count($names); $i++) {
@@ -100,7 +99,7 @@ class LanguageController extends Controller
         $request->validate([
             'name' => 'required|string|max:20|unique:languages,name,' . $language->id,
             'key' => 'required|string|max:2|min:2|unique:languages,key,' . $language->id,
-            'locales.*' => 'max:5|min:5',
+            'locales.*' => 'max:5',
             'keys.*' => 'max:50',
             'names.*' => 'max:50',
         ]);
@@ -108,44 +107,52 @@ class LanguageController extends Controller
         $language->update($request->all());
 
         if ($request->has('locales')) {
-            // return $request->locales;
             $ids = $request->dialectIds;
             $states = $request->dialectStates;
             $locales = $request->locales;
             $keys = $request->keys;
+
             for ($i = 0; $i < count($locales); $i++) {
-                if ($states[$i] == 'new')
-                    Dialect::create(['locale' => $locales[$i], 'key' => $keys[$i], 'language_id' => $language->id]);
-                elseif ($states[$i] == 'del' && $ids[$i] != 'new') {
+                if ($states[$i] == 'new') {
+                    if ($locales[$i] && $keys[$i])
+                        Dialect::create(['locale' => $locales[$i], 'key' => $keys[$i], 'language_id' => $language->id]);
+                } elseif ($states[$i] == 'del' && $ids[$i] != 'new') {
                     $participantStatusCount = Dialect::find($ids[$i])->participants()->count();
                     if ($participantStatusCount == 0)
                         Dialect::find($ids[$i])->delete();
                     else
-                        $errors['dialect'] = "can't delete dialect, because there are participants related to it";
+                        $errors['dialect'] = "can't delete dialect, because there are $participantStatusCount participants related to it";
                 } elseif ($states[$i] == 'old') {
-                    $dialect = Dialect::find($ids[$i]);
-                    $dialect->update(['locale' => $locales[$i], 'key' => $keys[$i], 'language_id' => $language->id]);
+                    if ($locales[$i] && $keys[$i]) {
+                        $dialect = Dialect::find($ids[$i]);
+                        $dialect->update(['locale' => $locales[$i], 'key' => $keys[$i], 'language_id' => $language->id]);
+                    }
                 }
             }
-        } else
-            Dialect::create(['lacale' => $language->name]);
+        }
 
         if ($request->has('names')) {
             $ids = $request->wordTypesIds;
             $states = $request->wordTypesStates;
             $names = $request->names;
+
             for ($i = 0; $i < count($names); $i++) {
-                if ($states[$i] == 'new')
-                    WordType::create(['name' => $names[$i], 'language_id' => $language->id]);
-                elseif ($states[$i] == 'del' && $ids[$i] != 'new') {
+
+                if ($states[$i] == 'new') {
+                    if ($names[$i])
+                        WordType::create(['name' => $names[$i], 'language_id' => $language->id]);
+                } elseif ($states[$i] == 'del' && $ids[$i] != 'new') {
                     $wordsCount = WordType::find($ids[$i])->words()->count();
+
                     if ($wordsCount == 0)
                         WordType::find($ids[$i])->delete();
                     else
-                        $errors['wordType'] = "can't delete word type, because there are words related to it";
+                        $errors['wordType'] = "can't delete word type, because there are $wordsCount words related to it";
                 } elseif ($states[$i] == 'old') {
-                    $dialect = WordType::find($ids[$i]);
-                    $dialect->update(['name' => $names[$i], 'language_id' => $language->id]);
+                    if ($names[$i]) {
+                        $dialect = WordType::find($ids[$i]);
+                        $dialect->update(['name' => $names[$i], 'language_id' => $language->id]);
+                    }
                 }
             }
         }

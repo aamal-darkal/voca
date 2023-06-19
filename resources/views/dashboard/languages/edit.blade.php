@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 @section('inside-content')
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             {{-- ========================== template-dialect ======================================= --}}
             <table id="template-dialect" style="visibility: collapse;">
@@ -14,18 +14,10 @@
                         <input type="text" name="keys[]" class="form-control" maxlength="50" required>
                     </td>
                     <td>
-                        <button type="button" class="pull-right btn btn-outline-mine"
-                            onclick="delete_dialect(this)" title="delete this dialect">-</button>
+                        <button type="button" class="pull-right btn btn-outline-mine" onclick="delete_dialect(this)"
+                            title="delete this dialect">-</button>
                     </td>
                 </tr>
-                <div class="text-danger">
-                    @error('locales.*')
-                        {{ $message }}
-                    @enderror
-                    @error('keys.*')
-                        {{ $message }}
-                    @enderror
-                </div>
             </table>
             {{-- ========================== template-wordType ======================================= --}}
             <table id="template-wordType" style="visibility: collapse;">
@@ -36,53 +28,51 @@
                         <input type="text" name="names[]" class="form-control" maxlength="50" required>
                     </td>
                     <td>
-                        <button type="button" class="pull-right btn btn-outline-mine"
-                            onclick="delete_wordType(this)" title="delete this word type">-</button>
+                        <button type="button" class="pull-right btn btn-outline-mine" onclick="delete_wordType(this)"
+                            title="delete this word type">-</button>
                     </td>
                 </tr>
-                <div class="text-danger">
-                    @error('locales.*')
-                        {{ $message }}
-                    @enderror
-                    @error('keys.*')
-                        {{ $message }}
-                    @enderror
-                </div>
             </table>
             {{-- ################################### start - form ####################### --}}
-            <form action="{{ route('languages.update', ['language' => $language]) }}" method="post" class="col-md-6 offset-md-1">
-                <h4><a href="{{ route('languages.index' ) }}" class="btn btn-mine my-2">&leftarrow;</a>
-                Edit Language </h4>                
+            <form action="{{ route('languages.update', ['language' => $language]) }}" method="post"
+                class="col-md-6 offset-md-1">
+                <h4><a href="{{ route('languages.index') }}" class="btn btn-mine my-2">&leftarrow;</a>
+                    Edit Language </h4>
                 @csrf
                 @method('put')
+                {{-- ************* error display ******************** --}}
+                @foreach ($errors->all() as $error)
+                    <p class="text-danger">{{ $error }}</p>
+                @endforeach
                 {{-- ****************************** language ****************************** --}}
                 <label for="name">Language name</label>
-                <input type="text" name="name" id="name" value="{{ old('name', $language->name) }}"
-                    placeholder="language name" required maxlength="50" class="form-control my-2">
+                <input type="text" name="name" id="name" value="{{ old('name', $language->name) }}" placeholder="language name"
+                    required maxlength="50" class="form-control my-2" maxlength="50">
                 <div class="text-danger">
                     @error('name')
                         {{ $message }}
                     @enderror
                 </div>
                 <label for="key">Language key</label>
-                <input type="text" name="key" id="key" value="{{ old('key', $language->key) }}"
-                    placeholder="language key" required minlength="2" maxlength="2" class="form-control my-2">
+                <input type="text" name="key" id="key" value="{{ old('key', $language->key) }}" placeholder="language key"
+                    required minlength="2" maxlength="2" class="form-control my-2">
                 <div class="text-danger">
                     @error('key')
                         {{ $message }}
                     @enderror
                 </div>
 
-                {{-- ****************************** Dialects ****************************** --}}
+                {{-- ***************************** Dialects ***************************** --}}
                 <h5 class="mt-5"> Dialects &nbsp;&nbsp;
-                    <button type="button" id="add_row" class="btn btn-outline-mine" onclick="plus_dialect()" title="add dialect">+</button>
+                    <button type="button" id="add_row" class="btn btn-outline-mine" onclick="plus_dialect()"
+                        title="Add new dialect">+</button>
                 </h5>
-                <table class="table" id="real-dialects">
+                <table id="real-dialects" class="table">
                     <thead>
                         <tr>
-                            <th>Locale</th>
-                            <th>Key</th>
-                            <td>actions</td>
+                            <th>Dialect Locale</th>
+                            <th>Dialect Key</th>
+                            <th>action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -101,11 +91,6 @@
                                         <input type="hidden" name="dialectIds[]" value="{{ $dialectIds[$i] }}">
                                         <input type="text" name="locales[]" value="{{ $locales[$i] }}"
                                             class="form-control" minlength="5" maxlength="5" required>
-                                        <div class="text-danger">
-                                            @error('locales')
-                                                {{ $message }}
-                                            @enderror
-                                        </div>
                                     </td>
                                     <td>
                                         <input type="text" name="keys[]" value="{{ $keys[$i] }}"
@@ -119,11 +104,6 @@
                             @endfor
                         @else
                             {{-- has already saved value --}}
-                            @php
-                                $names = old('names');
-                                $wordTypesStates = old('wordTypesStates');
-                                $wordTypesIds = old('wordTypesIds');
-                            @endphp
                             @foreach ($language->dialects as $dialect)
                                 <tr class="table-row">
                                     <td>
@@ -147,21 +127,26 @@
                         @endif
                     </tbody>
                 </table>
-                {{-- ****************************** word types ****************************** --}}
 
+                {{-- ***************************** wordtype***************************** --}}
                 <h5 class="mt-5"> Word Types &nbsp;&nbsp;
-                    <button type="button" id="add_row" class="btn btn-outline-mine"
-                        onclick="plus_wordType()" title="add dialect">+</button>
+                    <button type="button" id="add_row" class="btn btn-outline-mine" onclick="plus_wordType()"
+                        title="Add new word type">+</button>
                 </h5>
-                <table class="table" id="real-wordTypes">
+                <table id="real-wordType" class="table">
                     <thead>
                         <tr>
-                            <th>names</th>
-                            <td>actions</td>
+                            <th>Word Type Name</th>
+                            <th>actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {{-- has pre posted value (old) --}}
+                        @php
+                            $names = old('names');
+                            $wordTypesStates = old('wordTypesStates');
+                            $wordTypesIds = old('wordTypesIds');
+                        @endphp
                         @if ($names)
                             @for ($i = 0; $i < count($names); $i++)
                                 <tr class="table-row">
@@ -170,12 +155,7 @@
                                             value="{{ $wordTypesStates[$i] }}">
                                         <input type="hidden" name="wordTypesIds[]" value="{{ $wordTypesIds[$i] }}">
                                         <input type="text" name="names[]" value="{{ $names[$i] }}"
-                                            class="form-control" maxlength="50" required>
-                                        <div class="text-danger">
-                                            @error('names')
-                                                {{ $message }}
-                                            @enderror
-                                        </div>
+                                            class="form-control" required maxlength="50">
                                     </td>
                                     <td>
                                         <button type="button" class="pull-right btn btn-outline-mine"
@@ -203,11 +183,9 @@
                         @endif
                     </tbody>
                 </table>
-                <input type="button" value="save Language" class="btn btn-mine btn-mine mt-1" onclick="submit()">
+                <input type="submit" value="save Language" class="btn btn-mine btn-mine mt-1">
                 <input type="reset" value="تصفير" class="btn btn-outline-mine mt-1">
             </form>
-            {{-- ################################### end - form ####################### --}}
-
         </div>
     </div>
 @endsection

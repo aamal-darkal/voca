@@ -14,4 +14,7 @@ class WordType extends Model
     function language() {
         return $this->belongsTo(Language::class);
     }
+    function words() {
+        return $this->hasMany(Word::class);
+    }
 }

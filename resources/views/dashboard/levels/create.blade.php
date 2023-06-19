@@ -11,7 +11,7 @@
             <table style="visibility: collapse;">
                 <tr class="table-row" id="template">
                     <td>
-                        <input type="text" name="titles[]" class="form-control" maxlength="100">
+                        <input type="text" name="titles[]" class="form-control" maxlength="100" required>
                     </td>
                     <td>
                         <input type="text" name="descriptions[]" class="form-control" maxlength="255" required>
@@ -25,7 +25,7 @@
                         </select>
                     </td>
                     <td>
-                        <button type="button" class="pull-right btn btn-outline-mine" onclick="delete_row(this)">-</button>
+                        <button type="button" class="pull-right btn btn-outline-mine" onclick="delete_row(this)" title="Remove this translation">-</button>
                     </td>
                 </tr>
             </table>
@@ -85,7 +85,7 @@
                             <td>
                                 <h5 class="my-2"> Translations:
                                     <button type="button" id="add_row" class="btn btn-outline-mine"
-                                        onclick="plus_row()">+</button>
+                                        onclick="plus_row()" title="Add translation">+</button>
                                 </h5>
                             <td>
                         </tr>
@@ -118,7 +118,7 @@
                                     </td>
                                     <td>
                                         <button type="button" class="pull-right btn btn-outline-mine"
-                                            onclick="delete_row(this)">-</button>
+                                            onclick="delete_row(this)" title="Remove this translation">-</button>
                                     </td>
                                 </tr>
                             @endfor

@@ -146,6 +146,6 @@ class DomainController extends Controller
             $domain->delete();
             return redirect()->route('domains.index')->with('success', "domain deleted successfully");
         } else
-            return redirect()->route('domains.index')->with('error', "can remove domain $domain->title with $participantCount participantCount and $levelCount levels");
+            return redirect()->route('domains.index')->with('error', "can't remove domain $domain->title, because there are $participantCount participant related to it and has $levelCount levels");
     }
 }

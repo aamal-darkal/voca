@@ -13,7 +13,7 @@
             <a class="btn border" href="{{ route('domains.index') }}"><i class="fas fa-section"></i> Domains & Levels</a>
             <a class="btn border" href="{{ route('languages.index') }}"><i class="fas fa-language"></i> Langs & Dialects</a>
             <a class="btn border" href="{{ route('participants.index') }}"><i class="fas fa-user-friends"></i> View Participants</a>
-            <a class="btn border" href="{{ route('home.editProfile') }}"><i class="fas fa-quote-left"></i> <i class="fas fa-user"></i> Profile</a>
+            <a class="btn border" href="{{ route('home.editProfile') }}"><i class="fas fa-user"></i> Profile</a>
         </div>
     </div>
 </div>

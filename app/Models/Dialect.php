@@ -14,5 +14,8 @@ class Dialect extends Model
     function language() {
         return $this->belongsTo(Language::class);
     }
+    function participants() {
+        return $this->hasMany(Participant::class);
+    }
 
 }

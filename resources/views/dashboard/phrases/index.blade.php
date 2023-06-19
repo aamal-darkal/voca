@@ -49,7 +49,7 @@
                     @foreach ($phrases as $phrase)
                         <tr>
                             <td>{{ $phrase->id }}</td>
-                            <td style="display: none">{{ $phrase->level_id }}</td>
+                            <td class="d-none">{{ $phrase->level_id }}</td>
                             <td class="text-start">{{ $phrase->content }}</td>
                             <td class="text-start">{{ $phrase->translation }}</td>
                             <td class="text-center">{{ $phrase->order }}</td>

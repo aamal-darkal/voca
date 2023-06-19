@@ -3,11 +3,6 @@
     <div class="container-fluid">
         <div class="row">
 
-            {{-- error display --}}
-            @foreach ($errors->all() as $error)
-                <p>{{ $error }}</p>
-            @endforeach
-
             {{-- ========================== template-dialect ======================================= --}}
             <table id="template-dialect" style="visibility: collapse;">
                 <tr class="table-row">
@@ -15,11 +10,11 @@
                         <input type="text" name="locales[]" class="form-control" minlength="5" maxlength="5" required>
                     </td>
                     <td>
-                        <input type="text" name="keys[]" class="form-control"  maxlength="50" required>
+                        <input type="text" name="keys[]" class="form-control" maxlength="50" required>
                     </td>
                     <td>
-                        <button type="button" class="pull-right btn btn-outline-mine"
-                            onclick="delete_dialect(this)" title="delete this dialect">-</button>
+                        <button type="button" class="pull-right btn btn-outline-mine" onclick="delete_dialect(this)"
+                            title="delete this dialect">-</button>
                     </td>
                 </tr>
             </table>
@@ -30,26 +25,32 @@
                         <input type="text" name="names[]" class="form-control" maxlength="50" required>
                     </td>
                     <td>
-                        <button type="button" class="pull-right btn btn-outline-mine"
-                            onclick="delete_wordType(this)" title="delete this word type">-</button>
+                        <button type="button" class="pull-right btn btn-outline-mine" onclick="delete_wordType(this)"
+                            title="delete this word type">-</button>
                     </td>
                 </tr>
             </table>
 
             {{-- ################################### start - form ####################### --}}
             <form action="{{ route('languages.store') }}" method="post" class="col-md-6 offset-md-1">
-                <h4><a href="{{ route('languages.index' ) }}" class="btn btn-mine my-2">&leftarrow;</a>
-                Add Language </h4>
+                <h4><a href="{{ route('languages.index') }}" class="btn btn-mine my-2">&leftarrow;</a>
+                    Add Language </h4>
                 @csrf
-                {{-- ****************************** language ******************************--}}                
-                <input type="text" name="name" value="{{ old('name') }}" placeholder="language name" required
+                {{-- ************* error display ******************** --}}
+                @foreach ($errors->all() as $error)
+                    <p class="text-danger">{{ $error }}</p>
+                @endforeach
+                {{-- ****************************** language ****************************** --}}
+                <label for="name">Language name</label>
+                <input type="text" name="name" id="name" value="{{ old('name') }}" placeholder="language name" required
                     maxlength="50" class="form-control my-2" maxlength="50">
                 <div class="text-danger">
                     @error('name')
                         {{ $message }}
                     @enderror
                 </div>
-                <input type="text" name="key" value="{{ old('key') }}" placeholder="language key" required
+                <label for="key">Language key</label>
+                <input type="text" name="key" id="key" value="{{ old('key') }}" placeholder="language key" required
                     minlength="2" maxlength="2" class="form-control my-2">
                 <div class="text-danger">
                     @error('key')
@@ -59,13 +60,14 @@
 
                 {{-- ***************************** Dialects ***************************** --}}
                 <h5 class="mt-5"> Dialects &nbsp;&nbsp;
-                    <button type="button" id="add_row" class="btn btn-outline-mine" onclick="plus_dialect()" title="Add new dialect">+</button>
+                    <button type="button" id="add_row" class="btn btn-outline-mine" onclick="plus_dialect()"
+                        title="Add new dialect">+</button>
                 </h5>
                 <table id="real-dialects" class="table">
                     <thead>
                         <tr>
-                            <th>Locale</th>
-                            <th>Key</th>
+                            <th>Dialect Locale</th>
+                            <th>Dialect Key</th>
                             <th>action</th>
                         </tr>
                     </thead>
@@ -74,17 +76,17 @@
                         @php
                             $locales = old('locales');
                             $keys = old('keys');
-                        @endphp                        
+                        @endphp
                         @if ($locales)
                             @for ($i = 0; $i < count($locales); $i++)
                                 <tr class="table-row">
                                     <td>
                                         <input type="text" name="locales[]" value="{{ $locales[$i] }}"
-                                            class="form-control" minlength="5" maxlength="5" required>                                        
+                                            class="form-control" minlength="5" maxlength="5" required>
                                     </td>
                                     <td>
                                         <input type="text" name="keys[]" value="{{ $keys[$i] }}"
-                                            class="form-control"  maxlength="50" required>
+                                            class="form-control" maxlength="50" required>
                                     </td>
                                     <td>
                                         <button type="button" class="pull-right btn btn-outline-mine"
@@ -95,15 +97,17 @@
                         @endif
                     </tbody>
                 </table>
-
                 {{-- ***************************** wordtype***************************** --}}
                 <h5 class="mt-5"> Word Types &nbsp;&nbsp;
-                    <button type="button" id="add_row" class="btn btn-outline-mine" onclick="plus_wordType()" title="Add new word type">+</button>
+                    <button type="button" id="add_row" class="btn btn-outline-mine" onclick="plus_wordType()"
+                        title="Add new word type">+</button>
                 </h5>
                 <table id="real-wordType" class="table">
                     <thead>
                         <tr>
-                            <th>name</th>
+                            <th>Word Type Name</th>
+                            <th>action</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -113,15 +117,10 @@
                         @endphp
                         @if ($names)
                             @for ($i = 0; $i < count($names); $i++)
-                                <tr class="table-row">                                    
+                                <tr class="table-row">
                                     <td>
                                         <input type="text" name="names[]" value="{{ $names[$i] }}"
-                                            class="form-control" required maxlength="50">
-                                        <div class="text-danger">
-                                            @error('names')
-                                                {{ $message }}
-                                            @enderror
-                                        </div>
+                                            class="form-control" required maxlength="50">                                        
                                     </td>
                                     <td>
                                         <button type="button" class="pull-right btn btn-outline-mine"
