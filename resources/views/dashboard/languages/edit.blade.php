@@ -15,7 +15,7 @@
                     </td>
                     <td>
                         <button type="button" class="pull-right btn btn-outline-mine"
-                            onclick="delete_dialect(this)">-</button>
+                            onclick="delete_dialect(this)" title="delete this dialect">-</button>
                     </td>
                 </tr>
                 <div class="text-danger">
@@ -37,7 +37,7 @@
                     </td>
                     <td>
                         <button type="button" class="pull-right btn btn-outline-mine"
-                            onclick="delete_wordType(this)">-</button>
+                            onclick="delete_wordType(this)" title="delete this word type">-</button>
                     </td>
                 </tr>
                 <div class="text-danger">
@@ -75,7 +75,7 @@
 
                 {{-- ****************************** Dialects ****************************** --}}
                 <h5 class="mt-5"> Dialects &nbsp;&nbsp;
-                    <button type="button" id="add_row" class="btn btn-outline-mine" onclick="plus_dialect()">+</button>
+                    <button type="button" id="add_row" class="btn btn-outline-mine" onclick="plus_dialect()" title="add dialect">+</button>
                 </h5>
                 <table class="table" id="real-dialects">
                     <thead>
@@ -113,7 +113,7 @@
                                     </td>
                                     <td>
                                         <button type="button" class="pull-right btn btn-outline-mine"
-                                            onclick="delete_dialect(this)">-</button>
+                                            onclick="delete_dialect(this)" title="delete this dialect">-</button>
                                     </td>
                                 </tr>
                             @endfor
@@ -140,7 +140,7 @@
                                     </td>
                                     <td>
                                         <button type="button" class="pull-right btn btn-outline-mine"
-                                            onclick="delete_dialect(this)">-</button>
+                                            onclick="delete_dialect(this)" title="delete this dialect">-</button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -151,7 +151,7 @@
 
                 <h5 class="mt-5"> Word Types &nbsp;&nbsp;
                     <button type="button" id="add_row" class="btn btn-outline-mine"
-                        onclick="plus_wordType()">+</button>
+                        onclick="plus_wordType()" title="add dialect">+</button>
                 </h5>
                 <table class="table" id="real-wordTypes">
                     <thead>
@@ -179,7 +179,7 @@
                                     </td>
                                     <td>
                                         <button type="button" class="pull-right btn btn-outline-mine"
-                                            onclick="delete_wordType(this)">-</button>
+                                            onclick="delete_wordType(this)" title="delete this word type">-</button>
                                     </td>
                                 </tr>
                             @endfor
@@ -196,7 +196,7 @@
                                     </td>
                                     <td>
                                         <button type="button" class="pull-right btn btn-outline-mine"
-                                            onclick="delete_wordType(this)">-</button>
+                                            onclick="delete_wordType(this)" title="delete this word type">-</button>
                                     </td>
                                 </tr>
                             @endforeach

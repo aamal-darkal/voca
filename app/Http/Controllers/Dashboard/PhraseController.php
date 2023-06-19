@@ -133,6 +133,19 @@ class PhraseController extends Controller
     }
 
 
+     /**
+     * Show the form for removing the specified resource.
+     * 
+     * @param  \App\Models\Phrase  $phrase
+     * @return \Illuminate\Http\Response
+     */
+    public function delete(Phrase $phrase)
+    {   
+        $participantCount = $phrase->participants()->count();
+        Phrase::with('words')->find($phrase);
+        return view('dashboard.phrases.delete', compact('phrase', 'participantCount'));
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -141,7 +154,12 @@ class PhraseController extends Controller
      */
     public function destroy(Phrase $phrase)
     {
-        $phrase->delete();
-        return back()->with('success', 'phrase is successfuly deleted');
+        $participantCount = $phrase->participants()->count();
+
+        if ($participantCount == 0 ) {
+            $phrase->delete();
+            return redirect()->route('phrases.index')->with('success', "phrase deleted successfully");
+        } else
+            return redirect()->route('phrases.index')->with('error', "can remove phrase $phrase->content with $participantCount participantCount");
     }
 }

@@ -56,6 +56,12 @@ class LanguageController extends Controller
             }
         } else
             Dialect::create(['lacale' => $language->name]);
+        if ($request->has('names')) {
+            $names = $request->names;
+            for ($i = 0; $i < count($names); $i++) {
+                WordType::create(['name' => $names[$i], 'language_id' => $language->id]);
+            }
+        }
         return redirect()->route('languages.index')->with('success', 'Language added successfully');
     }
 
@@ -67,7 +73,7 @@ class LanguageController extends Controller
      */
     public function show(Language $language)
     {
-        return view('dashboard.languages.view' , compact('language'));
+        return view('dashboard.languages.view', compact('language'));
     }
 
     /**
@@ -98,6 +104,7 @@ class LanguageController extends Controller
             'keys.*' => 'max:50',
             'names.*' => 'max:50',
         ]);
+        $errors = [];
         $language->update($request->all());
 
         if ($request->has('locales')) {
@@ -110,7 +117,11 @@ class LanguageController extends Controller
                 if ($states[$i] == 'new')
                     Dialect::create(['locale' => $locales[$i], 'key' => $keys[$i], 'language_id' => $language->id]);
                 elseif ($states[$i] == 'del' && $ids[$i] != 'new') {
-                    $dialect = Dialect::find($ids[$i])->delete();
+                    $participantStatusCount = Dialect::find($ids[$i])->participants()->count();
+                    if ($participantStatusCount == 0)
+                        Dialect::find($ids[$i])->delete();
+                    else
+                        $errors['dialect'] = "can't delete dialect, because there are participants related to it";
                 } elseif ($states[$i] == 'old') {
                     $dialect = Dialect::find($ids[$i]);
                     $dialect->update(['locale' => $locales[$i], 'key' => $keys[$i], 'language_id' => $language->id]);
@@ -118,9 +129,8 @@ class LanguageController extends Controller
             }
         } else
             Dialect::create(['lacale' => $language->name]);
-        
-        if ($request->has('names'))
-        {
+
+        if ($request->has('names')) {
             $ids = $request->wordTypesIds;
             $states = $request->wordTypesStates;
             $names = $request->names;
@@ -128,14 +138,38 @@ class LanguageController extends Controller
                 if ($states[$i] == 'new')
                     WordType::create(['name' => $names[$i], 'language_id' => $language->id]);
                 elseif ($states[$i] == 'del' && $ids[$i] != 'new') {
-                    $dialect = WordType::find($ids[$i])->delete();
+                    $wordsCount = WordType::find($ids[$i])->words()->count();
+                    if ($wordsCount == 0)
+                        WordType::find($ids[$i])->delete();
+                    else
+                        $errors['wordType'] = "can't delete word type, because there are words related to it";
                 } elseif ($states[$i] == 'old') {
                     $dialect = WordType::find($ids[$i]);
                     $dialect->update(['name' => $names[$i], 'language_id' => $language->id]);
                 }
             }
         }
-        return redirect()->route('languages.index')->with('success', 'Language saved successfully');
+        if (count($errors) == 0)
+            return redirect()->route('languages.index')->with('success', 'Language saved successfully');
+        else {
+            foreach ($errors as $key => $value)
+                $message = "$key: $value <br>";
+            return redirect()->route('languages.index')->with('error', $message);
+        }
+    }
+
+    /**
+     * Show the form for removing the specified resource.
+     * 
+     * @param  \App\Models\Language  $language
+     * @return \Illuminate\Http\Response
+     */
+    public function delete(Language $language)
+    {
+        $participantCount = $language->participants()->count();
+        $domainCount = $language->domains()->count();
+        $language = Language::with(['dialects', 'wordTypes'])->find($language)->first();
+        return view('dashboard.languages.delete', compact('language', 'participantCount', 'domainCount'));
     }
 
     /**
@@ -144,28 +178,15 @@ class LanguageController extends Controller
      * @param  \App\Models\Language  $language
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Language $language, Request $request)
+    public function destroy(Language $language)
     {
-        if ($request->has('hard')) {
-            // $participants = $language->participants->modelkeys();
-            // Participant::wherein('id' , $participants)->delete();
-
-            // $dialects = $language->dialects->modelkeys();
-            // Dialect::wherein('id' , $dialects)->delete();
-            
-            // $language->delete();
-            // return back()->with('success' , "language deleted successfully");
-            return back()->with('error', 'Under development');
-
-        } else {
-
-            $dialectCount = $language->dialects->count();
-            if ($dialectCount == 0)
-                $language->delete();
-            else {
-                $participants = $language->participants->count();
-                return back()->with('error', "can\'t delete language, because it has $dialectCount dialects and $participants participants,     if you want to delete all, choose hard delete ");
-            }
-        }
-    }   
+        $participantCount = $language->participants()->count();
+        if ($participantCount == 0) {
+            $language->dialects()->delete();
+            $language->wordTypes()->delete();
+            $language->delete();
+            return redirect()->route('languages.index')->with('success', "language deleted successfully");
+        } else
+            return redirect()->route('languages.index')->with('error', "can remove language $language->name with $participantCount participantCount");
+    }
 }

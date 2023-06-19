@@ -125,30 +125,34 @@ class levelController extends Controller
      * @param  \App\Models\Level  $level
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Level $level, Request $request)
+    /**
+     * Show the form for removing the specified resource.
+     * 
+     * @param  \App\Models\Level  $level
+     * @return \Illuminate\Http\Response
+     */
+    public function delete(Level $level)
     {
-        if ($request->has('hard')) {
-            // $phrases = $level->phrases->modelkeys();
-            // Phrase::wherein('id' , $phrases)->delete();
+        $participantCount = $level->participants()->count();
+        $phraseCount = $level->phrases()->count();
+        return view('dashboard.levels.delete', compact('level', 'participantCount', 'phraseCount'));
+    }
 
-            // $levels = $level->levels->modelkeys();
-            // Level::wherein('id' , $levels)->delete();
-
-            // $level->delete();
-            // return back()->with('success' , "level deleted successfully");
-            return back()->with('error', 'Under development');
-        } else {
-            $phraseCount = $level->phrases->count();
-            if ($phraseCount == 0) {
-                $domain = Domain::find($level->domain_id);
-                $domain->level_count--;
-                $domain->save();
-                $level->delete();
-                return redirect()->route('levels.index', ['domain' => $domain])->with('success', 'level deleted successfully');
-            } else {
-                $wordCount = $level->words->count();
-                return back()->with('error', "can\'t delete level, because it has $phraseCount levels and $wordCount phrases,  if you want to delete all, choose hard delete ");
-            }
-        }
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Level  $level
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Level $level)
+    {
+        $participantCount = $level->participants()->count();
+        $phraseCount = $level->phrases()->count();
+        $domain = $level->domain;
+        if ($participantCount == 0 && $phraseCount == 0) {
+            $level->delete();
+            return redirect()->route('levels.index' , ['domain' => $domain])->with('success', "level deleted successfully");
+        } else
+            return redirect()->route('levels.index' , ['domain' => $domain])->with('error', "can remove level $level->title with $participantCount participantCount and $phraseCount phrases");
     }
 }

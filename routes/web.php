@@ -24,12 +24,20 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes(['register' => false]);
 
+Route::get('participants' , [ParticipantController::class,'index'])->name('participants.index');
 
 Route::resource('languages' , LanguageController::class );
-Route::get('participants' , [ParticipantController::class,'index'])->name('participants.index');
+Route::get('languages/delete/{language}' , [LanguageController::class, 'delete'] )->name('languages.delete');;
+
 Route::resource('domains' , DomainController::class );
-Route::resource('levels' , LevelController::class );    
-Route::resource('phrases' , PhraseController::class );
+Route::get('domains/delete/{language}' , [DomainController::class, 'delete'] )->name('domains.delete');;
+
+Route::resource('levels' , LevelController::class );  
+Route::get('levels/delete/{level}' , [LevelController::class, 'delete'] )->name('levels.delete');;
+
+Route::resource('phrases' , PhraseController::class )->except('show');
+Route::get('phrases/delete/{phrase}' , [PhraseController::class, 'delete'] )->name('phrases.delete');;
+
 Route::controller(HomeController::class )->group(function(){
     Route::get('/',  'index')->name('home');
     Route::get('/profile',  'editProfile')->name('home.editProfile');

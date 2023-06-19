@@ -19,7 +19,7 @@
                     </td>
                     <td>
                         <button type="button" class="pull-right btn btn-outline-mine"
-                            onclick="delete_dialect(this)">-</button>
+                            onclick="delete_dialect(this)" title="delete this dialect">-</button>
                     </td>
                 </tr>
             </table>
@@ -31,7 +31,7 @@
                     </td>
                     <td>
                         <button type="button" class="pull-right btn btn-outline-mine"
-                            onclick="delete_wordType(this)">-</button>
+                            onclick="delete_wordType(this)" title="delete this word type">-</button>
                     </td>
                 </tr>
             </table>
@@ -59,7 +59,7 @@
 
                 {{-- ***************************** Dialects ***************************** --}}
                 <h5 class="mt-5"> Dialects &nbsp;&nbsp;
-                    <button type="button" id="add_row" class="btn btn-outline-mine" onclick="plus_dialect()">+</button>
+                    <button type="button" id="add_row" class="btn btn-outline-mine" onclick="plus_dialect()" title="Add new dialect">+</button>
                 </h5>
                 <table id="real-dialects" class="table">
                     <thead>
@@ -88,7 +88,7 @@
                                     </td>
                                     <td>
                                         <button type="button" class="pull-right btn btn-outline-mine"
-                                            onclick="delete_dialect(this)">-</button>
+                                            onclick="delete_dialect(this)" title="delete this dialect">-</button>
                                     </td>
                                 </tr>
                             @endfor
@@ -98,7 +98,7 @@
 
                 {{-- ***************************** wordtype***************************** --}}
                 <h5 class="mt-5"> Word Types &nbsp;&nbsp;
-                    <button type="button" id="add_row" class="btn btn-outline-mine" onclick="plus_wordType()">+</button>
+                    <button type="button" id="add_row" class="btn btn-outline-mine" onclick="plus_wordType()" title="Add new word type">+</button>
                 </h5>
                 <table id="real-wordType" class="table">
                     <thead>
@@ -115,7 +115,7 @@
                             @for ($i = 0; $i < count($names); $i++)
                                 <tr class="table-row">                                    
                                     <td>
-                                        <input type="text" name="names[]" value="{{ $keys[$i] }}"
+                                        <input type="text" name="names[]" value="{{ $names[$i] }}"
                                             class="form-control" required maxlength="50">
                                         <div class="text-danger">
                                             @error('names')
@@ -125,7 +125,7 @@
                                     </td>
                                     <td>
                                         <button type="button" class="pull-right btn btn-outline-mine"
-                                            onclick="delete_wordType(this)">-</button>
+                                            onclick="delete_wordType(this)" title="delete this word type">-</button>
                                     </td>
                                 </tr>
                             @endfor

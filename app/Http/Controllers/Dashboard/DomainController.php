@@ -117,33 +117,35 @@ class DomainController extends Controller
         return redirect()->route('domains.index')->with('success', 'Domain saved successfully');
     }
 
+
+    /**
+     * Show the form for removing the specified resource.
+     * 
+     * @param  \App\Models\Domain  $domain
+     * @return \Illuminate\Http\Response
+     */
+    public function delete(Domain $domain)
+    {
+        $participantCount = $domain->participants()->count();
+        $levelCount = $domain->levels()->count();
+        return view('dashboard.domains.delete', compact('domain', 'participantCount', 'levelCount'));
+    }
+
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Domain  $Domain
+     * @param  \App\Models\Domain  $domain
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Domain $domain, Request $request)
+    public function destroy(Domain $domain)
     {
-        if ($request->has('hard')) {
-            // $phrases = $domain->phrases->modelkeys();
-            // Phrase::wherein('id' , $phrases)->delete();
+        $participantCount = $domain->participants()->count();
+        $levelCount = $domain->levels()->count();
 
-            // $levels = $domain->levels->modelkeys();
-            // Level::wherein('id' , $levels)->delete();
-
-            // $domain->delete();
-            // return back()->with('success' , "Domain deleted successfully");
-            return back()->with('error', 'Under development');
-        } else {
-            $levelCount = $domain->levels->count();
-            if ($levelCount == 0) {
-                $domain->delete();
-                return redirect()->route('domains.index')->with('success', 'Domain deleted successfully');
-            } else {
-                $phraseCount = $domain->phrases->count();
-                return back()->with('error', "can\'t delete Domain, because it has $levelCount levels and $phraseCount phrases,  if you want to delete all, choose hard delete ");
-            }
-        }
+        if ($participantCount == 0 && $levelCount == 0) {
+            $domain->delete();
+            return redirect()->route('domains.index')->with('success', "domain deleted successfully");
+        } else
+            return redirect()->route('domains.index')->with('error', "can remove domain $domain->title with $participantCount participantCount and $levelCount levels");
     }
 }
