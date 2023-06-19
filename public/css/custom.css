@@ -53,9 +53,6 @@ body {
     text-shadow: 0.5px 0.5px 0.5px grey, 1px 1px 1px white;
 }
 
-.side-menu a {
-    /* font-size: 1.2em; */
-}
 main {
     min-height: 85vh;
 }
@@ -70,7 +67,7 @@ td {
 }
 
 .canvas {
-    width: 200px !important;
+    width: 220px !important;
     max-width: 110%; 
 }
 

@@ -8,10 +8,10 @@
 @section('content')
     <div class="container-fluid">
         <div class="row">
-            <div class="col-2">
+            <div class="col-lg-3 col-xl-2">
                 @include('layouts.aside')
             </div>
-            <div class="col-lg-10">
+            <div class="col-lg-9 col-xl-10">
                 @yield('inside-content')
             </div>
         </div>
