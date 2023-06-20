@@ -12,6 +12,8 @@
                 @endforeach
             </select>
         </form>
+        
+        {{ $participants->links('pagination::bootstrap-5') }}
         <table class="table table-striped table-hover text-center">
             <thead>
                 <tr>

@@ -19,10 +19,10 @@ class ParticipantController extends Controller
     {
         $language = $request->input('language' , '*');
         if ($language == '*')
-            $participants = Participant::paginate(10);
+            $participants = Participant::paginate(8);
         else {
             $dialects = Dialect::select('id')->where('language_id', $language)->get();
-            $participants = Participant::whereIn('dialect_id', $dialects)->paginate(10);
+            $participants = Participant::whereIn('dialect_id', $dialects)->paginate(8);
         }
 
         $languages = Language::get();
