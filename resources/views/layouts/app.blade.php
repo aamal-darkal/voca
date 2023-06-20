@@ -25,11 +25,12 @@
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light mb-3 bg-transparent">
+        <nav class="navbar navbar-expand-md navbar-light bg-transparent p-0 pt-3">
             <div class="container-fluid">
                 <div class="col-2">
                     @yield('left-nav')
-                    <p class="navbar-brand-mine text-uppercase fs-2 d-block w-100 text-center" href="{{ url('/') }}">
+                    <p class="navbar-brand-mine text-uppercase fs-2 d-block w-100 text-center"
+                        href="{{ url('/') }}">
                         {{ config('app.name', 'Laravel') }}
                     </p>
                 </div>
@@ -45,7 +46,6 @@
                     <ul class="navbar-nav ms-auto">
                         <!-- Authentication Links -->
                         @guest
-                           
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
@@ -70,16 +70,16 @@
                 </div>
             </div>
         </nav>
-        <div class="msgs m-3">
-            @if(session()->has('success'))
-            <div class="alert alert-success w-50 mx-auto">
-                {{ session()->get('success') }}
-            </div>
+        <div>
+            @if (session()->has('success'))
+                <div class="alert alert-success w-50 mx-auto my-3">
+                    {{ session()->get('success') }}
+                </div>
             @endif
-            @if(session()->has('error'))
-            <div class="alert alert-danger w-50 mx-auto">
-                {{ session()->get('error') }}
-            </div>
+            @if (session()->has('error'))
+                <div class="alert alert-danger w-50 mx-auto my-3">
+                    {{ session()->get('error') }}
+                </div>
             @endif
         </div>
         <main class="container-fluid">

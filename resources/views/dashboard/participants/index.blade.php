@@ -1,8 +1,8 @@
 @extends('layouts.dashboard')
 @section('inside-content')
     <div class="container-fluid">
-        <h3>Participant </h3>
-        <a onclick="history.back()" class="btn btn-mine my-2">&leftarrow;</a>
+        <h3><a onclick="history.back()" class="btn btn-mine my-2">&leftarrow;</a>
+        Participant </h3>
         <form action="{{ route('participants.index') }}" class="col-md-3">
             <label for="language">Language</label>
             <select name="language" id="language" onchange="submit()" class="form-control">
