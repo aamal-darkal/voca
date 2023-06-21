@@ -29,10 +29,10 @@ Route::get('participants' , [ParticipantController::class,'index'])->name('parti
 Route::resource('languages' , LanguageController::class )->except('show');
 Route::get('languages/delete/{language}' , [LanguageController::class, 'delete'] )->name('languages.delete');;
 
-Route::resource('domains' , DomainController::class )->except('show');;
-Route::get('domains/delete/{language}' , [DomainController::class, 'delete'] )->name('domains.delete');;
+Route::resource('domains' , DomainController::class )->except('show');
+Route::get('domains/delete/{domain}' , [DomainController::class, 'delete'] )->name('domains.delete');;
 
-Route::resource('levels' , LevelController::class )->except('show');;  
+Route::resource('levels' , LevelController::class )->except('show'); 
 Route::get('levels/delete/{level}' , [LevelController::class, 'delete'] )->name('levels.delete');;
 
 Route::resource('phrases' , PhraseController::class )->except('show');

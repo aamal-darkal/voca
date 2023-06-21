@@ -6,10 +6,10 @@
                 <h4><a href="{{ route('domains.index') }}" class="btn btn-mine my-2">&leftarrow;</a>
                     Delete Domain </h4>
                 @if ($participantCount > 0)
-                    <h5 class="text-danger">You can't remove {{ $domains->title }} because it has {{ $participantCount }}
+                    <h5 class="text-danger">You can't remove {{ $domain->title }} because it has {{ $participantCount }}
                         participants</h5>
                 @elseif ($levelCount > 0)
-                    <h5 class="text-danger">You can't remove {{ $domains->title }} because it has {{ $levelCount }}
+                    <h5 class="text-danger">You can't remove {{ $domain->title }} because it has {{ $levelCount }}
                         levels</h5>
                 @else
                     {{-- start form --}}

@@ -33,27 +33,11 @@
                         <td>{{ $domain->level_count }}</td>
                         <td>{{ $domain->order }}</td>
                         <td>{{ $domain->language->name }}</td>
-                        <td><a href="{{ route('domains.edit', ['domain' => $domain]) }}"
+                        <td>
+                            <a href="{{ route('domains.edit', ['domain' => $domain]) }}"
                                 class="btn btn-outline-primary btn-sm" title="edit"><i class="fas fa-edit"></i></a> |
-                            <form action="{{ route('domains.destroy', ['domain' => $domain]) }}" method="post"
-                                onsubmit="return confirm('delete {{ $domain->title }}')" class="d-inline-block">
-                                @csrf
-                                @method('delete')
-                                <button type="submit" title="delete" class="btn btn-outline-danger btn-sm"><i
-                                        class="fas fa-trash"></i></button>
-                            </form>
-                            |
-                            {{-- <form action="{{ route('domains.destroy', ['domain' => $domain]) }}" method="post"
-                                onsubmit="return confirm('delete {{ $domain->name }} wih all its participants!!')"
-                                class="d-inline-block">
-                                @csrf
-                                @method('delete')
-                                <input type="hidden" name="hard" id="" title="hard delete">
-
-                                <button type="submit" title="hard delete" class="btn btn-outline-danger btn-sm"><i
-                                        class="fas fa-book-dead"></i></button>
-                            </form> --}}
-
+                            <a href="{{ route('domains.delete', ['domain' => $domain]) }}"
+                                    class="btn btn-outline-danger btn-sm" title="remove"><i class="fas fa-trash"></i></a> |                          
                             <a href="{{ route('levels.index', ['domain' => $domain->id]) }}"
                                 class="btn btn-outline-success">Levels</button>
                         </td>
