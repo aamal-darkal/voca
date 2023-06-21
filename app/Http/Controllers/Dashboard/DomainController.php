@@ -149,3 +149,4 @@ class DomainController extends Controller
             return redirect()->route('domains.index')->with('error', "can't remove domain $domain->title, because there are $participantCount participant related to it and has $levelCount levels");
     }
 }
+ 
