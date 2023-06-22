@@ -90,14 +90,14 @@ class PhraseController extends Controller
             $phraseWords[] = $phraseWord;
             $allTranslations[] = $translations;
         }
-        $word_types = WordType::get();
+        $wordTypes = $phrase->language->wordTypes;
         session()->put([
             'success' => 'phrase added, ready to complete its words',
             'phrase' => $phrase,
             'words' => $words,
             'allTranslations' => $allTranslations,
             'phraseWords' => $phraseWords,
-            'word_types' => $word_types,
+            'wordTypes' => $wordTypes,
         ]);
         return redirect()->route('words.edit');
     }
@@ -127,7 +127,7 @@ class PhraseController extends Controller
             'words' => $words,
             'allTranslations' => $allTranslations,
             'phraseWords' => $phraseWords,
-            'word_types' => $wordTypes,
+            'wordTypes' => $wordTypes,
         ]);
         return redirect()->route('words.edit');       
     }

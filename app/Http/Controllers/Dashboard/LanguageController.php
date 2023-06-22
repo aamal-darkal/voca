@@ -160,7 +160,7 @@ class LanguageController extends Controller
             return redirect()->route('languages.index')->with('success', 'Language saved successfully');
         else {
             foreach ($errors as $key => $value)
-                $message = "$key: $value <br>";
+                $message = "$key: $value -";
             return redirect()->route('languages.index')->with('error', $message);
         }
     }

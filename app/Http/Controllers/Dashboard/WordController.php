@@ -9,26 +9,23 @@ use App\Models\Word;
 use Illuminate\Http\Request;
 
 class WordController extends Controller
-{
+{    
     /**
-     * Display a listing of the resource.
+     * Show the form for editing the specified resource.
      *
+     * @param  \App\Models\Word  $word
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function edit(Word $word)
     {
-        //
-    }
+        $phrase = session()->get('phrase');
+        $words = session()->get('words');
+        $allTranslations = session()->get('allTranslations');
+        $phraseWords = session()->get('phraseWords');
+        $wordTypes = session()->get('wordTypes');
+        return view('dashboard.words.edit', compact('phrase', 'words','allTranslations' , 'phraseWords' ,'wordTypes'));
+    }   
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        
-    }
 
     /**
      * save phrase words.
@@ -42,9 +39,9 @@ class WordController extends Controller
         $phrase->translation = $request->translation;
         $phrase->save();
         $words = Word::find( $request->word_ids);
-        $word_types = $request->word_types;
+        $wordTypes = $request->wordTypes;
         for($i = 0 ; $i < count($words) ; $i++) {
-            $words[$i]->word_type_id = $word_types[$i];
+            $words[$i]->word_type_id = $wordTypes[$i];
             $words[$i]->save();
         }
         $phraseWords = PhraseWord::find( $request->phraseWord_ids);
@@ -57,57 +54,5 @@ class WordController extends Controller
             'phrase' , 'words', 'allTranslations', 'phraseWords', 'word_types',
         ]);
         return redirect()->route('phrases.index')->with('success' , 'Words Saved successfully ');
-
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Word  $word
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Word $word)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Word  $word
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Word $word)
-    {
-
-        $phrase = session()->get('phrase');
-        $words = session()->get('words');
-        $allTranslations = session()->get('allTranslations');
-        $phraseWords = session()->get('phraseWords');
-        $word_types = session()->get('word_types');
-        return view('dashboard.words.edit', compact('phrase', 'words','allTranslations' , 'phraseWords' ,'word_types'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Word  $word
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Word $word)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Word  $word
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Word $word)
-    {
-        //
     }
 }

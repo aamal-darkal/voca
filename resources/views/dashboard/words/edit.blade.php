@@ -44,11 +44,11 @@
                                 <td> <input type="text" value="{{ $words[$i]->content }}" disabled class="form-control">
                                 </td>
                                 <td class="control-group">
-                                    <select name="word_types[]" class="form-control my-2" >
+                                    <select name="wordTypes[]" class="form-control my-2" >
                                         <option value="" hidden> Word Type</option>
-                                        @foreach ($word_types as $word_type)
-                                            <option value="{{ $word_type->id }}" @selected(old("word_types[$i]", $words[$i]->word_type_id) == $word_type->id)>
-                                                {{ $word_type->name }}</option>
+                                        @foreach ($wordTypes as $wordType)
+                                            <option value="{{ $wordType->id }}" @selected(old("wordTypes[$i]", $words[$i]->word_type_id) == $wordType->id)>
+                                                {{ $wordType->name }}</option>
                                         @endforeach
                                     </select>
                                 </td>
