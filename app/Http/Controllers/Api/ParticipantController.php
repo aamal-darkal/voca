@@ -14,6 +14,7 @@ use App\Models\Language;
 use App\Models\Level;
 use App\Models\Phrase;
 use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\Return_;
 
 class ParticipantController extends Controller
 {
@@ -100,12 +101,21 @@ class ParticipantController extends Controller
      */
     public function domainsStatus(Participant $participant)
     {
-        Domain::$langkey =  Language::find($participant->lang_app)->key;
+        $langkey =  Language::find($participant->lang_app)->key;
         Level::$langkey =  Language::find($participant->lang_app)->key;
-        $domains = Domain::with('langApps')->get();
-        ParticipantDomainResource::$participant = $participant->id;
-        ParticipantLevelResource::$participant = $participant->id;
-        ParticipantLevelResource::$withphrase = false ;
+        $domains = Domain::with([
+            'levels',
+            'levels.languages' => function ($query) use ($langkey) {
+                $query->where('key', $langkey);
+            },
+            'languages' => function ($query) use ($langkey) {
+                $query->where('key', $langkey);
+            },
+            'participants' => function($query) use ($participant){
+                $query->where('id', $participant->id);
+            }
+        ])->get();
+        ParticipantDomainResource::$key = $participant->langApp->key;
         return ParticipantDomainResource::collection($domains);
     }
 
@@ -118,13 +128,16 @@ class ParticipantController extends Controller
      */
     public function levelStatus(Participant $participant, Request $request)
     {
-        Level::$langkey =  Language::find($participant->lang_app)->key;
+        $langkey =  Language::find($participant->lang_app)->key;
 
         $level_id = $request->level_id;
-        $level = Level::with('langApps', 'phrases')->where('id', $level_id)->find($level_id);
-        ParticipantLevelResource::$withphrase = true;
-        ParticipantLevelResource::$participant = $participant->id;
-        ParticipantPhraseResource::$participant = $participant->id;
+        $level = Level::with([
+            'languages' => function ($query) use ($langkey) {
+                $query->where('key', $langkey);
+            },
+            'phrases',
+            'phrases.words',                            
+        ])->find($level_id);
         ParticipantWordResource::$participant = $participant->id;
         if ($level)
             return new ParticipantLevelResource($level);
@@ -146,7 +159,6 @@ class ParticipantController extends Controller
         $phrase_id = $request->phrase_id;
 
         $phrase = Phrase::with('words')->where('id', $phrase_id)->get();
-        ParticipantPhraseResource::$participant = $participant->id;
         ParticipantWordResource::$participant = $participant->id;
         return ParticipantPhraseResource::collection($phrase);
     }

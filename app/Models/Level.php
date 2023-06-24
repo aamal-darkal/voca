@@ -19,10 +19,6 @@ class Level extends Model
     function phrases() {
         return $this->hasMany(Phrase::class);
     }
-   
-    function langApps() {
-        return $this->belongsToMany(Language::class)->where('key' , SELF::$langkey)->withPivot(['title' , 'description']);
-    }
 
     function languages() {
         return $this->belongsToMany(Language::class)->withPivot(['title' , 'description']);

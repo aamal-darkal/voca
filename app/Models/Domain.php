@@ -20,9 +20,7 @@ class Domain extends Model
     function language() {
         return $this->belongsTo(Language::class);
     }
-    function langApps() {
-        return $this->belongsToMany(Language::class)->where('key' , SELF::$langkey)->withPivot(['title' , 'description']);
-    }
+    
     function languages() {
         return $this->belongsToMany(Language::class)->withPivot(['title' , 'description']);
     }

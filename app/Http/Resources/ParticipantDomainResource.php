@@ -13,28 +13,18 @@ class ParticipantDomainResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    public static $participant;
+    public static $key; //applang of participant
     public function toArray($request)
     {
         return [
             'id' => $this->id,
-            'title' => $this->langApps[0]['pivot']['title'] ?? $this->title,
-            'description' => $this->langApps[0]['pivot']['description'] ?? $this->description,
+            'title' => $this->languages[0]['pivot']['title'] ?? $this->title,
+            'description' => $this->languages[0]['pivot']['description'] ?? $this->description,
             'level_count' => $this->level_count,
             'order' => $this->order,
-            'status' => $this->getStatus( $this),
-            'key' => Participant::find(SELF::$participant)->dialect->language->key,
+            'status' => $this->participants->first()? $this->participants->first()->pivot->status : null,
+            'key' => self::$key,
             'levels' => ParticipantLevelResource::collection( $this->levels),
         ];
-    }
-   
-
-    function getStatus($domain)
-    {
-        $domainParticipant = $domain->participants()->where('id', Self::$participant)->first();
-        if ($domainParticipant)
-            return $domainParticipant->pivot->status;
-        else
-            return null;
     }
 }

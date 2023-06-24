@@ -45,15 +45,15 @@ class DomainSeeder extends Seeder
         foreach($domains as $domain) {
             Domain::create($domain);
         }
-        Domain::find(1)->langApps()->attach([
+        Domain::find(1)->languages()->attach([
             2 => ['title' =>   'Medicine', 'description' =>  'Medicines, diseases, body parts' , ] , 
             3 => ['title' =>   'Mdcne', 'description' =>  'Medcies, diseases, body parts' , ] , 
         ]);
-        Domain::find(2)->langApps()->attach([
+        Domain::find(2)->languages()->attach([
             2 => ['title' =>  'Software Engineering' , 'description' =>  'Programming concept, tools',] , 
             3 => ['title' =>  'Sofre Engng' , 'description' =>  'Promi, ols',] , 
         ]);
-        Domain::find(3)->langApps()->attach([
+        Domain::find(3)->languages()->attach([
             2 => ['title' =>  'Computer Engineering' , 'description' =>  'Devices - Computer parts - maintenance',] , 
             3 => ['title' =>  'Comter Eneering' , 'description' =>  'Devs - Coterts - maisnance',] , 
         ]);

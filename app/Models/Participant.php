@@ -26,4 +26,7 @@ class Participant extends Model
     function words() {
         return $this->belongsToMany(PhraseWord::class)->withPivot('status') ;
     }
+    function langApp(){
+        return $this->belongsTo(Language::class , 'lang_app' );
+    }
 }

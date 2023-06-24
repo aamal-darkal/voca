@@ -23,7 +23,7 @@ class ParticipantWordResource extends JsonResource
             'word_type' => $this->wordType?$this->wordType->name: null,
             'phrase_word_id' => $this->pivot->id, 
             'translation' => $this->pivot->translation,
-            'order' => $this->pivot->order,
+            'order' => $this->pivot->order,        
             'status' => $this->getStatus($this->pivot->id),
         ];
     }

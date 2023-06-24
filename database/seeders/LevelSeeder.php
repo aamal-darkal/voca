@@ -69,22 +69,22 @@ class LevelSeeder extends Seeder
         foreach($levels as $level) {
             Level::create($level);
         }
-        Level::find(1)->langApps()->attach([
+        Level::find(1)->languages()->attach([
             2 => ['title' => 'body part' , 'description' =>  'Scientific names of the body',] , 
         ]);
-        Level::find(2)->langApps()->attach([
+        Level::find(2)->languages()->attach([
             2 => ['title' =>  'algorithm', 'description' => 'algorithm terms', ] , 
         ]);
-        Level::find(3)->langApps()->attach([
+        Level::find(3)->languages()->attach([
             2 => ['title' =>  'programming', 'description' => 'programming methods', ] , 
         ]);
-        Level::find(4)->langApps()->attach([
+        Level::find(4)->languages()->attach([
             2 => ['title' =>  'Artificial intelligence', 'description' => 'Artificial intelligence principles', ] , 
         ]);
-        Level::find(5)->langApps()->attach([
+        Level::find(5)->languages()->attach([
             2 => ['title' =>  'Computer part', 'description' => 'Hardware devices', ] , 
         ]);
-        Level::find(6)->langApps()->attach([
+        Level::find(6)->languages()->attach([
             2 => ['title' =>  'maintenance', 'description' => 'devices maintenance', ] , 
         ]);
 

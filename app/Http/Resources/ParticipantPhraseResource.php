@@ -14,7 +14,6 @@ class ParticipantPhraseResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    public static $participant;
     public function toArray($request)
     {
         return [
@@ -24,16 +23,9 @@ class ParticipantPhraseResource extends JsonResource
             'word_count' => $this->word_count,
             'order' => $this->order,
             'level_id' => $this->level_id,
-            'status' => $this->getStatus($this),
+            'status' => $this->participants->first()? $this->participants->first()->pivot->status : null,
             'words' => ParticipantWordResource::collection( $this->words),
         ];
     }
-    function getStatus($phrase)
-    {
-        $phraseParticipant = $phrase->participants()->where('id', Self::$participant)->first();
-        if ($phraseParticipant)
-            return $phraseParticipant->pivot->status;
-        else
-            return null;
-    }
+    
 }

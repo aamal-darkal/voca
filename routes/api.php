@@ -4,17 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ParticipantController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DialectController;
-use App\Http\Controllers\Api\DomainController;
 use App\Http\Controllers\Api\LanguageController;
-use App\Http\Controllers\Api\LevelController;
-use App\Http\Controllers\Api\PhraseController;
-use App\Models\Domain;
-use App\Models\Language;
-use App\Models\Level;
 use App\Models\Participant;
 use App\Models\Phrase;
-use App\Models\PhraseWord;
-use Illuminate\Support\Arr;
 
 /*
 |-----------------  ---------------------------------------------------------
@@ -60,8 +52,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
   
 Route::get('test' , function() {
-$participant = Participant::find(1);
-$count = $participant->phrases()->where('level_id' , 2)->wherein('status' , ['C','X'] )->get();
-
-return $count;
+    return Phrase::find(1)->phraseWords;
 });

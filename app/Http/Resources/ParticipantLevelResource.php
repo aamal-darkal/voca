@@ -7,8 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ParticipantLevelResource extends JsonResource
 {
-    public static $participant;
-    public static $withphrase;
 
     /**
      * Transform the resource into an array.
@@ -18,29 +16,16 @@ class ParticipantLevelResource extends JsonResource
      */
     public function toArray($request)
     {
-        $level =  [        
+        return  [        
             'id' => $this->id,
-            'title' => $this->langApps[0]['pivot']['title']?? $this->title,
-            'description' => $this->langApps[0]['pivot']['description']?? $this->description,
-            'status' => $this->getStatus($this),           
+            'title' => $this->languages[0]['pivot']['title']?? $this->title,
+            'description' => $this->languages[0]['pivot']['description']?? $this->description,
+            'status' => $this->participants->first()? $this->participants->first()->pivot->status : null,
             'phrase_count' => $this->phrase_count,
             'order' => $this->order,  
             'domain_id'=> $this->domain_id, 
-            'pastCount' => Participant::find(Self::$participant)->phrases()->where('level_id' , $this->id)->wherein('status' , ['C','X'] )->count(),
-        ];
-        if (SELF::$withphrase)         
-            $level['phrases'] = ParticipantPhraseResource::collection( $this->phrases);
-        return $level;
+            'pastCount' =>  $this->participants->first()?$this->participants->first()->phrases()->where('level_id' , $this->id)->wherein('status' , ['C','X'] )->count() : 0,                     
+            'phrases' =>  ParticipantPhraseResource::collection( $this->whenloaded('phrases')),
+        ];        
     } 
-    
-    
-    function getStatus($level)
-    {
-
-        $levelParticipant = $level->participants()->where('id', Self::$participant)->first();
-        if ($levelParticipant)
-            return $levelParticipant->pivot->status;
-        else
-            return null;
-    }
 }

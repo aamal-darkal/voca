@@ -16,6 +16,9 @@ class Phrase extends Model
     function words(){
         return $this->belongsToMany(Word::class)->withPivot(['id', 'translation' , 'order']);
     }
+    function phraseWords(){
+        return $this->hasMany(PhraseWord::class);
+    }
     function participants() {
         return $this->belongsToMany(Participant::class)->withPivot(['status']);;
     }
