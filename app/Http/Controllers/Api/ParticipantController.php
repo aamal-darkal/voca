@@ -102,7 +102,6 @@ class ParticipantController extends Controller
     public function domainsStatus(Participant $participant)
     {
         $langkey =  Language::find($participant->lang_app)->key;
-        Level::$langkey =  Language::find($participant->lang_app)->key;
         $domains = Domain::with([
             'levels',
             'levels.languages' => function ($query) use ($langkey) {
@@ -115,7 +114,6 @@ class ParticipantController extends Controller
                 $query->where('id', $participant->id);
             }
         ])->get();
-        ParticipantDomainResource::$key = $participant->langApp->key;
         return ParticipantDomainResource::collection($domains);
     }
 

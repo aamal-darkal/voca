@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Level extends Model
 {
     use HasFactory;
-    public static $langkey;
     
     protected $fillable = ['title', 'description' , 'domain_id' , 'order' ];
 
@@ -30,9 +29,5 @@ class Level extends Model
 
     function participants() {       
         return $this->belongsToMany(Participant::class)->withPivot('status');
-    }
-    
-    function participant($id) {
-        return $this->belongsToMany(Participant::class)->withPivot('status')->where('id',$id);
     }    
 }
