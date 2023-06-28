@@ -18,22 +18,13 @@ class ParticipantWordResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'word_id' => $this->id, 
-            'content' => $this->content,
-            'word_type' => $this->wordType?$this->wordType->name: null,
-            'phrase_word_id' => $this->pivot->id, 
-            'translation' => $this->pivot->translation,
-            'order' => $this->pivot->order,        
-            'status' => $this->getStatus($this->pivot->id),
+            'word_id' => $this->word_id, 
+            'content' => $this->word? $this->word->content: null,
+            'word_type' => $this->word? $this->word->wordType? $this->word->wordType->name: null:null,
+            'phrase_word_id' => $this->id, 
+            'translation' => $this->translation,
+            'order' => $this->order,        
+            'status' => $this->participants->first()? $this->participants->first()->pivot->status:null,
         ];
-    }
-    private function getStatus($phrase_word_id){
-
-        $wordParticipant =PhraseWord::find($phrase_word_id)->participants()->where('id', Self::$participant)->first();
-
-        if ($wordParticipant)
-            return $wordParticipant->pivot->status;
-        else
-            return null;
     }
 }

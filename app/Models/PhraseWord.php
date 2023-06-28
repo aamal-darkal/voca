@@ -15,4 +15,8 @@ class PhraseWord extends Model
     function participants() {
         return $this->belongsToMany(Participant::class)->withPivot(['status']);
     }
+
+    function word() {
+        return $this->belongsTo(Word::class);
+    }
 }

@@ -24,7 +24,7 @@ class ParticipantPhraseResource extends JsonResource
             'order' => $this->order,
             'level_id' => $this->level_id,
             'status' => $this->participants->first()? $this->participants->first()->pivot->status : null,
-            'words' => ParticipantWordResource::collection( $this->words),
+            'words' => ParticipantWordResource::collection( $this->phraseWords),
         ];
     }
     
