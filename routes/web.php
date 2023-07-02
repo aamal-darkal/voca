@@ -7,6 +7,7 @@ use App\Http\Controllers\Dashboard\ParticipantController;
 use App\Http\Controllers\Dashboard\PhraseController;
 use App\Http\Controllers\Dashboard\WordController;
 use App\Http\Controllers\HomeController;
+use App\Models\Domain;
 use App\Models\Word;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -22,34 +23,39 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Auth::routes(['register' => false]);
+Auth::routes();
 
-Route::get('participants' , [ParticipantController::class,'index'])->name('participants.index');
+Route::middleware('auth')->group(function () {
 
-Route::resource('languages' , LanguageController::class )->except('show');
-Route::get('languages/delete/{language}' , [LanguageController::class, 'delete'] )->name('languages.delete');;
+    Route::get('participants', [ParticipantController::class, 'index'])->name('participants.index');
 
-Route::resource('domains' , DomainController::class )->except('show');
-Route::get('domains/delete/{domain}' , [DomainController::class, 'delete'] )->name('domains.delete');;
+    Route::resource('languages', LanguageController::class)->except('show');
+    Route::get('languages/delete/{language}', [LanguageController::class, 'delete'])->name('languages.delete');;
 
-Route::resource('levels' , LevelController::class )->except('show'); 
-Route::get('levels/delete/{level}' , [LevelController::class, 'delete'] )->name('levels.delete');;
+    Route::resource('domains', DomainController::class)->except('show');
+    Route::get('domains/delete/{domain}', [DomainController::class, 'delete'])->name('domains.delete');;
 
-Route::resource('phrases' , PhraseController::class )->except('show');
-Route::get('phrases/delete/{phrase}' , [PhraseController::class, 'delete'] )->name('phrases.delete');;
+    Route::resource('levels', LevelController::class)->except('show');
+    Route::get('levels/delete/{level}', [LevelController::class, 'delete'])->name('levels.delete');;
 
-Route::controller(HomeController::class )->group(function(){
-    Route::get('/',  'index')->name('home');
-    Route::get('/profile',  'editProfile')->name('home.editProfile');
-    Route::post('/profile',  'saveProfile')->name('home.saveProfile');
-});
-Route::controller(WordController::class )->prefix('words')->group(function(){
-    Route::get('edit' , 'edit')->name('words.edit');
-    Route::post('save' , 'save')->name('words.save');
-});
+    Route::resource('phrases', PhraseController::class)->except('show');
+    Route::get('phrases/delete/{phrase}', [PhraseController::class, 'delete'])->name('phrases.delete');;
 
-Route::get('test' , function() {
-    
-    return session()->get('phrase');
+    Route::controller(HomeController::class)->group(function () {
+        Route::get('/',  'index')->name('home');
+        Route::get('/profile',  'editProfile')->name('home.editProfile');
+        Route::post('/profile',  'saveProfile')->name('home.saveProfile');
+    });
+    Route::controller(WordController::class)->prefix('words')->group(function () {
+        Route::get('edit', 'edit')->name('words.edit');
+        Route::post('save', 'save')->name('words.save');
+    });
 });
 
+
+Route::get('test/{part}', function ($participant) {
+    $domains = Domain::with(['levels.participants' => function ($participant, $q) {
+        return $q->where('id', $participant);
+    }])->get();
+    return $domains;
+});

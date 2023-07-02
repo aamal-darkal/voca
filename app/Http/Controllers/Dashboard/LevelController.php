@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Domain;
 use App\Models\Language;
-use App\Models\Phrase;
 
 class levelController extends Controller
 {

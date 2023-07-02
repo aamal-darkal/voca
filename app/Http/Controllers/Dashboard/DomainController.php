@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Domain;
 use App\Models\Language;
-use App\Models\Level;
-use App\Models\Phrase;
 
 class DomainController extends Controller
 {
@@ -18,13 +16,11 @@ class DomainController extends Controller
      */
     public function index(Request $request)
     {
-        $lang = $request->input('language', '*');
-        if ($lang == '*')
-            $domains = Domain::paginate(10);
-        else {
-            $language = Language::find($lang);
-            $domains = $language->domains;
-        }
+        $lang = $request->language;
+
+        $domains = Domain::when($lang , function($q) use ($lang) {
+            return $q->where('language_id' , $lang);
+        })->with('language')->get();
 
         $languages = Language::get();
 
@@ -58,16 +54,20 @@ class DomainController extends Controller
             'titles.*' => 'string|max:100',
             'descriptions.*' => 'string|max:255',
         ]);
+
+        //get max order if it is not supplied
         if (!$request->order)
             $request['order'] = Domain::where('language_id', $request->language_id)->max('order') + 1;
         $domain = Domain::create($request->all());
+       
+        //get titles & descriptions for all languages
         $titles = $request->titles;
         $languages = $request->languages;
         $descriptions = $request->descriptions;
 
         if ($titles) {
-            for ($i = 0; $i < count($titles); $i++) {
-                $domain->languages()->attach($languages[$i], ['title' => $titles[$i],  'description' => $descriptions[$i]]);
+            foreach ($titles as $i => $title) { 
+                $domain->languages()->attach($languages[$i], ['title' => $title,  'description' => $descriptions[$i]]);
             }
         }
         return redirect()->route('domains.index')->with('success', 'Domain added successfully');
@@ -110,8 +110,8 @@ class DomainController extends Controller
 
         $domain->languages()->detach();
         if ($titles) {
-            for ($i = 0; $i < count($titles); $i++) {
-                $domain->languages()->attach($languages[$i], ['title' => $titles[$i],  'description' => $descriptions[$i]]);
+            foreach ($titles as $i => $title) {
+                $domain->languages()->attach($languages[$i], ['title' => $title,  'description' => $descriptions[$i]]);
             }
         }
         return redirect()->route('domains.index')->with('success', 'Domain saved successfully');

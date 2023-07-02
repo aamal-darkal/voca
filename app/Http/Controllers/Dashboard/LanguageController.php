@@ -48,17 +48,19 @@ class LanguageController extends Controller
             'names.*' => 'required|string|max:50',
         ]);
         $language = Language::create($request->all());
+        //create dialects
         if ($request->has('locales')) {
             $locales = $request->locales;
             $keys = $request->keys;
-            for ($i = 0; $i < count($locales); $i++) {
-                Dialect::create(['locale' => $locales[$i], 'key' => $keys[$i], 'language_id' => $language->id]);
+            foreach ($locales as $i => $locale) {
+                Dialect::create(['locale' => $locale, 'key' => $keys[$i], 'language_id' => $language->id]);
             }
         }
+        //create WordTypes
         if ($request->has('names')) {
             $names = $request->names;
-            for ($i = 0; $i < count($names); $i++) {
-                WordType::create(['name' => $names[$i], 'language_id' => $language->id]);
+            foreach ($names as $name) {
+                WordType::create(['name' => $name, 'language_id' => $language->id]);
             }
         }
         return redirect()->route('languages.index')->with('success', 'Language added successfully');

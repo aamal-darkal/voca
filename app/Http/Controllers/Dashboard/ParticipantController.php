@@ -17,28 +17,16 @@ class ParticipantController extends Controller
      */
     public function index(Request $request)
     {
-        $language = $request->input('language' , '*');
-        if ($language == '*')
-            $participants = Participant::paginate(8);
-        else {
-            $dialects = Dialect::select('id')->where('language_id', $language)->get();
-            $participants = Participant::whereIn('dialect_id', $dialects)->paginate(8);
-        }
+        $language = $request->language;        
 
+        $participants = Participant::when($language , function($q) use($language)  {
+            return $q->wherehas('dialect', function($q1) use($language){
+                return $q1->where('language_id' , $language);
+            });
+        })->paginate(8);
         $languages = Language::get();
         return view('dashboard.participants.index', compact('participants', 'languages'))->with('selectedlang', $language );
     }
 
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Participant  $participant
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Participant $participant)
-    {
-        //
-    }
+    
 }

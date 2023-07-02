@@ -13,12 +13,12 @@
             </select>
         </form>
         
-        {{ $participants->links('pagination::bootstrap-5') }}
+        {{ $participants->links() }}
         <table class="table table-striped table-hover text-center">
             <thead>
                 <tr>
                     <td>image</td>
-                    <td>name</td>
+                    <td>name</td>   
                     <td>email</td>
                     <td>learn_word_count</td>
                     <td>learn_phrase_count</td>
