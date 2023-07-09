@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
         Route::get('edit', 'edit')->name('words.edit');
         Route::post('save', 'save')->name('words.save');
     });
-    Route::view('j-test' ,'test'); 
+    Route::view('j-test' ,'test');  
 }); 
 
 Route::get('test/{part}', function ($participant) {
