@@ -4,7 +4,7 @@
         <h2 class="ui header green"> GeeksforGeeks </h2>
 
         <h3> Semantic-UI Form Multiple Select Content </h3>
-    </div>
+    </div> 
  
     <div class="ui form">
         <div class="field">

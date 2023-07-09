@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
         Route::post('save', 'save')->name('words.save');
     });
     Route::view('j-test' ,'test'); 
-});
+}); 
 
 Route::get('test/{part}', function ($participant) {
     $domains = Domain::with(['levels.participants' => function ($participant, $q) {
