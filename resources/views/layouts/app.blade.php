@@ -19,6 +19,9 @@
     <link rel="stylesheet" href="{{ asset('vendor/datatable/css/dataTables.bootstrap5.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
     <!-- Scripts -->
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
 </head>
@@ -93,7 +96,7 @@
     </div>
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('vendor/fontawesome/js/all.min.js') }}"></script>
-    <script src="{{ asset('vendor/jQuery-3.6.0/jquery-3.6.0.min.js') }}"></script>
+    {{-- <script src="{{ asset('vendor/jQuery-3.6.0/jquery-3.6.0.min.js') }}"></script> --}}
     <script src="{{ asset('vendor/datatable/js/dataTables.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('vendor/datatable/js/jquery.dataTables.min.js') }}"></script>
     @yield('script')
