@@ -17,7 +17,7 @@
                         <input type="text" name="descriptions[]" class="form-control" maxlength="255" required>
                     </td>
                     <td>
-                        <select name="languages[]" id="language" class="form-control my-2" required>
+                        <select name="languages[]" id="language" class="form-select my-2" required>
                             <option value="" hidden> Lang</option>
                             @foreach ($languages as $language)
                                 <option value="{{ $language->id }}">{{ $language->name }}</option>
@@ -101,7 +101,7 @@
                                                 class="form-control" maxlength="255" required>
                                         </td>
                                         <td>
-                                            <select name="languages[]" id="language" class="form-control my-2" required>
+                                            <select name="languages[]" id="language" class="form-select my-2" required>
                                                 <option value="" hidden> Lang</option>
                                                 @foreach ($languages as $language)
                                                     <option value="{{ $language->id }}" @selected($language->id == $oldlanguages[$i])>
@@ -128,7 +128,7 @@
                                                 maxlength="255" required>
                                         </td>
                                         <td>
-                                            <select name="languages[]" id="language" class="form-control my-2" required>
+                                            <select name="languages[]" id="language" class="form-select my-2" required>
                                                 <option value="" hidden> Lang</option>
                                                 @foreach ($languages as $language)
                                                     <option value="{{ $language->id }}" @selected($language->id == $lang->id)>

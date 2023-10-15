@@ -27,10 +27,10 @@
                     <thead>
                         <tr class="">
                             <th class="d-none">word_id</th>
-                            <th class=w-25>Content</th>
+                            <th>Content</th>
                             <th>word_type</th>
                             <th class="d-none">phraseWords_id</th>
-                            <th class=w-50><label class="w-50">old-translation </label>
+                            <th><label class="w-50">old-translation </label>
                                 <label class=""> change-translation </label>
                             </th>
                             <th>Order</th>
@@ -44,7 +44,7 @@
                                 <td> <input type="text" value="{{ $words[$i]->content }}" disabled class="form-control">
                                 </td>
                                 <td class="control-group">
-                                    <select name="wordTypes[]" class="form-control my-2" >
+                                    <select name="wordTypes[]" class="form-control" >
                                         <option value="" hidden> Word Type</option>
                                         @foreach ($wordTypes as $wordType)
                                             <option value="{{ $wordType->id }}" @selected(old("wordTypes[$i]", $words[$i]->word_type_id) == $wordType->id)>
@@ -56,12 +56,12 @@
                                         value={{ $phraseWords[$i]->id }}> </td>
 
                                 <td>
-                                    <input type="text" class="form-control d-inline-block w-50"
+                                    <input type="text" class="form-control d-inline-block w-49"
                                         value="{{ $phraseWords[$i]->translation }}" disabled>
                                     <input type="text" name="translations[]" value="{{ $phraseWords[$i]->translation }}"
                                         hidden>
                                     <input list="allTranslation{{ $i }}" type="text"
-                                        class="form-control d-inline-block w-50" onchange="takeValue(this)">
+                                        class="form-control d-inline-block w-49" onchange="takeValue(this)">
                                     <datalist id="allTranslation{{ $i }}">
                                         @foreach ($allTranslations[$i] as $allTranslation)
                                             <option>{{ $allTranslation->translation }}</option>

@@ -5,7 +5,7 @@
         Participant </h3>
         <form action="{{ route('participants.index') }}" class="col-md-3">
             <label for="language">Language</label>
-            <select name="language" id="language" onchange="submit()" class="form-control">
+            <select name="language" id="language" onchange="submit()" class="form-select">
                 <option value="*" @selected($selectedlang == '*')>All languages</option>
                 @foreach($languages as $language)
                     <option value="{{ $language->id }}" @selected($language->id == $selectedlang)>{{ $language->name }}</option>

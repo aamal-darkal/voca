@@ -6,7 +6,7 @@
         <a href="{{ route('domains.create') }}" class="btn btn-mine my-2">Add Domain</a>
         <form action="{{ route('domains.index') }}" class="col-md-3">
             <label for="language">Language</label>
-            <select name="language" id="language" onchange="submit()" class="form-control"> 
+            <select name="language" id="language" onchange="submit()" class="form-select"> 
                 <option value="*" @selected($selectedlang == '*')>All languages</option>
                 @foreach ($languages as $language)
                     <option value="{{ $language->id }}" @selected($language->id == $selectedlang )>{{ $language->name }}</option>

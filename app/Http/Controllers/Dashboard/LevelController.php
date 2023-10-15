@@ -19,8 +19,33 @@ class levelController extends Controller
     {
         $domain_id = $request->domain;
         $domain = Domain::find($domain_id);
-        $levels = Level::where('domain_id' , $domain_id)->orderBy('order')->get();
+        $levels = Level::where('domain_id', $domain_id)->orderBy('order')->get();
         return view('dashboard.levels.index', compact('levels'))->with('domain', $domain);
+    }
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @return json
+     */
+    public function gelLevels(Request $request)
+    {
+        $domain = $request->domain;
+        $language = $request->language;
+        $levels = Level::when(
+            $domain != 'all',
+            function ($q) use ($domain) {
+                return $q->where('domain_id', $domain);
+            },
+            function ($q) use ($language) {
+                return $q->when($language !=  'all', function ($q) use ($language) {
+                    return $q->whereHas('domain', function ($q) use ($language) {
+                        return $q->where('language_id', $language);
+                    });
+                });
+            }
+        )->orderBy('order')->get();
+        return $levels;
     }
 
     /**
@@ -54,12 +79,12 @@ class levelController extends Controller
         ]);
 
         if (!$request->order)
-            $request['order'] = Level::where('domain_id' , $request->domain_id)->max('order') + 1;
+            $request['order'] = Level::where('domain_id', $request->domain_id)->max('order') + 1;
         $level = Level::create($request->all());
 
         $titles = $request->titles;
         $languages = $request->languages;
-        $descriptions = $request->descriptions;     
+        $descriptions = $request->descriptions;
 
         if ($titles) {
             for ($i = 0; $i < count($titles); $i++) {
@@ -150,8 +175,8 @@ class levelController extends Controller
         $domain = $level->domain;
         if ($participantCount == 0 && $phraseCount == 0) {
             $level->delete();
-            return redirect()->route('levels.index' , ['domain' => $domain])->with('success', "level deleted successfully");
+            return redirect()->route('levels.index', ['domain' => $domain])->with('success', "level deleted successfully");
         } else
-            return redirect()->route('levels.index' , ['domain' => $domain])->with('error', "can remove level $level->title with $participantCount participantCount and $phraseCount phrases");
+            return redirect()->route('levels.index', ['domain' => $domain])->with('error', "can remove level $level->title with $participantCount participantCount and $phraseCount phrases");
     }
 }

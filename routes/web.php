@@ -33,13 +33,18 @@ Route::middleware('auth')->group(function () {
     Route::get('languages/delete/{language}', [LanguageController::class, 'delete'])->name('languages.delete');;
 
     Route::resource('domains', DomainController::class)->except('show');
+
     Route::get('domains/delete/{domain}', [DomainController::class, 'delete'])->name('domains.delete');;
+    Route::get('domains/getDomains/{language}', [DomainController::class, 'getDomains'])->name('domains.getDomains');;
 
     Route::resource('levels', LevelController::class)->except('show');
     Route::get('levels/delete/{level}', [LevelController::class, 'delete'])->name('levels.delete');;
+    Route::get('levels/gelLevels/{domain}/{language}', [LevelController::class, 'gelLevels'])->name('levels.gelLevels');;
 
+    
     Route::resource('phrases', PhraseController::class)->except('show');
     Route::get('phrases/delete/{phrase}', [PhraseController::class, 'delete'])->name('phrases.delete');;
+    Route::get('phrases/getPhrases/{level}/{domain}/{language}', [PhraseController::class, 'getPhrases'])->name('phrases.getPhrases');;
 
     Route::controller(HomeController::class)->group(function () {
         Route::get('/',  'index')->name('home');

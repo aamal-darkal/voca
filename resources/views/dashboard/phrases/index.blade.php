@@ -1,94 +1,122 @@
 @extends('layouts.dashboard')
 @section('inside-content')
-    <div class="container-fluid">
-        <div class="col-12">
-            <h3><a onclick="history.back()" class="btn btn-mine my-2">&leftarrow;</a> Phrases Management</h3>
-            <div class="col-10">
-                <select id="languages" onchange="filter(this, 'domains')" class="form-control mt-2">
-                    <option value="" selected hidden>--select language</option>
-                    @foreach ($languages as $language)
-                        <option value="{{ $language->id }}">{{ $language->name }}</option>
-                    @endforeach
-                </select>
-                <select id="domains" onchange="filter(this, 'levels')" class="form-control mt-2">
-                    <option value="" selected hidden>--select domain</option>
-                    @foreach ($domains as $domain)
-                        <option value="{{ $domain->id }}" data-fk="{{ $domain->language_id }}">{{ $domain->title }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <form action="{{ route('phrases.create') }}" class="row">
-                <div class="col-10">
-                    <select id="levels" name="level_id" onchange="filterTable(this, 'myTable' , 1)"
-                        class="form-control mt-2" required>
-                        <option value="" selected hidden>--select level</option>
-                        @foreach ($levels as $level)
-                            <option value="{{ $level->id }}" data-fk="{{ $level->domain_id }}"> {{ $level->title }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-1">
-                    <input type="submit" class="btn btn-mine my-2" value="Add Phrase">
-                </div>
-            </form>
+    <div class="container-fluid">   
+        <div id="test"></div>     
+        <h3><a onclick="history.back()" class="btn btn-mine">&leftarrow;</a> Phrases Management</h3>
+        <select id="languages" onchange="getDomains(this.value)" class="form-select mt-2">
+            <option value="all"> All Languages</option>
+            @foreach ($languages as $language)
+                <option value="{{ $language->id }}">{{ $language->name }}</option>
+            @endforeach
+        </select>
+        <select id="domains" onchange="getLevels(this.value)" class="form-select mt-2">
+            {{-- domains options --}}
+        </select>
+        <form action="{{ route('phrases.create') }}">
+            <select id="levels" name="level_id" onchange="getPhrases(this.value)" class="form-select mt-2" required>
+                {{-- level options --}}
+            </select>
+            <div class="text-center">
+                <input id="addPhrase" disabled type="submit" class="btn btn-mine my-2 w-50" value="Add Phrase">
+                <span class="fst-italic">Choose level before adding phrase</span>
 
+            </div> 
 
-            <table id="myTable" class="table table-striped table-hover text-center">
-                <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>content</th>
-                        <th>translation</th>
-                        <th>order</th>
-                        <th>actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($phrases as $phrase)
+            {{-- {{ $phrases->links('pagination::bootstrap-5') }} --}}
+
+            <div class="table-responsive">
+                <table id="myTable" class="table table-striped table-hover text-center">
+                    <thead>
                         <tr>
-                            <td>{{ $phrase->id }}</td>
-                            <td class="d-none">{{ $phrase->level_id }}</td>
-                            <td class="text-start">{{ $phrase->content }}</td>
-                            <td class="text-start">{{ $phrase->translation }}</td>
-                            <td class="text-center">{{ $phrase->order }}</td>
-
-                            <td><a href="{{ route( 'phrases.edit', ['phrase' => $phrase]) }}"
-                                    class="btn btn-outline-primary btn-sm" title="edit"><i class="fas fa-edit"></i></a> |                                
-                            <a href="{{ route('phrases.delete', ['phrase' => $phrase]) }} "
-                                    class="btn btn-outline-danger btn-sm" title="remove"><i class="fas fa-trash"></i></a>                                                                   
-                            </td>
+                            <th>
+                                <div class="min-w-300px text-start">content</div>
+                            </th>
+                            <th>
+                                <div class="min-w-300px text-start">translation</div>
+                            </th>
+                            <th>word_count</th>
+                            <th>order</th>
+                            <th>actions</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    @endsection
-    @section('script')
-        <script>
-            function filter(parentList, filteredList) {
-                filteredList = document.getElementById(filteredList)
-                filteredList.options[0].selected = true
-                for (option of filteredList.options) {
-                    if (option.getAttribute('data-fk') != parentList.value)
-                        option.hidden = true
-                    else
-                        option.hidden = false
-                }
+                    </thead>
+                    <tbody id="phrasesRows">
+                        {{-- phrasesRows --}}
+                    </tbody>
+                </table>
+            </div>
+    </div>
+@endsection
+@section('script')
+    <script>
+        getDomains('all')
+
+        async function getDomains(language_id) {
+            //fetch data async
+            let response = await fetch('domains/getDomains/' + language_id);
+            let datas = await response.json();
+            let domainSelect = document.getElementById('domains')
+            domainSelect.innerHTML = ""
+            domainSelect.add(new Option(' All Domains', 'all'))
+            for (let data of datas) {
+                let op = document.createElement('option')
+                op.value = data['id']
+                op.text = data['title']
+                domainSelect.options.add(op)
+            }
+            getLevels('all')
+        }
+
+        async function getLevels(domain) {
+            let language = document.getElementById('languages').value
+            let response = await fetch(`levels/gelLevels/${domain}/${language}`);
+            let datas = await response.json();
+            let levelSelect = document.getElementById('levels')
+            levelSelect.innerHTML = ""
+            levelSelect.add(new Option('All Levels', 'all'))
+
+            for (let data of datas) {
+                let op = document.createElement('option')
+                op.value = data['id']
+                op.text = data['title']
+                levelSelect.options.add(op)
             }
 
-            function filterTable(mylist, mytable, column) {
-                let myTable = document.getElementById(mytable)
+            getPhrases('all')
+        }
+        async function getPhrases(level) {
+            let language = document.getElementById('languages').value
+            let domain = document.getElementById('domains').value
+            let response = await fetch(`phrases/getPhrases/${level}/${domain}/${language}`);
 
-                let trs = document.querySelectorAll(`#${mytable} tbody tr`)
-                for (currTr of trs)
-                    currTr.style.visibility = 'visible'
+            let datas = await response.json();
+            datas = datas.data
+            let phraseRows = document.getElementById('phrasesRows')
+            phraseRows.innerHTML = ''
+            rows = ''
+            for (let data of datas) {
 
-                for (currTr of trs) {
-                    if (currTr.children[column].innerHTML != mylist.value)
-                        currTr.style.visibility = 'collapse'
-                }
+                rows += `<tr>
+                            <td class='text-start'>${data['content']}</td>
+                            <td class='text-start'>${data['translation']}</td>
+                            <td>${data['word_count']}</td>
+                            <td>${data['order']}</td>   
+                            <td class="text-center nowrap">
+                                        <a href="phrases/${data['id']}/edit"
+                                            class="btn btn-outline-primary btn-sm" title="edit"><i
+                                                class="fas fa-edit"></i></a> | 
+                                        <a href="phrases/delete/${data['id']}"
+                                        class="btn btn-outline-danger btn-sm" title="remove"><i
+                                                class="fas fa-trash"></i></a>                                    
+                            </td>               
+                        <tr>`;
             }
-        </script>
-    @endsection
+            phraseRows.innerHTML = rows
+
+            if(level != 'all') 
+                document.getElementById('addPhrase').disabled = false
+            else
+                document.getElementById('addPhrase').disabled = true
+
+        }
+    </script>
+@endsection

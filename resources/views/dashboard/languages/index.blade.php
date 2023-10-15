@@ -2,7 +2,7 @@
 @section('inside-content')
     <div class="container-fluid">
         <h3>Languages Management</h3>
-        <a onclick="history.back()" class="btn btn-mine my-2">&leftarrow;</a>
+        <a onclick="history.back()" class="btn btn-mine">&leftarrow;</a>
         <a href="{{ route('languages.create') }}" class="btn btn-mine my-2">Add Language</a>
         <table class="table table-striped table-hover text-center">
             <thead>

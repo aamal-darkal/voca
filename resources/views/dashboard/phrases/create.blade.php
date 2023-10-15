@@ -8,7 +8,7 @@
 
             <form action="{{ route('phrases.store') }}" method="post" class="col-md-10 offset-md-1" name="phrase">
                 <h4><a href="{{ route('phrases.index') }}" class="btn btn-mine my-2">&leftarrow;</a>    
-                    Add Phrase </h4>
+                    Add Phrase to {{ $levelTitle }}</h4>
                 @csrf
                 <input type="hidden" name="level_id" value="{{ $level_id }}">
 

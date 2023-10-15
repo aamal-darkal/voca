@@ -26,6 +26,21 @@ class DomainController extends Controller
 
         return view('dashboard.domains.index', compact('domains', 'languages'))->with('selectedlang', $lang);
     }
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @return json
+     */
+    public function getDomains(Request $request)
+    {
+        $language = $request->language;
+        $domains = Domain::when($language != 'all' , function($q) use ($language) {
+            return $q->where('language_id' , $language);
+        })->orderby('order')->get();
+
+        return $domains;
+    }
 
     /**
      * Show the form for creating a new resource.

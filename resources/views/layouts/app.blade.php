@@ -25,14 +25,14 @@
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-transparent p-0 pt-3">
+        <nav class="navbar navbar-expand-md navbar-light bg-transparent p-0">
             <div class="container-fluid">
                 <div class="col-2">
                     @yield('left-nav')
-                    <p class="navbar-brand-mine text-uppercase fs-2 d-block w-100 text-center"
+                    <a class="navbar-brand-mine text-uppercase fs-2 d-block w-100 text-center pt-2"
                         href="{{ url('/') }}">
                         {{ config('app.name', 'Laravel') }}
-                    </p>
+                </a>
                 </div>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -72,12 +72,12 @@
         </nav>
         <div>
             @if (session()->has('success'))
-                <div class="alert alert-success w-50 mx-auto my-3">
+                <div class="alert alert-success w-50 mx-auto my-1">
                     {{ session()->get('success') }}
                 </div>
             @endif
             @if (session()->has('error'))
-                <div class="alert alert-danger w-50 mx-auto my-3">
+                <div class="alert alert-danger w-50 mx-auto my-1">
                     {{ session()->get('error') }}
                 </div>
             @endif

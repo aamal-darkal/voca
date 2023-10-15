@@ -14,7 +14,7 @@
                         <input type="text" name="translations[]" class="form-control">
                     </td>
                     <td>
-                        <select name="wordTypes[]" class="form-control">
+                        <select name="wordTypes[]" class="form-select">
                             <option value="" hidden selected>--word type</option>
                             @foreach ($wordTypes as $wordType)
                                 <option value="{{ $wordType->id }}">{{ $wordType->name }}</option>
@@ -76,7 +76,7 @@
                                     <input type="text" name="translations[]" value="{{ $words[$i]->pivot->translation }}" class="form-control">
                                 </td>
                                 <td>
-                                    <select name="wordTypes[]" class="form-control">
+                                    <select name="wordTypes[]" class="form-select">
                                         <option value="" hidden>--word type</option>
                                         @foreach ($wordTypes as $wordType)
                                             <option value="{{ $wordType->id }}" @selected($wordType->id == $words[$i]->word_type_id)>{{ $wordType->name }}</option>

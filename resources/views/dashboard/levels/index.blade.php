@@ -2,7 +2,7 @@
 @section('inside-content')
     <div class="container-fluid">
         <h3> {{ $domain->title }} - Levels Management</h3>
-        <a href="{{ route('domains.index') }}" class="btn btn-mine my-2">&leftarrow;</a>
+        <a href="{{ route('domains.index') }}" class="btn btn-mine">&leftarrow;</a>
         <a href="{{ route('levels.create', ['domain' => $domain]) }}" class="btn btn-mine my-2">Add Level</a>
 
         <table class="table table-striped table-hover text-center">

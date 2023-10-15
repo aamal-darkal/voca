@@ -51,6 +51,8 @@ body {
 .navbar-brand-mine {
     font-family: fantasy;
     text-shadow: 0.5px 0.5px 0.5px grey, 1px 1px 1px white;
+    text-decoration: none;
+    padding-top: 10px;
 }
 
 main {
@@ -62,9 +64,7 @@ main {
     background-color: rgb(244, 228, 253);
 }   
 
-td {
-    white-space: nowrap;
-}
+
 
 .canvas {
     width: 220px !important;
@@ -76,8 +76,34 @@ h3,h4,h5 {
     text-shadow: 0.5px 0.5px 0.5px grey, 1px 1px 1px white;
 }
 .w-100px {
-    width: 100px;
+    width: 100px !important;
+}
+.w-110px {
+    width: 110px;
 }
 .w-200px {
+    width: 200px;
+}
+.w-300px {
+    width: 300px !important;
+}
+.w-49 {
+    width: 49%;
+}
+.min-w-100px {
+    width: 100px;
+}
+.min-w-150px {
     width: 150px;
 }
+.min-w-300px {
+    width: 300px !important;
+}
+.min-w-400px {
+    width: 400px !important;
+}
+.nowrap {
+    white-space: nowrap;
+}
+
+

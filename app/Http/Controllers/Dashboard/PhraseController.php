@@ -9,7 +9,6 @@ use App\Models\Language;
 use App\Models\Level;
 use App\Models\PhraseWord;
 use App\Models\Word;
-use App\Models\WordType;
 use Illuminate\Http\Request;
 
 class PhraseController extends Controller
@@ -21,11 +20,39 @@ class PhraseController extends Controller
      */
     public function index()
     {
-        $phrases = Phrase::paginate(10);
-        $languages = Language::get();
-        $domains = Domain::get();
-        $levels = Level::get();
-        return view('dashboard.phrases.index', compact('phrases', 'languages', 'domains', 'levels'));
+        // $phrases = Phrase::paginate(7);
+        $languages = Language::get();       
+        return view('dashboard.phrases.index', compact('languages'));
+    }
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @return json
+     */
+    public function getPhrases(Request $request)
+    {
+        $level = $request->level;
+        $domain = $request->domain;
+        $language = $request->language;
+
+        $phrases = Phrase::when($level != 'all', function ($q) use ($level) {
+            return $q->where('level_id', $level);
+        }, function ($q) use ($domain, $language) {
+            return $q->when($domain != 'all', function ($q) use ($domain) {
+                return $q->whereHas('level', function ($q) use ($domain) {
+                    return $q->where('domain_id', $domain);
+                });
+            },  function ($q) use ($language) {
+                return $q->when($language != 'all', function ($q) use ($language) {
+                    return $q->whereHas('domain', function ($q) use ($language) {
+                        return $q->where('language_id', $language);
+                    });
+                });
+            });
+        })->orderby('order')->paginate(7);
+    // })->orderby('order')->get();
+        return $phrases;
     }
 
     /**
@@ -37,10 +64,11 @@ class PhraseController extends Controller
     {
         $request->validate(['level_id' => 'required']);
         $level = Level::find($request->level_id);
+        $levelTitle = $level->title;
         $domain = $level->domain;
         $language = $domain->language;
         $word_types = $language->word_types;
-        return view('dashboard.phrases.create', compact('word_types'))->with('level_id', $level->id);
+        return view('dashboard.phrases.create', compact('word_types' , 'levelTitle'))->with('level_id', $level->id);
     }
 
     /**
@@ -53,17 +81,23 @@ class PhraseController extends Controller
     {
         $request->validate([
             'content' => 'required|string',
-            // 'word_count' => 'integer',
             'level_id' => 'exists:levels,id',
             'contents.*' => 'string',
             'word_type_id.*' => 'exists:word_types,id',
         ]);
+
+        /** ******** Save phrase ************ */
+        //if order is not sent, calculate it
         if (!$request->order)
             $request['order'] = Phrase::where('level_id', $request->level_id)->max('order') + 1;
-        $phrase = Phrase::create($request->all());
 
         $content = $request->content;
         $wordContent = explode(" ", $content);
+        $request['word_count'] = count($wordContent);
+        $phrase = Phrase::create($request->all());
+
+        /** ******** Save  words & its translation *********** */
+        //for each word save it with its translation
         for ($i = 0; $i <  count($wordContent); $i++) {
             $word = Word::where("content", $wordContent[$i])->first();
             $translations = [];
@@ -72,10 +106,10 @@ class PhraseController extends Controller
                 // get first translation as field
                 $translationRec = PhraseWord::where('word_id',  $word->id)->first();
                 $translation = $translationRec ? $translationRec->translation : '';
-                // get all translations to be as dataset                
+                // get all translations to be as a dataset                
                 $translations = PhraseWord::where('word_id',  $word->id)->get()->unique('translation');
-
             } else {
+                // if word first time added, add it to words table
                 $word = Word::create(["content" => $wordContent[$i]]);
                 $translation = '';
             }
@@ -84,7 +118,7 @@ class PhraseController extends Controller
                 'phrase_id' => $phrase->id,
                 'word_id' => $word->id,
                 'translation' => $translation,
-                'order' => $i+1
+                'order' => $i + 1
             ]);
             $words[] = $word;
             $phraseWords[] = $phraseWord;
@@ -99,7 +133,7 @@ class PhraseController extends Controller
             'phraseWords' => $phraseWords,
             'wordTypes' => $wordTypes,
         ]);
-        return redirect()->route('words.edit');
+        return to_route('words.edit');
     }
 
 
@@ -129,18 +163,18 @@ class PhraseController extends Controller
             'phraseWords' => $phraseWords,
             'wordTypes' => $wordTypes,
         ]);
-        return redirect()->route('words.edit');       
+        return redirect()->route('words.edit');
     }
 
 
-     /**
+    /**
      * Show the form for removing the specified resource.
      * 
      * @param  \App\Models\Phrase  $phrase
      * @return \Illuminate\Http\Response
      */
     public function delete(Phrase $phrase)
-    {   
+    {
         $participantCount = $phrase->participants()->count();
         Phrase::with('words')->find($phrase);
         return view('dashboard.phrases.delete', compact('phrase', 'participantCount'));
@@ -156,7 +190,7 @@ class PhraseController extends Controller
     {
         $participantCount = $phrase->participants()->count();
 
-        if ($participantCount == 0 ) {
+        if ($participantCount == 0) {
             $phrase->delete();
             return redirect()->route('phrases.index')->with('success', "phrase deleted successfully");
         } else
