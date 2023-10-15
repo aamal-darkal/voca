@@ -50,8 +50,8 @@ class PhraseController extends Controller
                     });
                 });
             });
-        })->orderby('order')->paginate(7);
-    // })->orderby('order')->get();
+        // })->orderby('order')->paginate(7);
+        })->orderby('order')->get();
         return $phrases;
     }
 
