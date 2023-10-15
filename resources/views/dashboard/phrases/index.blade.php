@@ -89,7 +89,8 @@
             let response = await fetch(`phrases/getPhrases/${level}/${domain}/${language}`);
 
             let datas = await response.json();
-            datas = datas.data
+            console.log(datas)
+            // datas = datas.data
             let phraseRows = document.getElementById('phrasesRows')
             phraseRows.innerHTML = ''
             rows = ''
