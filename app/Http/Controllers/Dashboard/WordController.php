@@ -35,12 +35,17 @@ class WordController extends Controller
      */
     public function save(Request $request )
     {
+        //Save phrase translation
         $phrase = Phrase::find($request->phrase_id);
         $phrase->translation = $request->translation;
         $phrase->save();
-        $words = Word::find( $request->word_ids);
+        
+        //save words info
+        // $words = Word::find( $request->word_ids);
+        $words =  $request->word_ids;
         $wordTypes = $request->wordTypes;
         for($i = 0 ; $i < count($words) ; $i++) {
+            $words[$i] = Word::find( $words[$i]);
             $words[$i]->word_type_id = $wordTypes[$i];
             $words[$i]->save();
         }
