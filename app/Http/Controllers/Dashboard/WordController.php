@@ -41,19 +41,20 @@ class WordController extends Controller
         $phrase->save();
         
         //save words info
-        // $words = Word::find( $request->word_ids);
         $wordIds =  $request->word_ids;
         $wordTypes = $request->wordTypes;
         for($i = 0 ; $i < count($wordIds) ; $i++) {
-            $words[$i] = Word::find( $wordIds[$i]);
-            $words[$i]->word_type_id = $wordTypes[$i];
-            $words[$i]->save();
+            $word = Word::find( $wordIds[$i]);
+            $word->word_type_id = $wordTypes[$i];
+            $word->save();
         }
-        $phraseWords = PhraseWord::find( $request->phraseWord_ids);
+        $phraseWorIds = $request->phraseWord_ids;
         $translations = $request->translations;
-        for($i = 0 ; $i < count($phraseWords) ; $i++) {
-            $phraseWords[$i]->translation = $translations[$i] ;
-            $phraseWords[$i]->save();
+
+        for($i = 0 ; $i < count($phraseWorIds) ; $i++) {
+            $phraseWord = PhraseWord::find( $phraseWorIds[$i]);
+            $phraseWord->translation = $translations[$i] ;
+            $phraseWord->save();
         }
         session()->forget([
             'phrase' , 'words', 'allTranslations', 'phraseWords', 'word_types',
