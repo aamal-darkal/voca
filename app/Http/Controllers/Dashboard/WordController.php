@@ -42,10 +42,10 @@ class WordController extends Controller
         
         //save words info
         // $words = Word::find( $request->word_ids);
-        $words =  $request->word_ids;
+        $wordIds =  $request->word_ids;
         $wordTypes = $request->wordTypes;
-        for($i = 0 ; $i < count($words) ; $i++) {
-            $words[$i] = Word::find( $words[$i]);
+        for($i = 0 ; $i < count($wordIds) ; $i++) {
+            $words[$i] = Word::find( $wordIds[$i]);
             $words[$i]->word_type_id = $wordTypes[$i];
             $words[$i]->save();
         }
