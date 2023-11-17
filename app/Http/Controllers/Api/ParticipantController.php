@@ -132,7 +132,8 @@ class ParticipantController extends Controller
             'languages' => function ($query) use ($langkey) {
                 $query->where('key', $langkey);
             },
-            'phrases'])          
+            'phrases'
+        ])
             ->find($level_id);
 
 
@@ -158,11 +159,11 @@ class ParticipantController extends Controller
         $phrase_id = $request->phrase_id;
 
         $phrase = Phrase::with('phraseWords')
-                        ->with('phraseWords.word')
-                        ->with('phraseWords.participants' , function($query) use ($participant){
-                             $query->where('id' , $participant->id);
-                        })
-                        ->where('id', $phrase_id)->get();
+            ->with('phraseWords.word')
+            ->with('phraseWords.participants', function ($query) use ($participant) {
+                $query->where('id', $participant->id);
+            })
+            ->where('id', $phrase_id)->get();
         return ParticipantPhraseResource::collection($phrase);
     }
 
