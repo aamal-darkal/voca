@@ -19,8 +19,8 @@ class ParticipantLevelResource extends JsonResource
         $participant = $this->participants->first();
         return  [
             'id' => $this->id,
-            'title' => $this->languages ? $this->languages[0]['pivot']['title'] ?? $this->title : $this->title,
-            'description' => $this->languages ? $this->languages[0]['pivot']['description'] ?? $this->description : $this->description,
+            'title' => $this->languages->first() ? $this->languages[0]['pivot']['title'] ?? $this->title : $this->title,
+            'description' => $this->languages->first() ? $this->languages[0]['pivot']['description'] ?? $this->description : $this->description,
             'status' => $participant ? $participant->pivot->status : null,
             'phrase_count' => $this->phrase_count,
             'order' => $this->order,

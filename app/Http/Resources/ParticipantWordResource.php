@@ -18,13 +18,13 @@ class ParticipantWordResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'word_id' => $this->word_id, 
-            'content' => $this->word? $this->word->content: null,
-            'word_type' => $this->word? $this->word->wordType? $this->word->wordType->name: null:null,
-            'phrase_word_id' => $this->id, 
+            'word_id' => $this->word_id,
+            'content' => $this->word ? $this->word->content : null,
+            'word_type' => $this->word ? ($this->word->wordType ? $this->word->wordType->name : null) : null,
+            'phrase_word_id' => $this->id,
             'translation' => $this->translation,
-            'order' => $this->order,        
-            'status' => $this->participants->first()? $this->participants->first()->pivot->status:null,
+            'order' => $this->order,
+            'status' => $this->participants->first() ? $this->participants->first()->pivot->status : null,
         ];
     }
 }
