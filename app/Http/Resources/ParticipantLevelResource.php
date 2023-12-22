@@ -37,11 +37,16 @@ class ParticipantLevelResource extends JsonResource
             $participant_id = null;
         $nPhrases = [];
         foreach ($phrases as $phrase) {
-            $nphrase = Phrase::with('phraseWords')
-                ->with('phraseWords.word')
-                ->with('phraseWords.participants', function ($query) use ($participant_id) {
+            $nphrase = Phrase::with([
+                'phraseWords',
+                'participants' => function ($query) use ($participant_id) {
                     $query->where('id', $participant_id);
-                })
+                },
+                'phraseWords.word',
+                'phraseWords.participants' => function ($query) use ($participant_id) {
+                    $query->where('id', $participant_id);
+                }
+            ])
                 ->where('id', $phrase->id)->first();
             $nPhrases[] = $nphrase;
         }
