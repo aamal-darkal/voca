@@ -132,7 +132,11 @@ class ParticipantController extends Controller
             'languages' => function ($query) use ($langkey) {
                 $query->where('key', $langkey);
             },
-            'phrases'
+            'phrases',
+            'participants' =>
+            function ($query) use ($participant) {
+                $query->where('id', $participant->id);
+            },
         ])
             ->find($level_id);
 
@@ -159,10 +163,19 @@ class ParticipantController extends Controller
         $phrase_id = $request->phrase_id;
 
         $phrase = Phrase::with('phraseWords')
-            ->with('phraseWords.word')
-            ->with('phraseWords.participants', function ($query) use ($participant) {
-                $query->where('id', $participant->id);
-            })
+            ->with(
+                [
+                    'participants' =>
+                    function ($query) use ($participant) {
+                        $query->where('id', $participant->id);
+                    },
+                    'phraseWords.word',
+                    'phraseWords.participants' =>
+                    function ($query) use ($participant) {
+                        $query->where('id', $participant->id);
+                    }
+                ]
+            )
             ->where('id', $phrase_id)->get();
         return ParticipantPhraseResource::collection($phrase);
     }
@@ -212,12 +225,14 @@ class ParticipantController extends Controller
 
     public function handlePhraseTree(Participant $participant, Request $request)
     {
+        //handle phrase
         $phrase_id = $request->phrase_id;
         $phrase = Phrase::find($phrase_id);
         $language_id = $phrase->domain->language_id;
         $next_phrase_id = Language::find($language_id)->phrases()->where('phrases.order', '>', $phrase->order)->orderby('phrases.order')->first();
         $next_phrase_id = $next_phrase_id ? $next_phrase_id->id : null;
         $this->handlePhrase($participant, $phrase_id, $request->phrase_status);
+        //Handle word
         $words =  $request->words;
         foreach ($words as $word) {
             $this->handleWord($participant, $word['phrase_word_id'], $word['phrase_word_status']);
