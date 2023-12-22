@@ -17,10 +17,11 @@ class ParticipantLevelResource extends JsonResource
     public function toArray($request)
     {
         $participant = $this->participants->first();
+        $languages = $this->languages->first();
         return  [
             'id' => $this->id,
-            'title' => $this->languages->first() ? $this->languages[0]['pivot']['title'] ?? $this->title : $this->title,
-            'description' => $this->languages->first() ? $this->languages[0]['pivot']['description'] ?? $this->description : $this->description,
+            'title' => $languages ? $this->languages[0]['pivot']['title'] ?? $this->title : $this->title,
+            'description' => $languages ? $this->languages[0]['pivot']['description'] ?? $this->description : $this->description,
             'status' => $participant ? $participant->pivot->status : null,
             'phrase_count' => $this->phrase_count,
             'order' => $this->order,
@@ -38,7 +39,6 @@ class ParticipantLevelResource extends JsonResource
         $nPhrases = [];
         foreach ($phrases as $phrase) {
             $nphrase = Phrase::with([
-                'phraseWords',
                 'participants' => function ($query) use ($participant_id) {
                     $query->where('id', $participant_id);
                 },

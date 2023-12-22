@@ -102,9 +102,11 @@ class ParticipantController extends Controller
     {
         $langkey =  Language::find($participant->lang_app)->key;
         $domains = Domain::with([
-            'levels',
             'levels.languages' => function ($query) use ($langkey) {
                 $query->where('key', $langkey);
+            },
+            'levels.participants' => function ($query) use ($participant) {
+                $query->where('id', $participant->id);
             },
             'languages' => function ($query) use ($langkey) {
                 $query->where('key', $langkey);
