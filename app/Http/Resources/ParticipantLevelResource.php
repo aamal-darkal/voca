@@ -27,30 +27,7 @@ class ParticipantLevelResource extends JsonResource
             'order' => $this->order,
             'domain_id' => $this->domain_id,
             'pastCount' =>  $participant ? $participant->phrases()->where('level_id', $this->id)->wherein('status', ['C', 'X'])->count() : 0,
-            'phrases' => $this->when($this->relationLoaded('phrases'), ParticipantPhraseResource::collection($this->phraseCollection($this->phrases, $participant))),
+            'phrases' => $this->when($this->relationLoaded('phrases'),  ParticipantPhraseResource::collection($this->phrases)),
         ];
-    }
-    function phraseCollection($phrases, $participant)
-    {
-        if ($participant)
-            $participant_id = $participant->id;
-        else
-            $participant_id = null;
-        $nPhrases = [];
-        foreach ($phrases as $phrase) {
-            $nphrase = Phrase::with([
-                'participants' => function ($query) use ($participant_id) {
-                    $query->where('id', $participant_id);
-                },
-                'phraseWords.word',
-                'phraseWords.participants' => function ($query) use ($participant_id) {
-                    $query->where('id', $participant_id);
-                }
-            ])
-                ->where('id', $phrase->id)->first();
-            $nPhrases[] = $nphrase;
-        }
-
-        return $nPhrases;
     }
 }

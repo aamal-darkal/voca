@@ -134,17 +134,21 @@ class ParticipantController extends Controller
             'languages' => function ($query) use ($langkey) {
                 $query->where('key', $langkey);
             },
-            'phrases',
             'participants' =>
             function ($query) use ($participant) {
                 $query->where('id', $participant->id);
             },
+            'phrases.participants' =>
+            function ($query) use ($participant) {
+                $query->where('id', $participant->id);
+            },
+            'phrases.phraseWords.word',
+            'phrases.phraseWords.participants' => function ($query) use ($participant) {
+                $query->where('id', $participant->id);
+            }
         ])
             ->find($level_id);
 
-
-
-        ParticipantWordResource::$participant = $participant->id;
         if ($level)
             return new ParticipantLevelResource($level);
         else
@@ -231,8 +235,8 @@ class ParticipantController extends Controller
         $phrase_id = $request->phrase_id;
         $phrase = Phrase::find($phrase_id);
         $language_id = $phrase->domain->language_id;
-        $next_phrase_id = Language::find($language_id)->phrases()->where('phrases.order', '>', $phrase->order)->orderby('phrases.order')->first();
-        $next_phrase_id = $next_phrase_id ? $next_phrase_id->id : null;
+        $next_phrase = Language::find($language_id)->phrases()->where('phrases.order', '>', $phrase->order)->orderby('phrases.order')->first();
+        $next_phrase_id = $next_phrase ? $next_phrase->id : null;
         $this->handlePhrase($participant, $phrase_id, $request->phrase_status);
         //Handle word
         $words =  $request->words;
