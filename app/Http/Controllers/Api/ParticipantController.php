@@ -8,7 +8,6 @@ use App\Http\Resources\ParticipantResource;
 use App\Http\Resources\ParticipantDomainResource;
 use App\Http\Resources\ParticipantLevelResource;
 use App\Http\Resources\ParticipantPhraseResource;
-use App\Http\Resources\ParticipantWordResource;
 use App\Models\Domain;
 use App\Models\Language;
 use App\Models\Level;
@@ -228,14 +227,37 @@ class ParticipantController extends Controller
             'status' => 'success',
         ];
     }
+    /**
+     * Undocumented function
+     *
+     * @param Participant $participant
+     * @param Request $request contains:
+     * {
+            "phrase_id": 89,
+            "phrase_status" : "g",
+            "words": [
+                        {
+                            "phrase_word_id": 930,
+                            "phrase_word_status": "C" 
+                        },
+                        {
+                            "phrase_word_id": 931,
+                            "phrase_word_status": "C"
+                        }   
+                    ]
+        }
 
+     * @return json 
+     */
     public function handlePhraseTree(Participant $participant, Request $request)
     {
         //handle phrase
         $phrase_id = $request->phrase_id;
         $phrase = Phrase::find($phrase_id);
-        $language_id = $phrase->domain->language_id;
-        $next_phrase = Language::find($language_id)->phrases()->where('phrases.order', '>', $phrase->order)->orderby('phrases.order')->first();
+        $level_id = $phrase->level_id;
+        // $next_phrase = Language::find($language_id)->phrases()->where('phrases.order', '>', $phrase->order)->orderby('phrases.order')->first();
+        $next_phrase = Phrase::where('level_id', $level_id)->where('order', '>', $phrase->order)->orderby('phrases.order')->first();
+
         $next_phrase_id = $next_phrase ? $next_phrase->id : null;
         $this->handlePhrase($participant, $phrase_id, $request->phrase_status);
         //Handle word
