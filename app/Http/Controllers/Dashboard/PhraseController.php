@@ -79,7 +79,7 @@ class PhraseController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {        
         $request->validate([
             'content' => 'required|string',
             'level_id' => 'exists:levels,id',
@@ -97,6 +97,9 @@ class PhraseController extends Controller
         $request['word_count'] = count($wordContent);
         $phrase = Phrase::create($request->all());
 
+        /** ** update phease-count in level record ************* */
+        Level::find($request->level_id)->increment('phrase_count');   
+        
         /** ******** Save  words & its translation *********** */
         //for each word save it with its translation
         for ($i = 0; $i <  count($wordContent); $i++) {
@@ -192,7 +195,10 @@ class PhraseController extends Controller
         $participantCount = $phrase->participants()->count();
 
         if ($participantCount == 0) {
+            /** ** update phease-count in level record ************* */
+            Level::find($phrase->level_id)->decrement('phrase_count');   
             $phrase->delete();
+
             return redirect()->route('phrases.index')->with('success', "phrase deleted successfully");
         } else
             return redirect()->route('phrases.index')->with('error', "can remove phrase $phrase->content with $participantCount participantCount");

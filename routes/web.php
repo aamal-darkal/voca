@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboard\PhraseController;
 use App\Http\Controllers\Dashboard\WordController;
 use App\Http\Controllers\HomeController;
 use App\Models\Domain;
+use App\Models\Level;
 use App\Models\Word;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -54,15 +55,6 @@ Route::middleware('auth')->group(function () {
     Route::controller(WordController::class)->prefix('words')->group(function () {
         Route::get('edit', 'edit')->name('words.edit');
         Route::post('save', 'save')->name('words.save');
-    });
-    Route::view('j-test' ,'test');  
+    });    
 }); 
-
-Route::get('test/{part}', function ($participant) {
-    $domains = Domain::with(['levels.participants' => function ($participant, $q) {
-        return $q->where('id', $participant);
-    }])->get();
-    return $domains;
-});
-
 

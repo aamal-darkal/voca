@@ -5,8 +5,6 @@ use App\Http\Controllers\Api\ParticipantController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DialectController;
 use App\Http\Controllers\Api\LanguageController;
-use App\Models\Participant;
-use App\Models\Phrase;
 
 /*
 |-----------------  ---------------------------------------------------------
@@ -48,9 +46,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('participant-email', [ParticipantController::class, 'getByEmail']);
 
     
-});
-
-  
-Route::get('test' , function() {
-    return Phrase::find(1)->phraseWords;
 });
